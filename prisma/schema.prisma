@@ -1,0 +1,320 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PaymentStatus {
+  not_invoiced
+  invoiced
+  paid
+  overdue
+}
+
+enum StepStatus {
+  not_sent
+  sent
+  completed
+}
+
+enum EventBaseType {
+  send_email
+}
+
+enum EventInstanceType {
+  send_invoice
+  send_prework_email
+  send_admin_reminder
+  send_form
+}
+
+enum EventStatus {
+  pending
+  processing
+  completed
+  failed
+}
+
+enum InvoiceStatus {
+  draft
+  sent
+  paid
+  overdue
+}
+
+enum AdminRole {
+  super
+  standard
+  basic
+  read_only
+}
+
+enum OpportunityStatus {
+  open
+  nurturing
+  converted
+  archived
+}
+
+enum OpportunityEventStatus {
+  pending
+  scheduled
+  completed
+  cancelled
+  failed
+}
+
+model Participant {
+  id               String                   @id @default(cuid())
+  name             String
+  email            String                   @unique
+  organisation     String?
+  address          String?
+  phone            String?
+  socialLinks      String[]                 @default([])
+  photoId          String?
+  stripeCustomerId String?
+  stripeInvoiceIds String[]                 @default([])
+  createdAt        DateTime                 @default(now())
+  updatedAt        DateTime                 @updatedAt
+  notes            String?
+  metadata         Json                     @default("{}")
+  programmes       ProgrammeParticipant[]
+  invoices         ParticipantInvoice[]
+  eventStatuses    EventParticipantStatus[]
+  formSubmissions  FormSubmission[]
+}
+
+model ProgrammeParticipant {
+  id            String        @id @default(cuid())
+  programmeId   String
+  participantId String
+  paymentStatus PaymentStatus @default(not_invoiced)
+  metadata      Json          @default("{}")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  programme     Programme     @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  participant   Participant   @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([programmeId, participantId])
+  @@index([participantId])
+}
+
+model ParticipantInvoice {
+  id            String      @id @default(cuid())
+  invoiceId     String
+  invoiceTotal  Float
+  programmeId   String
+  participantId String
+  createdAt     DateTime    @default(now())
+  invoice       Invoice     @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  programme     Programme   @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([invoiceId, participantId])
+  @@index([programmeId])
+  @@index([participantId])
+}
+
+model Programme {
+  id                    String                 @id @default(cuid())
+  name                  String
+  startDate             DateTime
+  eventFlow             Json                   @default("{}")
+  participantDefinition Json
+  participants          ProgrammeParticipant[]
+  events                Event[]
+  formTables            FormTable[]
+  forms                 Form[]
+  invoices              Invoice[]
+  participantInvoices   ParticipantInvoice[]
+  emailTemplates        EmailTemplate[]
+}
+
+model Event {
+  id                  String                   @id @default(cuid())
+  name                String
+  programmeId         String
+  baseType            EventBaseType
+  instanceType        EventInstanceType
+  scheduledAt         DateTime
+  status              EventStatus              @default(pending)
+  config              Json
+  createdAt           DateTime                 @default(now())
+  programme           Programme                @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  participantStatuses EventParticipantStatus[]
+  formTables          FormTable[]
+  forms               Form[]
+}
+
+model EventParticipantStatus {
+  id            String      @id @default(cuid())
+  eventId       String
+  participantId String
+  status        StepStatus  @default(not_sent)
+  metadata      Json        @default("{}")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  event         Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, participantId])
+  @@index([participantId])
+}
+
+model Form {
+  id          String           @id @default(cuid())
+  programmeId String?
+  eventId     String?
+  slug        String           @unique
+  name        String
+  description String?
+  status      String           @default("draft")
+  sections    Json
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  programme   Programme?       @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  event       Event?           @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  submissions FormSubmission[]
+}
+
+model FormSubmission {
+  id          String       @id @default(cuid())
+  formId      String
+  respondentId String?
+  answers     Json
+  metadata    Json         @default("{}")
+  createdAt   DateTime     @default(now())
+  form        Form         @relation(fields: [formId], references: [id], onDelete: Cascade)
+  participant Participant? @relation(fields: [respondentId], references: [id], onDelete: SetNull)
+
+  @@index([formId])
+  @@index([respondentId])
+}
+
+model FormTable {
+  id          String    @id @default(cuid())
+  programmeId String
+  eventId     String
+  name        String
+  formSchema  Json
+  entries     Json
+  programme   Programme @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  id               String               @id @default(cuid())
+  programmeId      String
+  amount           Float
+  currency         String               @default("GBP")
+  status           InvoiceStatus        @default(draft)
+  dueDate          DateTime
+  paidAt           DateTime?
+  stripeInvoiceUrl String?
+  programme        Programme            @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  participants     ParticipantInvoice[]
+}
+
+model EmailTemplate {
+  id          String    @id @default(cuid())
+  programmeId String
+  name        String
+  subject     String
+  body        String
+  programme   Programme @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+}
+
+model Admin {
+  id                   String    @id @default(cuid())
+  name                 String
+  email                String    @unique
+  role                 AdminRole @default(read_only)
+  password             String
+  notificationsEnabled Boolean   @default(true)
+  photoId              String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  sessions             AdminSession[]
+}
+
+model AdminSession {
+  id           String   @id @default(cuid())
+  adminId      String
+  tokenHash    String   @unique
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  createdAt    DateTime @default(now())
+  lastUsedAt    DateTime @default(now())
+  admin        Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([expiresAt])
+}
+
+model Opportunity {
+  id              String             @id @default(cuid())
+  name            String
+  email           String             @unique
+  organisation    String?
+  importanceScore Int                @default(0)
+  status          OpportunityStatus  @default(open)
+  notes           String?
+  metadata        Json               @default("{}")
+  events          OpportunityEvent[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+model OpportunityPipeline {
+  id        String                    @id @default(cuid())
+  name      String
+  flow      Json                      @default("{}")
+  steps     OpportunityPipelineStep[]
+  events    OpportunityEvent[]
+  createdAt DateTime                  @default(now())
+  updatedAt DateTime                  @updatedAt
+}
+
+model OpportunityPipelineStep {
+  id          String                @id @default(cuid())
+  pipelineId  String
+  name        String
+  type        String                @default("send_email")
+  delayDays   Int                   @default(0)
+  config      Json                  @default("{}")
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  pipeline    OpportunityPipeline   @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  events      OpportunityEvent[]
+
+  @@index([pipelineId])
+}
+
+model OpportunityEvent {
+  id             String                 @id @default(cuid())
+  opportunityId  String
+  pipelineId     String?
+  pipelineStepId String?
+  name           String
+  type           String                 @default("send_email")
+  scheduledAt    DateTime
+  status         OpportunityEventStatus @default(pending)
+  cronJobId      String                 @unique
+  config         Json                   @default("{}")
+  error          String?
+  completedAt    DateTime?
+  cancelledAt    DateTime?
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  opportunity    Opportunity            @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  pipeline       OpportunityPipeline?    @relation(fields: [pipelineId], references: [id], onDelete: SetNull)
+  pipelineStep   OpportunityPipelineStep? @relation(fields: [pipelineStepId], references: [id], onDelete: SetNull)
+
+  @@index([opportunityId])
+  @@index([pipelineId])
+  @@index([pipelineStepId])
+}
