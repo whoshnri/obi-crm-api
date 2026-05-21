@@ -1,4 +1,4 @@
-import type { Prisma } from "../generated/client";
+import type { Participant, ParticipantInvoice, Prisma, Programme, ProgrammeParticipant } from "../generated/client";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -11,7 +11,6 @@ export function serializeEvent(event: {
   name: string;
   programmeId: string;
   baseType: string;
-  instanceType: string;
   status: string;
   scheduledAt: Date;
   createdAt: Date;
@@ -22,7 +21,6 @@ export function serializeEvent(event: {
     name: event.name,
     programmeId: event.programmeId,
     baseType: event.baseType,
-    instanceType: event.instanceType,
     status: event.status,
     scheduledAt: event.scheduledAt.toISOString(),
     createdAt: event.createdAt.toISOString(),
@@ -30,31 +28,9 @@ export function serializeEvent(event: {
   };
 }
 
-export function serializeParticipant(participant: {
-  id: string;
-  name: string;
-  email: string;
-  organisation: string | null;
-  address: string | null;
-  phone: string | null;
-  socialLinks: string[];
-  photoId: string | null;
-  stripeCustomerId: string | null;
-  stripeInvoiceIds: string[];
-  createdAt: Date;
-  updatedAt: Date;
-  notes: string | null;
-  metadata: Prisma.JsonValue;
-  programmes?: Array<{ programmeId: string; paymentStatus: string }>;
-}, scopedProgrammeId?: string) {
-  const scopedProgramme = scopedProgrammeId
-    ? participant.programmes?.find((programme) => programme.programmeId === scopedProgrammeId)
-    : participant.programmes?.[0];
-
+export function serializeBaseParticipant(participant: Participant) {
   return {
     id: participant.id,
-    programmeId: scopedProgramme?.programmeId,
-    programmeIds: participant.programmes?.map((programme) => programme.programmeId) ?? [],
     name: participant.name,
     email: participant.email,
     organisation: participant.organisation ?? undefined,
@@ -62,9 +38,7 @@ export function serializeParticipant(participant: {
     phone: participant.phone ?? undefined,
     socialLinks: participant.socialLinks,
     photoId: participant.photoId ?? undefined,
-    paymentStatus: scopedProgramme?.paymentStatus ?? "not_invoiced",
     stripeCustomerId: participant.stripeCustomerId ?? undefined,
-    stripeInvoiceIds: participant.stripeInvoiceIds,
     createdAt: participant.createdAt.toISOString(),
     updatedAt: participant.updatedAt.toISOString(),
     notes: participant.notes ?? undefined,
@@ -72,30 +46,61 @@ export function serializeParticipant(participant: {
   };
 }
 
+export function serializeProgramParticipant(programParticipant: ProgrammeParticipant & {
+  participant: Participant;
+  programme: Programme;
+  invoice?: ParticipantInvoice | null;
+}) {
+  const baseParticipant = serializeBaseParticipant(programParticipant.participant);
+
+  return {
+    ...baseParticipant,
+    id: programParticipant.id,
+    participantId: programParticipant.participantId,
+    programmeId: programParticipant.programmeId,
+    programmeIds: [programParticipant.programmeId],
+    paymentStatus: programParticipant.paymentStatus,
+    invoiceId: programParticipant.invoiceId ?? undefined,
+    enrolledAt: programParticipant.createdAt.toISOString(),
+    createdAt: programParticipant.createdAt.toISOString(),
+    updatedAt: programParticipant.updatedAt.toISOString(),
+    metadata: isRecord(programParticipant.metadata) ? programParticipant.metadata : {},
+    participant: baseParticipant,
+    programme: serializeProgramme(programParticipant.programme),
+    invoice: programParticipant.invoice ? serializeInvoice(programParticipant.invoice) : undefined
+  };
+}
+
 export function serializeInvoice(invoice: {
   id: string;
   programmeId: string;
+  participantId: string;
   amount: number;
   currency: string;
   status: string;
   dueDate: Date;
   paidAt: Date | null;
-  stripeInvoiceUrl: string | null;
-  participants?: Array<{ participantId: string; invoiceTotal: number }>;
+  stripeInvoiceId: string | null;
+  stripeInvoiceUrl?: string | null;
+  stripeInvoiceItemIds?: string[];
+  lineItems?: Prisma.JsonValue;
+  metadata?: Prisma.JsonValue;
 }) {
-  const participantIds = invoice.participants?.map((participant) => participant.participantId) ?? [];
-
   return {
     id: invoice.id,
     programmeId: invoice.programmeId,
-    participantId: participantIds[0],
-    participantIds,
+    participantId: invoice.participantId,
+    participantIds: [invoice.participantId],
     amount: invoice.amount,
     currency: invoice.currency,
     status: invoice.status,
     dueDate: invoice.dueDate.toISOString(),
     paidAt: invoice.paidAt?.toISOString(),
-    stripeInvoiceUrl: invoice.stripeInvoiceUrl ?? undefined
+    stripeInvoiceId: invoice.stripeInvoiceId ?? undefined,
+    stripeInvoiceUrl: invoice.stripeInvoiceUrl ?? undefined,
+    stripeInvoiceItemIds: invoice.stripeInvoiceItemIds ?? [],
+    lineItems: Array.isArray(invoice.lineItems) ? invoice.lineItems : [],
+    metadata: isRecord(invoice.metadata) ? invoice.metadata : {}
   };
 }
 

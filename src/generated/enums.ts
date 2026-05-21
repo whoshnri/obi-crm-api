@@ -29,20 +29,11 @@ export type StepStatus = (typeof StepStatus)[keyof typeof StepStatus]
 
 
 export const EventBaseType = {
-  send_email: 'send_email'
+  send_email: 'send_email',
+  send_invoice: 'send_invoice'
 } as const
 
 export type EventBaseType = (typeof EventBaseType)[keyof typeof EventBaseType]
-
-
-export const EventInstanceType = {
-  send_invoice: 'send_invoice',
-  send_prework_email: 'send_prework_email',
-  send_admin_reminder: 'send_admin_reminder',
-  send_form: 'send_form'
-} as const
-
-export type EventInstanceType = (typeof EventInstanceType)[keyof typeof EventInstanceType]
 
 
 export const EventStatus = {

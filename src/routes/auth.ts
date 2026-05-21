@@ -84,7 +84,7 @@ export const authRouter = new Hono()
       if (!admin || !passwordMatches) {
         clearAccessCookie(c);
         clearRefreshCookie(c);
-        return c.json({ error: "Invalid password" }, 401);
+        return c.json({ error: "Invalid email or password" }, 401);
       }
 
       const accessToken = await signAccessToken(admin);

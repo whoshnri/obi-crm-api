@@ -178,7 +178,6 @@ export type ProgrammeWhereInput = {
   events?: Prisma.EventListRelationFilter
   formTables?: Prisma.FormTableListRelationFilter
   forms?: Prisma.FormListRelationFilter
-  invoices?: Prisma.InvoiceListRelationFilter
   participantInvoices?: Prisma.ParticipantInvoiceListRelationFilter
   emailTemplates?: Prisma.EmailTemplateListRelationFilter
 }
@@ -193,7 +192,6 @@ export type ProgrammeOrderByWithRelationInput = {
   events?: Prisma.EventOrderByRelationAggregateInput
   formTables?: Prisma.FormTableOrderByRelationAggregateInput
   forms?: Prisma.FormOrderByRelationAggregateInput
-  invoices?: Prisma.InvoiceOrderByRelationAggregateInput
   participantInvoices?: Prisma.ParticipantInvoiceOrderByRelationAggregateInput
   emailTemplates?: Prisma.EmailTemplateOrderByRelationAggregateInput
 }
@@ -211,7 +209,6 @@ export type ProgrammeWhereUniqueInput = Prisma.AtLeast<{
   events?: Prisma.EventListRelationFilter
   formTables?: Prisma.FormTableListRelationFilter
   forms?: Prisma.FormListRelationFilter
-  invoices?: Prisma.InvoiceListRelationFilter
   participantInvoices?: Prisma.ParticipantInvoiceListRelationFilter
   emailTemplates?: Prisma.EmailTemplateListRelationFilter
 }, "id">
@@ -248,7 +245,6 @@ export type ProgrammeCreateInput = {
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
 }
@@ -263,7 +259,6 @@ export type ProgrammeUncheckedCreateInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
 }
@@ -278,7 +273,6 @@ export type ProgrammeUpdateInput = {
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
 }
@@ -293,7 +287,6 @@ export type ProgrammeUncheckedUpdateInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
 }
@@ -366,20 +359,6 @@ export type ProgrammeUpdateOneRequiredWithoutParticipantsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutParticipantsInput, Prisma.ProgrammeUpdateWithoutParticipantsInput>, Prisma.ProgrammeUncheckedUpdateWithoutParticipantsInput>
 }
 
-export type ProgrammeCreateNestedOneWithoutParticipantInvoicesInput = {
-  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutParticipantInvoicesInput>
-  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutParticipantInvoicesInput
-  connect?: Prisma.ProgrammeWhereUniqueInput
-}
-
-export type ProgrammeUpdateOneRequiredWithoutParticipantInvoicesNestedInput = {
-  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutParticipantInvoicesInput>
-  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutParticipantInvoicesInput
-  upsert?: Prisma.ProgrammeUpsertWithoutParticipantInvoicesInput
-  connect?: Prisma.ProgrammeWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutParticipantInvoicesInput, Prisma.ProgrammeUpdateWithoutParticipantInvoicesInput>, Prisma.ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput>
-}
-
 export type ProgrammeCreateNestedOneWithoutEventsInput = {
   create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutEventsInput, Prisma.ProgrammeUncheckedCreateWithoutEventsInput>
   connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutEventsInput
@@ -424,18 +403,18 @@ export type ProgrammeUpdateOneRequiredWithoutFormTablesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutFormTablesInput, Prisma.ProgrammeUpdateWithoutFormTablesInput>, Prisma.ProgrammeUncheckedUpdateWithoutFormTablesInput>
 }
 
-export type ProgrammeCreateNestedOneWithoutInvoicesInput = {
-  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutInvoicesInput>
-  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutInvoicesInput
+export type ProgrammeCreateNestedOneWithoutParticipantInvoicesInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutParticipantInvoicesInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutParticipantInvoicesInput
   connect?: Prisma.ProgrammeWhereUniqueInput
 }
 
-export type ProgrammeUpdateOneRequiredWithoutInvoicesNestedInput = {
-  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutInvoicesInput>
-  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutInvoicesInput
-  upsert?: Prisma.ProgrammeUpsertWithoutInvoicesInput
+export type ProgrammeUpdateOneRequiredWithoutParticipantInvoicesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutParticipantInvoicesInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutParticipantInvoicesInput
+  upsert?: Prisma.ProgrammeUpsertWithoutParticipantInvoicesInput
   connect?: Prisma.ProgrammeWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutInvoicesInput, Prisma.ProgrammeUpdateWithoutInvoicesInput>, Prisma.ProgrammeUncheckedUpdateWithoutInvoicesInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutParticipantInvoicesInput, Prisma.ProgrammeUpdateWithoutParticipantInvoicesInput>, Prisma.ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput>
 }
 
 export type ProgrammeCreateNestedOneWithoutEmailTemplatesInput = {
@@ -461,7 +440,6 @@ export type ProgrammeCreateWithoutParticipantsInput = {
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
 }
@@ -475,7 +453,6 @@ export type ProgrammeUncheckedCreateWithoutParticipantsInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
 }
@@ -505,7 +482,6 @@ export type ProgrammeUpdateWithoutParticipantsInput = {
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
 }
@@ -519,80 +495,7 @@ export type ProgrammeUncheckedUpdateWithoutParticipantsInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
-  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
-}
-
-export type ProgrammeCreateWithoutParticipantInvoicesInput = {
-  id?: string
-  name: string
-  startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
-  events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
-  formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
-  forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutProgrammeInput
-  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
-}
-
-export type ProgrammeUncheckedCreateWithoutParticipantInvoicesInput = {
-  id?: string
-  name: string
-  startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
-  formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
-  forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProgrammeInput
-  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
-}
-
-export type ProgrammeCreateOrConnectWithoutParticipantInvoicesInput = {
-  where: Prisma.ProgrammeWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutParticipantInvoicesInput>
-}
-
-export type ProgrammeUpsertWithoutParticipantInvoicesInput = {
-  update: Prisma.XOR<Prisma.ProgrammeUpdateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput>
-  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutParticipantInvoicesInput>
-  where?: Prisma.ProgrammeWhereInput
-}
-
-export type ProgrammeUpdateToOneWithWhereWithoutParticipantInvoicesInput = {
-  where?: Prisma.ProgrammeWhereInput
-  data: Prisma.XOR<Prisma.ProgrammeUpdateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput>
-}
-
-export type ProgrammeUpdateWithoutParticipantInvoicesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
-  events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
-  formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
-  forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutProgrammeNestedInput
-  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
-}
-
-export type ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
-  formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
-  forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
@@ -605,7 +508,6 @@ export type ProgrammeCreateWithoutEventsInput = {
   participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
 }
@@ -619,7 +521,6 @@ export type ProgrammeUncheckedCreateWithoutEventsInput = {
   participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
 }
@@ -649,7 +550,6 @@ export type ProgrammeUpdateWithoutEventsInput = {
   participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
 }
@@ -663,7 +563,6 @@ export type ProgrammeUncheckedUpdateWithoutEventsInput = {
   participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
 }
@@ -677,7 +576,6 @@ export type ProgrammeCreateWithoutFormsInput = {
   participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
 }
@@ -691,7 +589,6 @@ export type ProgrammeUncheckedCreateWithoutFormsInput = {
   participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
 }
@@ -721,7 +618,6 @@ export type ProgrammeUpdateWithoutFormsInput = {
   participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
 }
@@ -735,7 +631,6 @@ export type ProgrammeUncheckedUpdateWithoutFormsInput = {
   participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
 }
@@ -749,7 +644,6 @@ export type ProgrammeCreateWithoutFormTablesInput = {
   participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
 }
@@ -763,7 +657,6 @@ export type ProgrammeUncheckedCreateWithoutFormTablesInput = {
   participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
 }
@@ -793,7 +686,6 @@ export type ProgrammeUpdateWithoutFormTablesInput = {
   participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
 }
@@ -807,12 +699,11 @@ export type ProgrammeUncheckedUpdateWithoutFormTablesInput = {
   participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
-export type ProgrammeCreateWithoutInvoicesInput = {
+export type ProgrammeCreateWithoutParticipantInvoicesInput = {
   id?: string
   name: string
   startDate: Date | string
@@ -822,11 +713,10 @@ export type ProgrammeCreateWithoutInvoicesInput = {
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
-  participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
 }
 
-export type ProgrammeUncheckedCreateWithoutInvoicesInput = {
+export type ProgrammeUncheckedCreateWithoutParticipantInvoicesInput = {
   id?: string
   name: string
   startDate: Date | string
@@ -836,27 +726,26 @@ export type ProgrammeUncheckedCreateWithoutInvoicesInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
-  participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
 }
 
-export type ProgrammeCreateOrConnectWithoutInvoicesInput = {
+export type ProgrammeCreateOrConnectWithoutParticipantInvoicesInput = {
   where: Prisma.ProgrammeWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutInvoicesInput>
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutParticipantInvoicesInput>
 }
 
-export type ProgrammeUpsertWithoutInvoicesInput = {
-  update: Prisma.XOR<Prisma.ProgrammeUpdateWithoutInvoicesInput, Prisma.ProgrammeUncheckedUpdateWithoutInvoicesInput>
-  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutInvoicesInput>
+export type ProgrammeUpsertWithoutParticipantInvoicesInput = {
+  update: Prisma.XOR<Prisma.ProgrammeUpdateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput>
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedCreateWithoutParticipantInvoicesInput>
   where?: Prisma.ProgrammeWhereInput
 }
 
-export type ProgrammeUpdateToOneWithWhereWithoutInvoicesInput = {
+export type ProgrammeUpdateToOneWithWhereWithoutParticipantInvoicesInput = {
   where?: Prisma.ProgrammeWhereInput
-  data: Prisma.XOR<Prisma.ProgrammeUpdateWithoutInvoicesInput, Prisma.ProgrammeUncheckedUpdateWithoutInvoicesInput>
+  data: Prisma.XOR<Prisma.ProgrammeUpdateWithoutParticipantInvoicesInput, Prisma.ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput>
 }
 
-export type ProgrammeUpdateWithoutInvoicesInput = {
+export type ProgrammeUpdateWithoutParticipantInvoicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -866,11 +755,10 @@ export type ProgrammeUpdateWithoutInvoicesInput = {
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
-  participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
 }
 
-export type ProgrammeUncheckedUpdateWithoutInvoicesInput = {
+export type ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -880,7 +768,6 @@ export type ProgrammeUncheckedUpdateWithoutInvoicesInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
-  participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
@@ -894,7 +781,6 @@ export type ProgrammeCreateWithoutEmailTemplatesInput = {
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
 }
 
@@ -908,7 +794,6 @@ export type ProgrammeUncheckedCreateWithoutEmailTemplatesInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
 }
 
@@ -938,7 +823,6 @@ export type ProgrammeUpdateWithoutEmailTemplatesInput = {
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
 }
 
@@ -952,7 +836,6 @@ export type ProgrammeUncheckedUpdateWithoutEmailTemplatesInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
@@ -966,7 +849,6 @@ export type ProgrammeCountOutputType = {
   events: number
   formTables: number
   forms: number
-  invoices: number
   participantInvoices: number
   emailTemplates: number
 }
@@ -976,7 +858,6 @@ export type ProgrammeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   events?: boolean | ProgrammeCountOutputTypeCountEventsArgs
   formTables?: boolean | ProgrammeCountOutputTypeCountFormTablesArgs
   forms?: boolean | ProgrammeCountOutputTypeCountFormsArgs
-  invoices?: boolean | ProgrammeCountOutputTypeCountInvoicesArgs
   participantInvoices?: boolean | ProgrammeCountOutputTypeCountParticipantInvoicesArgs
   emailTemplates?: boolean | ProgrammeCountOutputTypeCountEmailTemplatesArgs
 }
@@ -1022,13 +903,6 @@ export type ProgrammeCountOutputTypeCountFormsArgs<ExtArgs extends runtime.Types
 /**
  * ProgrammeCountOutputType without action
  */
-export type ProgrammeCountOutputTypeCountInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.InvoiceWhereInput
-}
-
-/**
- * ProgrammeCountOutputType without action
- */
 export type ProgrammeCountOutputTypeCountParticipantInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ParticipantInvoiceWhereInput
 }
@@ -1051,7 +925,6 @@ export type ProgrammeSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   events?: boolean | Prisma.Programme$eventsArgs<ExtArgs>
   formTables?: boolean | Prisma.Programme$formTablesArgs<ExtArgs>
   forms?: boolean | Prisma.Programme$formsArgs<ExtArgs>
-  invoices?: boolean | Prisma.Programme$invoicesArgs<ExtArgs>
   participantInvoices?: boolean | Prisma.Programme$participantInvoicesArgs<ExtArgs>
   emailTemplates?: boolean | Prisma.Programme$emailTemplatesArgs<ExtArgs>
   _count?: boolean | Prisma.ProgrammeCountOutputTypeDefaultArgs<ExtArgs>
@@ -1087,7 +960,6 @@ export type ProgrammeInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   events?: boolean | Prisma.Programme$eventsArgs<ExtArgs>
   formTables?: boolean | Prisma.Programme$formTablesArgs<ExtArgs>
   forms?: boolean | Prisma.Programme$formsArgs<ExtArgs>
-  invoices?: boolean | Prisma.Programme$invoicesArgs<ExtArgs>
   participantInvoices?: boolean | Prisma.Programme$participantInvoicesArgs<ExtArgs>
   emailTemplates?: boolean | Prisma.Programme$emailTemplatesArgs<ExtArgs>
   _count?: boolean | Prisma.ProgrammeCountOutputTypeDefaultArgs<ExtArgs>
@@ -1102,7 +974,6 @@ export type $ProgrammePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     events: Prisma.$EventPayload<ExtArgs>[]
     formTables: Prisma.$FormTablePayload<ExtArgs>[]
     forms: Prisma.$FormPayload<ExtArgs>[]
-    invoices: Prisma.$InvoicePayload<ExtArgs>[]
     participantInvoices: Prisma.$ParticipantInvoicePayload<ExtArgs>[]
     emailTemplates: Prisma.$EmailTemplatePayload<ExtArgs>[]
   }
@@ -1510,7 +1381,6 @@ export interface Prisma__ProgrammeClient<T, Null = never, ExtArgs extends runtim
   events<T extends Prisma.Programme$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   formTables<T extends Prisma.Programme$formTablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$formTablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormTablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   forms<T extends Prisma.Programme$formsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$formsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  invoices<T extends Prisma.Programme$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   participantInvoices<T extends Prisma.Programme$participantInvoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$participantInvoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipantInvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   emailTemplates<T extends Prisma.Programme$emailTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$emailTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2033,30 +1903,6 @@ export type Programme$formsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.FormScalarFieldEnum | Prisma.FormScalarFieldEnum[]
-}
-
-/**
- * Programme.invoices
- */
-export type Programme$invoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Invoice
-   */
-  select?: Prisma.InvoiceSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Invoice
-   */
-  omit?: Prisma.InvoiceOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.InvoiceInclude<ExtArgs> | null
-  where?: Prisma.InvoiceWhereInput
-  orderBy?: Prisma.InvoiceOrderByWithRelationInput | Prisma.InvoiceOrderByWithRelationInput[]
-  cursor?: Prisma.InvoiceWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.InvoiceScalarFieldEnum | Prisma.InvoiceScalarFieldEnum[]
 }
 
 /**

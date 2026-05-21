@@ -2,6 +2,7 @@ import 'dotenv/config'
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import "./jobs";
 import { authMiddleware } from "./lib/auth";
 import { logApiError } from "./lib/http";
 import { assetsRouter } from "./routes/assets";
@@ -15,6 +16,7 @@ import { participantsRouter } from "./routes/participants";
 import { programmesRouter } from "./routes/programmes";
 import { publicRouter } from "./routes/public";
 import { templatesRouter } from "./routes/templates";
+import { webhooksRouter } from "./routes/webhooks";
 
 const app = new Hono();
 
@@ -28,10 +30,11 @@ app.use(
     credentials: true
   })
 );
-app.use("*", authMiddleware());
 
 app.get("/", (c) => c.json({ok: true}))
 app.get("/health", (c) => c.json({ ok: true, service: "obi-api" }));
+app.route("/webhooks", webhooksRouter);
+app.use("*", authMiddleware());
 app.route("/auth", authRouter);
 app.route("/programmes", programmesRouter);
 app.route("/events", eventsRouter);
@@ -50,7 +53,11 @@ app.onError((error, c) => {
   return c.json({ error: "Unexpected API error" }, 500);
 });
 
-const port = Number(Bun.env.OBI_APP_PORT);
+const port = Number(Bun.env.OBI_APP_PORT ?? 3001);
+
+if (!Number.isInteger(port) || port <= 0) {
+  throw new Error("OBI_APP_PORT must be a positive integer");
+}
 
 Bun.serve({
   port,

@@ -27,9 +27,7 @@ pool.on("error", (error) => {
       message: error.message,
       code: (error as { code?: string }).code
     })
-  );ssl: {
-    rejectUnauthorized: true  // equivalent to verify-full
-  }
+  );
 });
 
 const adapter = new PrismaPg(pool);

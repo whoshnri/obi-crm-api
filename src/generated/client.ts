@@ -52,11 +52,6 @@ export type Participant = Prisma.ParticipantModel
  */
 export type ProgrammeParticipant = Prisma.ProgrammeParticipantModel
 /**
- * Model ParticipantInvoice
- * 
- */
-export type ParticipantInvoice = Prisma.ParticipantInvoiceModel
-/**
  * Model Programme
  * 
  */
@@ -87,10 +82,10 @@ export type FormSubmission = Prisma.FormSubmissionModel
  */
 export type FormTable = Prisma.FormTableModel
 /**
- * Model Invoice
+ * Model ParticipantInvoice
  * 
  */
-export type Invoice = Prisma.InvoiceModel
+export type ParticipantInvoice = Prisma.ParticipantInvoiceModel
 /**
  * Model EmailTemplate
  * 

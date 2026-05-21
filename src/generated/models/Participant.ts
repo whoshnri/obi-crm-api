@@ -62,7 +62,6 @@ export type ParticipantCountAggregateOutputType = {
   socialLinks: number
   photoId: number
   stripeCustomerId: number
-  stripeInvoiceIds: number
   createdAt: number
   updatedAt: number
   notes: number
@@ -109,7 +108,6 @@ export type ParticipantCountAggregateInputType = {
   socialLinks?: true
   photoId?: true
   stripeCustomerId?: true
-  stripeInvoiceIds?: true
   createdAt?: true
   updatedAt?: true
   notes?: true
@@ -199,7 +197,6 @@ export type ParticipantGroupByOutputType = {
   socialLinks: string[]
   photoId: string | null
   stripeCustomerId: string | null
-  stripeInvoiceIds: string[]
   createdAt: Date
   updatedAt: Date
   notes: string | null
@@ -237,15 +234,14 @@ export type ParticipantWhereInput = {
   socialLinks?: Prisma.StringNullableListFilter<"Participant">
   photoId?: Prisma.StringNullableFilter<"Participant"> | string | null
   stripeCustomerId?: Prisma.StringNullableFilter<"Participant"> | string | null
-  stripeInvoiceIds?: Prisma.StringNullableListFilter<"Participant">
   createdAt?: Prisma.DateTimeFilter<"Participant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Participant"> | Date | string
   notes?: Prisma.StringNullableFilter<"Participant"> | string | null
   metadata?: Prisma.JsonFilter<"Participant">
   programmes?: Prisma.ProgrammeParticipantListRelationFilter
-  invoices?: Prisma.ParticipantInvoiceListRelationFilter
   eventStatuses?: Prisma.EventParticipantStatusListRelationFilter
   formSubmissions?: Prisma.FormSubmissionListRelationFilter
+  participantInvoices?: Prisma.ParticipantInvoiceListRelationFilter
 }
 
 export type ParticipantOrderByWithRelationInput = {
@@ -258,20 +254,20 @@ export type ParticipantOrderByWithRelationInput = {
   socialLinks?: Prisma.SortOrder
   photoId?: Prisma.SortOrderInput | Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  stripeInvoiceIds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrder
   programmes?: Prisma.ProgrammeParticipantOrderByRelationAggregateInput
-  invoices?: Prisma.ParticipantInvoiceOrderByRelationAggregateInput
   eventStatuses?: Prisma.EventParticipantStatusOrderByRelationAggregateInput
   formSubmissions?: Prisma.FormSubmissionOrderByRelationAggregateInput
+  participantInvoices?: Prisma.ParticipantInvoiceOrderByRelationAggregateInput
 }
 
 export type ParticipantWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  stripeCustomerId?: string
   AND?: Prisma.ParticipantWhereInput | Prisma.ParticipantWhereInput[]
   OR?: Prisma.ParticipantWhereInput[]
   NOT?: Prisma.ParticipantWhereInput | Prisma.ParticipantWhereInput[]
@@ -281,17 +277,15 @@ export type ParticipantWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringNullableFilter<"Participant"> | string | null
   socialLinks?: Prisma.StringNullableListFilter<"Participant">
   photoId?: Prisma.StringNullableFilter<"Participant"> | string | null
-  stripeCustomerId?: Prisma.StringNullableFilter<"Participant"> | string | null
-  stripeInvoiceIds?: Prisma.StringNullableListFilter<"Participant">
   createdAt?: Prisma.DateTimeFilter<"Participant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Participant"> | Date | string
   notes?: Prisma.StringNullableFilter<"Participant"> | string | null
   metadata?: Prisma.JsonFilter<"Participant">
   programmes?: Prisma.ProgrammeParticipantListRelationFilter
-  invoices?: Prisma.ParticipantInvoiceListRelationFilter
   eventStatuses?: Prisma.EventParticipantStatusListRelationFilter
   formSubmissions?: Prisma.FormSubmissionListRelationFilter
-}, "id" | "email">
+  participantInvoices?: Prisma.ParticipantInvoiceListRelationFilter
+}, "id" | "email" | "stripeCustomerId">
 
 export type ParticipantOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -303,7 +297,6 @@ export type ParticipantOrderByWithAggregationInput = {
   socialLinks?: Prisma.SortOrder
   photoId?: Prisma.SortOrderInput | Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  stripeInvoiceIds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -326,7 +319,6 @@ export type ParticipantScalarWhereWithAggregatesInput = {
   socialLinks?: Prisma.StringNullableListFilter<"Participant">
   photoId?: Prisma.StringNullableWithAggregatesFilter<"Participant"> | string | null
   stripeCustomerId?: Prisma.StringNullableWithAggregatesFilter<"Participant"> | string | null
-  stripeInvoiceIds?: Prisma.StringNullableListFilter<"Participant">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Participant"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Participant"> | Date | string
   notes?: Prisma.StringNullableWithAggregatesFilter<"Participant"> | string | null
@@ -343,15 +335,14 @@ export type ParticipantCreateInput = {
   socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
   photoId?: string | null
   stripeCustomerId?: string | null
-  stripeInvoiceIds?: Prisma.ParticipantCreatestripeInvoiceIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantCreateNestedManyWithoutParticipantInput
-  invoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutParticipantInput
   eventStatuses?: Prisma.EventParticipantStatusCreateNestedManyWithoutParticipantInput
   formSubmissions?: Prisma.FormSubmissionCreateNestedManyWithoutParticipantInput
+  participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantUncheckedCreateInput = {
@@ -364,15 +355,14 @@ export type ParticipantUncheckedCreateInput = {
   socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
   photoId?: string | null
   stripeCustomerId?: string | null
-  stripeInvoiceIds?: Prisma.ParticipantCreatestripeInvoiceIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutParticipantInput
-  invoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutParticipantInput
   eventStatuses?: Prisma.EventParticipantStatusUncheckedCreateNestedManyWithoutParticipantInput
   formSubmissions?: Prisma.FormSubmissionUncheckedCreateNestedManyWithoutParticipantInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantUpdateInput = {
@@ -385,15 +375,14 @@ export type ParticipantUpdateInput = {
   socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantUpdateManyWithoutParticipantNestedInput
-  invoices?: Prisma.ParticipantInvoiceUpdateManyWithoutParticipantNestedInput
   eventStatuses?: Prisma.EventParticipantStatusUpdateManyWithoutParticipantNestedInput
   formSubmissions?: Prisma.FormSubmissionUpdateManyWithoutParticipantNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantUncheckedUpdateInput = {
@@ -406,15 +395,14 @@ export type ParticipantUncheckedUpdateInput = {
   socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutParticipantNestedInput
-  invoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutParticipantNestedInput
   eventStatuses?: Prisma.EventParticipantStatusUncheckedUpdateManyWithoutParticipantNestedInput
   formSubmissions?: Prisma.FormSubmissionUncheckedUpdateManyWithoutParticipantNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantCreateManyInput = {
@@ -427,7 +415,6 @@ export type ParticipantCreateManyInput = {
   socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
   photoId?: string | null
   stripeCustomerId?: string | null
-  stripeInvoiceIds?: Prisma.ParticipantCreatestripeInvoiceIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: string | null
@@ -444,7 +431,6 @@ export type ParticipantUpdateManyMutationInput = {
   socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -461,7 +447,6 @@ export type ParticipantUncheckedUpdateManyInput = {
   socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -486,7 +471,6 @@ export type ParticipantCountOrderByAggregateInput = {
   socialLinks?: Prisma.SortOrder
   photoId?: Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrder
-  stripeInvoiceIds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -535,10 +519,6 @@ export type ParticipantCreatesocialLinksInput = {
   set: string[]
 }
 
-export type ParticipantCreatestripeInvoiceIdsInput = {
-  set: string[]
-}
-
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -548,11 +528,6 @@ export type NullableStringFieldUpdateOperationsInput = {
 }
 
 export type ParticipantUpdatesocialLinksInput = {
-  set?: string[]
-  push?: string | string[]
-}
-
-export type ParticipantUpdatestripeInvoiceIdsInput = {
   set?: string[]
   push?: string | string[]
 }
@@ -573,20 +548,6 @@ export type ParticipantUpdateOneRequiredWithoutProgrammesNestedInput = {
   upsert?: Prisma.ParticipantUpsertWithoutProgrammesInput
   connect?: Prisma.ParticipantWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ParticipantUpdateToOneWithWhereWithoutProgrammesInput, Prisma.ParticipantUpdateWithoutProgrammesInput>, Prisma.ParticipantUncheckedUpdateWithoutProgrammesInput>
-}
-
-export type ParticipantCreateNestedOneWithoutInvoicesInput = {
-  create?: Prisma.XOR<Prisma.ParticipantCreateWithoutInvoicesInput, Prisma.ParticipantUncheckedCreateWithoutInvoicesInput>
-  connectOrCreate?: Prisma.ParticipantCreateOrConnectWithoutInvoicesInput
-  connect?: Prisma.ParticipantWhereUniqueInput
-}
-
-export type ParticipantUpdateOneRequiredWithoutInvoicesNestedInput = {
-  create?: Prisma.XOR<Prisma.ParticipantCreateWithoutInvoicesInput, Prisma.ParticipantUncheckedCreateWithoutInvoicesInput>
-  connectOrCreate?: Prisma.ParticipantCreateOrConnectWithoutInvoicesInput
-  upsert?: Prisma.ParticipantUpsertWithoutInvoicesInput
-  connect?: Prisma.ParticipantWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ParticipantUpdateToOneWithWhereWithoutInvoicesInput, Prisma.ParticipantUpdateWithoutInvoicesInput>, Prisma.ParticipantUncheckedUpdateWithoutInvoicesInput>
 }
 
 export type ParticipantCreateNestedOneWithoutEventStatusesInput = {
@@ -619,6 +580,20 @@ export type ParticipantUpdateOneWithoutFormSubmissionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ParticipantUpdateToOneWithWhereWithoutFormSubmissionsInput, Prisma.ParticipantUpdateWithoutFormSubmissionsInput>, Prisma.ParticipantUncheckedUpdateWithoutFormSubmissionsInput>
 }
 
+export type ParticipantCreateNestedOneWithoutParticipantInvoicesInput = {
+  create?: Prisma.XOR<Prisma.ParticipantCreateWithoutParticipantInvoicesInput, Prisma.ParticipantUncheckedCreateWithoutParticipantInvoicesInput>
+  connectOrCreate?: Prisma.ParticipantCreateOrConnectWithoutParticipantInvoicesInput
+  connect?: Prisma.ParticipantWhereUniqueInput
+}
+
+export type ParticipantUpdateOneRequiredWithoutParticipantInvoicesNestedInput = {
+  create?: Prisma.XOR<Prisma.ParticipantCreateWithoutParticipantInvoicesInput, Prisma.ParticipantUncheckedCreateWithoutParticipantInvoicesInput>
+  connectOrCreate?: Prisma.ParticipantCreateOrConnectWithoutParticipantInvoicesInput
+  upsert?: Prisma.ParticipantUpsertWithoutParticipantInvoicesInput
+  connect?: Prisma.ParticipantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ParticipantUpdateToOneWithWhereWithoutParticipantInvoicesInput, Prisma.ParticipantUpdateWithoutParticipantInvoicesInput>, Prisma.ParticipantUncheckedUpdateWithoutParticipantInvoicesInput>
+}
+
 export type ParticipantCreateWithoutProgrammesInput = {
   id?: string
   name: string
@@ -629,14 +604,13 @@ export type ParticipantCreateWithoutProgrammesInput = {
   socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
   photoId?: string | null
   stripeCustomerId?: string | null
-  stripeInvoiceIds?: Prisma.ParticipantCreatestripeInvoiceIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  invoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutParticipantInput
   eventStatuses?: Prisma.EventParticipantStatusCreateNestedManyWithoutParticipantInput
   formSubmissions?: Prisma.FormSubmissionCreateNestedManyWithoutParticipantInput
+  participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantUncheckedCreateWithoutProgrammesInput = {
@@ -649,14 +623,13 @@ export type ParticipantUncheckedCreateWithoutProgrammesInput = {
   socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
   photoId?: string | null
   stripeCustomerId?: string | null
-  stripeInvoiceIds?: Prisma.ParticipantCreatestripeInvoiceIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  invoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutParticipantInput
   eventStatuses?: Prisma.EventParticipantStatusUncheckedCreateNestedManyWithoutParticipantInput
   formSubmissions?: Prisma.FormSubmissionUncheckedCreateNestedManyWithoutParticipantInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantCreateOrConnectWithoutProgrammesInput = {
@@ -685,14 +658,13 @@ export type ParticipantUpdateWithoutProgrammesInput = {
   socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  invoices?: Prisma.ParticipantInvoiceUpdateManyWithoutParticipantNestedInput
   eventStatuses?: Prisma.EventParticipantStatusUpdateManyWithoutParticipantNestedInput
   formSubmissions?: Prisma.FormSubmissionUpdateManyWithoutParticipantNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantUncheckedUpdateWithoutProgrammesInput = {
@@ -705,110 +677,13 @@ export type ParticipantUncheckedUpdateWithoutProgrammesInput = {
   socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  invoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutParticipantNestedInput
   eventStatuses?: Prisma.EventParticipantStatusUncheckedUpdateManyWithoutParticipantNestedInput
   formSubmissions?: Prisma.FormSubmissionUncheckedUpdateManyWithoutParticipantNestedInput
-}
-
-export type ParticipantCreateWithoutInvoicesInput = {
-  id?: string
-  name: string
-  email: string
-  organisation?: string | null
-  address?: string | null
-  phone?: string | null
-  socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
-  photoId?: string | null
-  stripeCustomerId?: string | null
-  stripeInvoiceIds?: Prisma.ParticipantCreatestripeInvoiceIdsInput | string[]
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  notes?: string | null
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  programmes?: Prisma.ProgrammeParticipantCreateNestedManyWithoutParticipantInput
-  eventStatuses?: Prisma.EventParticipantStatusCreateNestedManyWithoutParticipantInput
-  formSubmissions?: Prisma.FormSubmissionCreateNestedManyWithoutParticipantInput
-}
-
-export type ParticipantUncheckedCreateWithoutInvoicesInput = {
-  id?: string
-  name: string
-  email: string
-  organisation?: string | null
-  address?: string | null
-  phone?: string | null
-  socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
-  photoId?: string | null
-  stripeCustomerId?: string | null
-  stripeInvoiceIds?: Prisma.ParticipantCreatestripeInvoiceIdsInput | string[]
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  notes?: string | null
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  programmes?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutParticipantInput
-  eventStatuses?: Prisma.EventParticipantStatusUncheckedCreateNestedManyWithoutParticipantInput
-  formSubmissions?: Prisma.FormSubmissionUncheckedCreateNestedManyWithoutParticipantInput
-}
-
-export type ParticipantCreateOrConnectWithoutInvoicesInput = {
-  where: Prisma.ParticipantWhereUniqueInput
-  create: Prisma.XOR<Prisma.ParticipantCreateWithoutInvoicesInput, Prisma.ParticipantUncheckedCreateWithoutInvoicesInput>
-}
-
-export type ParticipantUpsertWithoutInvoicesInput = {
-  update: Prisma.XOR<Prisma.ParticipantUpdateWithoutInvoicesInput, Prisma.ParticipantUncheckedUpdateWithoutInvoicesInput>
-  create: Prisma.XOR<Prisma.ParticipantCreateWithoutInvoicesInput, Prisma.ParticipantUncheckedCreateWithoutInvoicesInput>
-  where?: Prisma.ParticipantWhereInput
-}
-
-export type ParticipantUpdateToOneWithWhereWithoutInvoicesInput = {
-  where?: Prisma.ParticipantWhereInput
-  data: Prisma.XOR<Prisma.ParticipantUpdateWithoutInvoicesInput, Prisma.ParticipantUncheckedUpdateWithoutInvoicesInput>
-}
-
-export type ParticipantUpdateWithoutInvoicesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  organisation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
-  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  programmes?: Prisma.ProgrammeParticipantUpdateManyWithoutParticipantNestedInput
-  eventStatuses?: Prisma.EventParticipantStatusUpdateManyWithoutParticipantNestedInput
-  formSubmissions?: Prisma.FormSubmissionUpdateManyWithoutParticipantNestedInput
-}
-
-export type ParticipantUncheckedUpdateWithoutInvoicesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  organisation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
-  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  programmes?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutParticipantNestedInput
-  eventStatuses?: Prisma.EventParticipantStatusUncheckedUpdateManyWithoutParticipantNestedInput
-  formSubmissions?: Prisma.FormSubmissionUncheckedUpdateManyWithoutParticipantNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantCreateWithoutEventStatusesInput = {
@@ -821,14 +696,13 @@ export type ParticipantCreateWithoutEventStatusesInput = {
   socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
   photoId?: string | null
   stripeCustomerId?: string | null
-  stripeInvoiceIds?: Prisma.ParticipantCreatestripeInvoiceIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantCreateNestedManyWithoutParticipantInput
-  invoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutParticipantInput
   formSubmissions?: Prisma.FormSubmissionCreateNestedManyWithoutParticipantInput
+  participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantUncheckedCreateWithoutEventStatusesInput = {
@@ -841,14 +715,13 @@ export type ParticipantUncheckedCreateWithoutEventStatusesInput = {
   socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
   photoId?: string | null
   stripeCustomerId?: string | null
-  stripeInvoiceIds?: Prisma.ParticipantCreatestripeInvoiceIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutParticipantInput
-  invoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutParticipantInput
   formSubmissions?: Prisma.FormSubmissionUncheckedCreateNestedManyWithoutParticipantInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantCreateOrConnectWithoutEventStatusesInput = {
@@ -877,14 +750,13 @@ export type ParticipantUpdateWithoutEventStatusesInput = {
   socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantUpdateManyWithoutParticipantNestedInput
-  invoices?: Prisma.ParticipantInvoiceUpdateManyWithoutParticipantNestedInput
   formSubmissions?: Prisma.FormSubmissionUpdateManyWithoutParticipantNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantUncheckedUpdateWithoutEventStatusesInput = {
@@ -897,14 +769,13 @@ export type ParticipantUncheckedUpdateWithoutEventStatusesInput = {
   socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutParticipantNestedInput
-  invoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutParticipantNestedInput
   formSubmissions?: Prisma.FormSubmissionUncheckedUpdateManyWithoutParticipantNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantCreateWithoutFormSubmissionsInput = {
@@ -917,14 +788,13 @@ export type ParticipantCreateWithoutFormSubmissionsInput = {
   socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
   photoId?: string | null
   stripeCustomerId?: string | null
-  stripeInvoiceIds?: Prisma.ParticipantCreatestripeInvoiceIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantCreateNestedManyWithoutParticipantInput
-  invoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutParticipantInput
   eventStatuses?: Prisma.EventParticipantStatusCreateNestedManyWithoutParticipantInput
+  participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantUncheckedCreateWithoutFormSubmissionsInput = {
@@ -937,14 +807,13 @@ export type ParticipantUncheckedCreateWithoutFormSubmissionsInput = {
   socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
   photoId?: string | null
   stripeCustomerId?: string | null
-  stripeInvoiceIds?: Prisma.ParticipantCreatestripeInvoiceIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutParticipantInput
-  invoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutParticipantInput
   eventStatuses?: Prisma.EventParticipantStatusUncheckedCreateNestedManyWithoutParticipantInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantCreateOrConnectWithoutFormSubmissionsInput = {
@@ -973,14 +842,13 @@ export type ParticipantUpdateWithoutFormSubmissionsInput = {
   socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantUpdateManyWithoutParticipantNestedInput
-  invoices?: Prisma.ParticipantInvoiceUpdateManyWithoutParticipantNestedInput
   eventStatuses?: Prisma.EventParticipantStatusUpdateManyWithoutParticipantNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantUncheckedUpdateWithoutFormSubmissionsInput = {
@@ -993,14 +861,105 @@ export type ParticipantUncheckedUpdateWithoutFormSubmissionsInput = {
   socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeInvoiceIds?: Prisma.ParticipantUpdatestripeInvoiceIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   programmes?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutParticipantNestedInput
-  invoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutParticipantNestedInput
   eventStatuses?: Prisma.EventParticipantStatusUncheckedUpdateManyWithoutParticipantNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutParticipantNestedInput
+}
+
+export type ParticipantCreateWithoutParticipantInvoicesInput = {
+  id?: string
+  name: string
+  email: string
+  organisation?: string | null
+  address?: string | null
+  phone?: string | null
+  socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
+  photoId?: string | null
+  stripeCustomerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notes?: string | null
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  programmes?: Prisma.ProgrammeParticipantCreateNestedManyWithoutParticipantInput
+  eventStatuses?: Prisma.EventParticipantStatusCreateNestedManyWithoutParticipantInput
+  formSubmissions?: Prisma.FormSubmissionCreateNestedManyWithoutParticipantInput
+}
+
+export type ParticipantUncheckedCreateWithoutParticipantInvoicesInput = {
+  id?: string
+  name: string
+  email: string
+  organisation?: string | null
+  address?: string | null
+  phone?: string | null
+  socialLinks?: Prisma.ParticipantCreatesocialLinksInput | string[]
+  photoId?: string | null
+  stripeCustomerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notes?: string | null
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  programmes?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutParticipantInput
+  eventStatuses?: Prisma.EventParticipantStatusUncheckedCreateNestedManyWithoutParticipantInput
+  formSubmissions?: Prisma.FormSubmissionUncheckedCreateNestedManyWithoutParticipantInput
+}
+
+export type ParticipantCreateOrConnectWithoutParticipantInvoicesInput = {
+  where: Prisma.ParticipantWhereUniqueInput
+  create: Prisma.XOR<Prisma.ParticipantCreateWithoutParticipantInvoicesInput, Prisma.ParticipantUncheckedCreateWithoutParticipantInvoicesInput>
+}
+
+export type ParticipantUpsertWithoutParticipantInvoicesInput = {
+  update: Prisma.XOR<Prisma.ParticipantUpdateWithoutParticipantInvoicesInput, Prisma.ParticipantUncheckedUpdateWithoutParticipantInvoicesInput>
+  create: Prisma.XOR<Prisma.ParticipantCreateWithoutParticipantInvoicesInput, Prisma.ParticipantUncheckedCreateWithoutParticipantInvoicesInput>
+  where?: Prisma.ParticipantWhereInput
+}
+
+export type ParticipantUpdateToOneWithWhereWithoutParticipantInvoicesInput = {
+  where?: Prisma.ParticipantWhereInput
+  data: Prisma.XOR<Prisma.ParticipantUpdateWithoutParticipantInvoicesInput, Prisma.ParticipantUncheckedUpdateWithoutParticipantInvoicesInput>
+}
+
+export type ParticipantUpdateWithoutParticipantInvoicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  organisation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  programmes?: Prisma.ProgrammeParticipantUpdateManyWithoutParticipantNestedInput
+  eventStatuses?: Prisma.EventParticipantStatusUpdateManyWithoutParticipantNestedInput
+  formSubmissions?: Prisma.FormSubmissionUpdateManyWithoutParticipantNestedInput
+}
+
+export type ParticipantUncheckedUpdateWithoutParticipantInvoicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  organisation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialLinks?: Prisma.ParticipantUpdatesocialLinksInput | string[]
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  programmes?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutParticipantNestedInput
+  eventStatuses?: Prisma.EventParticipantStatusUncheckedUpdateManyWithoutParticipantNestedInput
+  formSubmissions?: Prisma.FormSubmissionUncheckedUpdateManyWithoutParticipantNestedInput
 }
 
 
@@ -1010,16 +969,16 @@ export type ParticipantUncheckedUpdateWithoutFormSubmissionsInput = {
 
 export type ParticipantCountOutputType = {
   programmes: number
-  invoices: number
   eventStatuses: number
   formSubmissions: number
+  participantInvoices: number
 }
 
 export type ParticipantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   programmes?: boolean | ParticipantCountOutputTypeCountProgrammesArgs
-  invoices?: boolean | ParticipantCountOutputTypeCountInvoicesArgs
   eventStatuses?: boolean | ParticipantCountOutputTypeCountEventStatusesArgs
   formSubmissions?: boolean | ParticipantCountOutputTypeCountFormSubmissionsArgs
+  participantInvoices?: boolean | ParticipantCountOutputTypeCountParticipantInvoicesArgs
 }
 
 /**
@@ -1042,13 +1001,6 @@ export type ParticipantCountOutputTypeCountProgrammesArgs<ExtArgs extends runtim
 /**
  * ParticipantCountOutputType without action
  */
-export type ParticipantCountOutputTypeCountInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ParticipantInvoiceWhereInput
-}
-
-/**
- * ParticipantCountOutputType without action
- */
 export type ParticipantCountOutputTypeCountEventStatusesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EventParticipantStatusWhereInput
 }
@@ -1058,6 +1010,13 @@ export type ParticipantCountOutputTypeCountEventStatusesArgs<ExtArgs extends run
  */
 export type ParticipantCountOutputTypeCountFormSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FormSubmissionWhereInput
+}
+
+/**
+ * ParticipantCountOutputType without action
+ */
+export type ParticipantCountOutputTypeCountParticipantInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ParticipantInvoiceWhereInput
 }
 
 
@@ -1071,15 +1030,14 @@ export type ParticipantSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   socialLinks?: boolean
   photoId?: boolean
   stripeCustomerId?: boolean
-  stripeInvoiceIds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   notes?: boolean
   metadata?: boolean
   programmes?: boolean | Prisma.Participant$programmesArgs<ExtArgs>
-  invoices?: boolean | Prisma.Participant$invoicesArgs<ExtArgs>
   eventStatuses?: boolean | Prisma.Participant$eventStatusesArgs<ExtArgs>
   formSubmissions?: boolean | Prisma.Participant$formSubmissionsArgs<ExtArgs>
+  participantInvoices?: boolean | Prisma.Participant$participantInvoicesArgs<ExtArgs>
   _count?: boolean | Prisma.ParticipantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["participant"]>
 
@@ -1093,7 +1051,6 @@ export type ParticipantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   socialLinks?: boolean
   photoId?: boolean
   stripeCustomerId?: boolean
-  stripeInvoiceIds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   notes?: boolean
@@ -1110,7 +1067,6 @@ export type ParticipantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   socialLinks?: boolean
   photoId?: boolean
   stripeCustomerId?: boolean
-  stripeInvoiceIds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   notes?: boolean
@@ -1127,19 +1083,18 @@ export type ParticipantSelectScalar = {
   socialLinks?: boolean
   photoId?: boolean
   stripeCustomerId?: boolean
-  stripeInvoiceIds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   notes?: boolean
   metadata?: boolean
 }
 
-export type ParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "organisation" | "address" | "phone" | "socialLinks" | "photoId" | "stripeCustomerId" | "stripeInvoiceIds" | "createdAt" | "updatedAt" | "notes" | "metadata", ExtArgs["result"]["participant"]>
+export type ParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "organisation" | "address" | "phone" | "socialLinks" | "photoId" | "stripeCustomerId" | "createdAt" | "updatedAt" | "notes" | "metadata", ExtArgs["result"]["participant"]>
 export type ParticipantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   programmes?: boolean | Prisma.Participant$programmesArgs<ExtArgs>
-  invoices?: boolean | Prisma.Participant$invoicesArgs<ExtArgs>
   eventStatuses?: boolean | Prisma.Participant$eventStatusesArgs<ExtArgs>
   formSubmissions?: boolean | Prisma.Participant$formSubmissionsArgs<ExtArgs>
+  participantInvoices?: boolean | Prisma.Participant$participantInvoicesArgs<ExtArgs>
   _count?: boolean | Prisma.ParticipantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ParticipantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1149,9 +1104,9 @@ export type $ParticipantPayload<ExtArgs extends runtime.Types.Extensions.Interna
   name: "Participant"
   objects: {
     programmes: Prisma.$ProgrammeParticipantPayload<ExtArgs>[]
-    invoices: Prisma.$ParticipantInvoicePayload<ExtArgs>[]
     eventStatuses: Prisma.$EventParticipantStatusPayload<ExtArgs>[]
     formSubmissions: Prisma.$FormSubmissionPayload<ExtArgs>[]
+    participantInvoices: Prisma.$ParticipantInvoicePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1163,7 +1118,6 @@ export type $ParticipantPayload<ExtArgs extends runtime.Types.Extensions.Interna
     socialLinks: string[]
     photoId: string | null
     stripeCustomerId: string | null
-    stripeInvoiceIds: string[]
     createdAt: Date
     updatedAt: Date
     notes: string | null
@@ -1563,9 +1517,9 @@ readonly fields: ParticipantFieldRefs;
 export interface Prisma__ParticipantClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   programmes<T extends Prisma.Participant$programmesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participant$programmesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgrammeParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  invoices<T extends Prisma.Participant$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participant$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipantInvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   eventStatuses<T extends Prisma.Participant$eventStatusesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participant$eventStatusesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventParticipantStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   formSubmissions<T extends Prisma.Participant$formSubmissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participant$formSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  participantInvoices<T extends Prisma.Participant$participantInvoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participant$participantInvoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipantInvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1604,7 +1558,6 @@ export interface ParticipantFieldRefs {
   readonly socialLinks: Prisma.FieldRef<"Participant", 'String[]'>
   readonly photoId: Prisma.FieldRef<"Participant", 'String'>
   readonly stripeCustomerId: Prisma.FieldRef<"Participant", 'String'>
-  readonly stripeInvoiceIds: Prisma.FieldRef<"Participant", 'String[]'>
   readonly createdAt: Prisma.FieldRef<"Participant", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Participant", 'DateTime'>
   readonly notes: Prisma.FieldRef<"Participant", 'String'>
@@ -2026,30 +1979,6 @@ export type Participant$programmesArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
- * Participant.invoices
- */
-export type Participant$invoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ParticipantInvoice
-   */
-  select?: Prisma.ParticipantInvoiceSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ParticipantInvoice
-   */
-  omit?: Prisma.ParticipantInvoiceOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ParticipantInvoiceInclude<ExtArgs> | null
-  where?: Prisma.ParticipantInvoiceWhereInput
-  orderBy?: Prisma.ParticipantInvoiceOrderByWithRelationInput | Prisma.ParticipantInvoiceOrderByWithRelationInput[]
-  cursor?: Prisma.ParticipantInvoiceWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ParticipantInvoiceScalarFieldEnum | Prisma.ParticipantInvoiceScalarFieldEnum[]
-}
-
-/**
  * Participant.eventStatuses
  */
 export type Participant$eventStatusesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2095,6 +2024,30 @@ export type Participant$formSubmissionsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.FormSubmissionScalarFieldEnum | Prisma.FormSubmissionScalarFieldEnum[]
+}
+
+/**
+ * Participant.participantInvoices
+ */
+export type Participant$participantInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ParticipantInvoice
+   */
+  select?: Prisma.ParticipantInvoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ParticipantInvoice
+   */
+  omit?: Prisma.ParticipantInvoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ParticipantInvoiceInclude<ExtArgs> | null
+  where?: Prisma.ParticipantInvoiceWhereInput
+  orderBy?: Prisma.ParticipantInvoiceOrderByWithRelationInput | Prisma.ParticipantInvoiceOrderByWithRelationInput[]
+  cursor?: Prisma.ParticipantInvoiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ParticipantInvoiceScalarFieldEnum | Prisma.ParticipantInvoiceScalarFieldEnum[]
 }
 
 /**

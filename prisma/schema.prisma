@@ -22,14 +22,9 @@ enum StepStatus {
 
 enum EventBaseType {
   send_email
+  send_invoice
 }
 
-enum EventInstanceType {
-  send_invoice
-  send_prework_email
-  send_admin_reminder
-  send_form
-}
 
 enum EventStatus {
   pending
@@ -68,54 +63,39 @@ enum OpportunityEventStatus {
 }
 
 model Participant {
-  id               String                   @id @default(cuid())
-  name             String
-  email            String                   @unique
-  organisation     String?
-  address          String?
-  phone            String?
-  socialLinks      String[]                 @default([])
-  photoId          String?
-  stripeCustomerId String?
-  stripeInvoiceIds String[]                 @default([])
-  createdAt        DateTime                 @default(now())
-  updatedAt        DateTime                 @updatedAt
-  notes            String?
-  metadata         Json                     @default("{}")
-  programmes       ProgrammeParticipant[]
-  invoices         ParticipantInvoice[]
-  eventStatuses    EventParticipantStatus[]
-  formSubmissions  FormSubmission[]
+  id                  String                   @id @default(cuid())
+  name                String
+  email               String                   @unique
+  organisation        String?
+  address             String?
+  phone               String?
+  socialLinks         String[]                 @default([])
+  photoId             String?
+  stripeCustomerId    String?                  @unique
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @updatedAt
+  notes               String?
+  metadata            Json                     @default("{}")
+  programmes          ProgrammeParticipant[]
+  eventStatuses       EventParticipantStatus[]
+  formSubmissions     FormSubmission[]
+  participantInvoices ParticipantInvoice[]
 }
 
 model ProgrammeParticipant {
   id            String        @id @default(cuid())
   programmeId   String
   participantId String
+  invoiceId     String?       @unique
   paymentStatus PaymentStatus @default(not_invoiced)
   metadata      Json          @default("{}")
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   programme     Programme     @relation(fields: [programmeId], references: [id], onDelete: Cascade)
   participant   Participant   @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  invoice       ParticipantInvoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
 
   @@unique([programmeId, participantId])
-  @@index([participantId])
-}
-
-model ParticipantInvoice {
-  id            String      @id @default(cuid())
-  invoiceId     String
-  invoiceTotal  Float
-  programmeId   String
-  participantId String
-  createdAt     DateTime    @default(now())
-  invoice       Invoice     @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  programme     Programme   @relation(fields: [programmeId], references: [id], onDelete: Cascade)
-  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
-
-  @@unique([invoiceId, participantId])
-  @@index([programmeId])
   @@index([participantId])
 }
 
@@ -129,7 +109,6 @@ model Programme {
   events                Event[]
   formTables            FormTable[]
   forms                 Form[]
-  invoices              Invoice[]
   participantInvoices   ParticipantInvoice[]
   emailTemplates        EmailTemplate[]
 }
@@ -139,7 +118,6 @@ model Event {
   name                String
   programmeId         String
   baseType            EventBaseType
-  instanceType        EventInstanceType
   scheduledAt         DateTime
   status              EventStatus              @default(pending)
   config              Json
@@ -182,14 +160,14 @@ model Form {
 }
 
 model FormSubmission {
-  id          String       @id @default(cuid())
-  formId      String
+  id           String       @id @default(cuid())
+  formId       String
   respondentId String?
-  answers     Json
-  metadata    Json         @default("{}")
-  createdAt   DateTime     @default(now())
-  form        Form         @relation(fields: [formId], references: [id], onDelete: Cascade)
-  participant Participant? @relation(fields: [respondentId], references: [id], onDelete: SetNull)
+  answers      Json
+  metadata     Json         @default("{}")
+  createdAt    DateTime     @default(now())
+  form         Form         @relation(fields: [formId], references: [id], onDelete: Cascade)
+  participant  Participant? @relation(fields: [respondentId], references: [id], onDelete: SetNull)
 
   @@index([formId])
   @@index([respondentId])
@@ -206,17 +184,29 @@ model FormTable {
   event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
-model Invoice {
-  id               String               @id @default(cuid())
-  programmeId      String
-  amount           Float
-  currency         String               @default("GBP")
-  status           InvoiceStatus        @default(draft)
-  dueDate          DateTime
-  paidAt           DateTime?
-  stripeInvoiceUrl String?
-  programme        Programme            @relation(fields: [programmeId], references: [id], onDelete: Cascade)
-  participants     ParticipantInvoice[]
+model ParticipantInvoice {
+  id                   String                @id @default(cuid())
+  programmeId          String
+  participantId        String
+  amount               Float
+  currency             String                @default("GBP")
+  status               InvoiceStatus         @default(draft)
+  dueDate              DateTime
+  paidAt               DateTime?
+  stripeInvoiceId      String?               @unique
+  stripeInvoiceUrl     String?
+  stripeInvoiceItemIds String[]              @default([])
+  lineItems            Json                  @default("[]")
+  metadata             Json                  @default("{}")
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  participant          Participant           @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  programme            Programme             @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  programmeParticipant ProgrammeParticipant?
+
+  @@unique([programmeId, participantId])
+  @@index([participantId])
+  @@index([programmeId])
 }
 
 model EmailTemplate {
@@ -229,27 +219,27 @@ model EmailTemplate {
 }
 
 model Admin {
-  id                   String    @id @default(cuid())
+  id                   String         @id @default(cuid())
   name                 String
-  email                String    @unique
-  role                 AdminRole @default(read_only)
+  email                String         @unique
+  role                 AdminRole      @default(read_only)
   password             String
-  notificationsEnabled Boolean   @default(true)
+  notificationsEnabled Boolean        @default(true)
   photoId              String?
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
   sessions             AdminSession[]
 }
 
 model AdminSession {
-  id           String   @id @default(cuid())
-  adminId      String
-  tokenHash    String   @unique
-  expiresAt    DateTime
-  revokedAt    DateTime?
-  createdAt    DateTime @default(now())
-  lastUsedAt    DateTime @default(now())
-  admin        Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  id         String    @id @default(cuid())
+  adminId    String
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime  @default(now())
+  admin      Admin     @relation(fields: [adminId], references: [id], onDelete: Cascade)
 
   @@index([adminId])
   @@index([expiresAt])
@@ -280,38 +270,38 @@ model OpportunityPipeline {
 }
 
 model OpportunityPipelineStep {
-  id          String                @id @default(cuid())
-  pipelineId  String
-  name        String
-  type        String                @default("send_email")
-  delayDays   Int                   @default(0)
-  config      Json                  @default("{}")
-  createdAt   DateTime              @default(now())
-  updatedAt   DateTime              @updatedAt
-  pipeline    OpportunityPipeline   @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
-  events      OpportunityEvent[]
+  id         String              @id @default(cuid())
+  pipelineId String
+  name       String
+  type       String              @default("send_email")
+  delayDays  Int                 @default(0)
+  config     Json                @default("{}")
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  pipeline   OpportunityPipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  events     OpportunityEvent[]
 
   @@index([pipelineId])
 }
 
 model OpportunityEvent {
-  id             String                 @id @default(cuid())
+  id             String                   @id @default(cuid())
   opportunityId  String
   pipelineId     String?
   pipelineStepId String?
   name           String
-  type           String                 @default("send_email")
+  type           String                   @default("send_email")
   scheduledAt    DateTime
-  status         OpportunityEventStatus @default(pending)
-  cronJobId      String                 @unique
-  config         Json                   @default("{}")
+  status         OpportunityEventStatus   @default(pending)
+  cronJobId      String                   @unique
+  config         Json                     @default("{}")
   error          String?
   completedAt    DateTime?
   cancelledAt    DateTime?
-  createdAt      DateTime               @default(now())
-  updatedAt      DateTime               @updatedAt
-  opportunity    Opportunity            @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
-  pipeline       OpportunityPipeline?    @relation(fields: [pipelineId], references: [id], onDelete: SetNull)
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+  opportunity    Opportunity              @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  pipeline       OpportunityPipeline?     @relation(fields: [pipelineId], references: [id], onDelete: SetNull)
   pipelineStep   OpportunityPipelineStep? @relation(fields: [pipelineStepId], references: [id], onDelete: SetNull)
 
   @@index([opportunityId])

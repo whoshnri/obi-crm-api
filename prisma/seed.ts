@@ -20,7 +20,7 @@ async function main() {
     where: { email },
     update: {},
     create: {
-      name: "Super Admin",
+      name: "Henry Bassey",
       email,
       password,
       role: AdminRole.super,

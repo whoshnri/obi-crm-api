@@ -1,8 +1,10 @@
 import { Hono } from "hono";
-import { EventBaseType, EventInstanceType, EventStatus, Prisma } from "../generated/client";
+import { EventBaseType, EventStatus, Prisma } from "../generated/client";
 import { prisma } from "../lib/prisma";
+import { redis } from "../lib/redis";
 import { handleRoute } from "../lib/http";
 import { serializeProgramme } from "../lib/serializers";
+import { EVENT_SCHEDULE_HASH } from "../jobs/utils";
 import {
   createProgrammeSchema,
   eventFlowSchema,
@@ -11,7 +13,6 @@ import {
   saveProgrammeEventFlowStateSchema,
   updateProgrammeSchema
 } from "../lib/schemas";
-import { sendEmailEvent } from "../lib/email/send-event-email";
 
 const defaultParticipantDefinition = {
   fields: []
@@ -40,6 +41,66 @@ export const programmesRouter = new Hono()
       return serializeProgramme(programme);
     })
   )
+  .get("/:programmeId/events/:eventId/status", (c) =>
+    handleRoute(c, async () => {
+      const { programmeId, eventId } = c.req.param();
+      const event = await prisma.event.findFirst({
+        where: { id: eventId, programmeId },
+        select: { id: true, name: true, status: true, scheduledAt: true, baseType: true }
+      });
+
+      if (!event) return null;
+
+      const programmeParticipants = await prisma.programmeParticipant.findMany({
+        where: { programmeId },
+        include: {
+          participant: true
+        },
+        orderBy: { createdAt: "asc" }
+      });
+
+      const statuses = await prisma.eventParticipantStatus.findMany({
+        where: {
+          eventId,
+          participantId: { in: programmeParticipants.map((entry) => entry.participantId) }
+        }
+      });
+      const statusByParticipantId = new Map(statuses.map((status) => [status.participantId, status]));
+
+      const participants = programmeParticipants.map((entry) => {
+        const status = statusByParticipantId.get(entry.participantId);
+        const metadata =
+          typeof status?.metadata === "object" && status.metadata !== null && !Array.isArray(status.metadata)
+            ? status.metadata
+            : {};
+        return {
+          participantId: entry.participantId,
+          name: entry.participant.name,
+          email: entry.participant.email,
+          status: status?.status ?? "not_sent",
+          metadata
+        };
+      });
+
+      const sent = participants.filter((participant) => participant.status === "sent" || participant.status === "completed").length;
+      const failed = participants.filter((participant) => "error" in participant.metadata).length;
+      const pending = participants.length - sent - failed;
+
+      return {
+        event: {
+          ...event,
+          scheduledAt: event.scheduledAt.toISOString()
+        },
+        participants,
+        summary: {
+          total: participants.length,
+          sent,
+          failed,
+          pending
+        }
+      };
+    })
+  )
   .get("/:id", (c) =>
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
@@ -48,7 +109,7 @@ export const programmesRouter = new Hono()
         include: {
           events: { orderBy: { scheduledAt: "asc" } },
           formTables: true,
-          invoices: true,
+          participantInvoices: true,
           emailTemplates: true
         }
       });
@@ -101,14 +162,13 @@ export const programmesRouter = new Hono()
 
       if (eventsWithIds.length > 0) {
         await prisma.$executeRaw`
-          INSERT INTO "Event" ("id", "name", "programmeId", "baseType", "instanceType", "scheduledAt", "status", "config")
+          INSERT INTO "Event" ("id", "name", "programmeId", "baseType", "scheduledAt", "status", "config")
           VALUES ${Prisma.join(
             eventsWithIds.map((event) => Prisma.sql`(
               ${event.id},
               ${event.name},
               ${id},
               ${(event.baseType as EventBaseType)}::"EventBaseType",
-              ${(event.instanceType ?? "send_admin_reminder") as EventInstanceType}::"EventInstanceType",
               ${new Date(event.scheduledAt)},
               ${(event.status ?? "pending") as EventStatus}::"EventStatus",
               ${JSON.stringify(event.config ?? {})}::jsonb
@@ -117,7 +177,6 @@ export const programmesRouter = new Hono()
           ON CONFLICT ("id") DO UPDATE SET
             "name" = EXCLUDED."name",
             "baseType" = EXCLUDED."baseType",
-            "instanceType" = EXCLUDED."instanceType",
             "scheduledAt" = EXCLUDED."scheduledAt",
             "status" = EXCLUDED."status",
             "config" = EXCLUDED."config"
@@ -155,46 +214,12 @@ export const programmesRouter = new Hono()
         where: { programmeId: id, status: "pending" },
         select: { id: true, scheduledAt: true }
       });
-      const cron = (Bun as any).cron;
 
-      if (typeof cron === "function") {
-        for (const event of events) {
-          const jobId = `obi-programme-${id}-${event.id}`;
-          await cron(jobId, event.scheduledAt, () => {
-            void (async () => {
-              const scheduledEvent = await prisma.event.findUnique({
-                where: { id: event.id },
-                include: {
-                  programme: {
-                    select: {
-                      id: true,
-                      name: true,
-                      startDate: true,
-                      participants: { include: { participant: true } }
-                    }
-                  }
-                }
-              });
-              if (!scheduledEvent) return;
-
-              await prisma.event.update({ where: { id: event.id }, data: { status: EventStatus.processing } });
-              try {
-                await sendEmailEvent({
-                  event: scheduledEvent,
-                  programme: scheduledEvent.programme,
-                  participants: scheduledEvent.programme.participants.map((entry) => ({
-                    ...entry.participant,
-                    programmes: [{ programmeId: entry.programmeId, paymentStatus: entry.paymentStatus }]
-                  }))
-                });
-                await prisma.event.update({ where: { id: event.id }, data: { status: EventStatus.completed } });
-              } catch (error) {
-                console.error("[programme:cron:error]", JSON.stringify({ jobId, eventId: event.id, error: error instanceof Error ? error.message : String(error) }));
-                await prisma.event.update({ where: { id: event.id }, data: { status: EventStatus.failed } });
-              }
-            })();
-          });
-        }
+      if (events.length > 0) {
+        await redis.hset(
+          EVENT_SCHEDULE_HASH,
+          Object.fromEntries(events.map((event) => [event.id, event.scheduledAt.toISOString()]))
+        );
       }
 
       return { ok: true, scheduled: events.length };

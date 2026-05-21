@@ -1,9 +1,16 @@
 import { Hono } from "hono";
+import type { Prisma } from "../generated/client";
 import { prisma } from "../lib/prisma";
 import { handleRoute } from "../lib/http";
 import { serializeForm, serializeFormSubmission } from "../lib/serializers";
 import { createFormSchema, createSubmissionSchema, updateFormSchema } from "../lib/form-contract";
 import { idParamSchema, programmeQuerySchema } from "../lib/schemas";
+
+function isDuplicateFormSlugError(error: unknown) {
+  if (typeof error !== "object" || error === null) return false;
+  const prismaError = error as { code?: string; meta?: { target?: unknown } };
+  return prismaError.code === "P2002" && Array.isArray(prismaError.meta?.target) && prismaError.meta.target.includes("slug");
+}
 
 export const formsRouter = new Hono()
   .get("/", (c) =>
@@ -19,24 +26,25 @@ export const formsRouter = new Hono()
   .post("/", (c) =>
     handleRoute(c, async () => {
       const input = createFormSchema.parse(await c.req.json());
-      const id = crypto.randomUUID();
-      const rows = await prisma.$queryRaw<Array<Parameters<typeof serializeForm>[0]>>`
-        INSERT INTO "Form" ("id", "programmeId", "eventId", "slug", "name", "description", "status", "sections")
-        VALUES (
-          ${id},
-          ${input.programmeId ?? null},
-          ${input.eventId ?? null},
-          ${input.slug},
-          ${input.name},
-          ${input.description ?? null},
-          ${input.status},
-          ${JSON.stringify(input.sections)}::jsonb
-        )
-        RETURNING "id", "programmeId", "eventId", "slug", "name", "description", "status", "sections", "createdAt", "updatedAt"
-      `;
-      const form = rows[0];
-      if (!form) throw new Error("Form was not created.");
-      return serializeForm(form);
+      try {
+        const form = await prisma.form.create({
+          data: {
+            programmeId: input.programmeId,
+            eventId: input.eventId ?? null,
+            slug: input.slug,
+            name: input.name,
+            description: input.description ?? null,
+            status: input.status,
+            sections: input.sections as Prisma.InputJsonValue
+          }
+        });
+        return serializeForm(form);
+      } catch (error) {
+        if (isDuplicateFormSlugError(error)) {
+          return c.json({ error: "A form with this slug already exists." }, 409);
+        }
+        throw error;
+      }
     })
   )
   .get("/slug/:slug", (c) =>

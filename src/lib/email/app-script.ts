@@ -10,7 +10,7 @@ export type AppScriptEmailResult = {
   error?: string;
 };
 
-const EMAIL_APP_SCRIPT_URL = Bun.env.OBI_EMAIL_APP_SCRIPT_URL ?? Bun.env.NEXT_PUBLIC_APP_SCRIPT_URL;
+const EMAIL_APP_SCRIPT_URL = process.env.OBI_EMAIL_APP_SCRIPT_URL ?? process.env.NEXT_PUBLIC_APP_SCRIPT_URL;
 
 export async function sendAppScriptEmail(payload: AppScriptEmailPayload) {
   if (!EMAIL_APP_SCRIPT_URL) {

@@ -53,14 +53,13 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Participant: 'Participant',
   ProgrammeParticipant: 'ProgrammeParticipant',
-  ParticipantInvoice: 'ParticipantInvoice',
   Programme: 'Programme',
   Event: 'Event',
   EventParticipantStatus: 'EventParticipantStatus',
   Form: 'Form',
   FormSubmission: 'FormSubmission',
   FormTable: 'FormTable',
-  Invoice: 'Invoice',
+  ParticipantInvoice: 'ParticipantInvoice',
   EmailTemplate: 'EmailTemplate',
   Admin: 'Admin',
   AdminSession: 'AdminSession',
@@ -96,7 +95,6 @@ export const ParticipantScalarFieldEnum = {
   socialLinks: 'socialLinks',
   photoId: 'photoId',
   stripeCustomerId: 'stripeCustomerId',
-  stripeInvoiceIds: 'stripeInvoiceIds',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   notes: 'notes',
@@ -110,6 +108,7 @@ export const ProgrammeParticipantScalarFieldEnum = {
   id: 'id',
   programmeId: 'programmeId',
   participantId: 'participantId',
+  invoiceId: 'invoiceId',
   paymentStatus: 'paymentStatus',
   metadata: 'metadata',
   createdAt: 'createdAt',
@@ -117,18 +116,6 @@ export const ProgrammeParticipantScalarFieldEnum = {
 } as const
 
 export type ProgrammeParticipantScalarFieldEnum = (typeof ProgrammeParticipantScalarFieldEnum)[keyof typeof ProgrammeParticipantScalarFieldEnum]
-
-
-export const ParticipantInvoiceScalarFieldEnum = {
-  id: 'id',
-  invoiceId: 'invoiceId',
-  invoiceTotal: 'invoiceTotal',
-  programmeId: 'programmeId',
-  participantId: 'participantId',
-  createdAt: 'createdAt'
-} as const
-
-export type ParticipantInvoiceScalarFieldEnum = (typeof ParticipantInvoiceScalarFieldEnum)[keyof typeof ParticipantInvoiceScalarFieldEnum]
 
 
 export const ProgrammeScalarFieldEnum = {
@@ -147,7 +134,6 @@ export const EventScalarFieldEnum = {
   name: 'name',
   programmeId: 'programmeId',
   baseType: 'baseType',
-  instanceType: 'instanceType',
   scheduledAt: 'scheduledAt',
   status: 'status',
   config: 'config',
@@ -210,18 +196,25 @@ export const FormTableScalarFieldEnum = {
 export type FormTableScalarFieldEnum = (typeof FormTableScalarFieldEnum)[keyof typeof FormTableScalarFieldEnum]
 
 
-export const InvoiceScalarFieldEnum = {
+export const ParticipantInvoiceScalarFieldEnum = {
   id: 'id',
   programmeId: 'programmeId',
+  participantId: 'participantId',
   amount: 'amount',
   currency: 'currency',
   status: 'status',
   dueDate: 'dueDate',
   paidAt: 'paidAt',
-  stripeInvoiceUrl: 'stripeInvoiceUrl'
+  stripeInvoiceId: 'stripeInvoiceId',
+  stripeInvoiceUrl: 'stripeInvoiceUrl',
+  stripeInvoiceItemIds: 'stripeInvoiceItemIds',
+  lineItems: 'lineItems',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
-export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
+export type ParticipantInvoiceScalarFieldEnum = (typeof ParticipantInvoiceScalarFieldEnum)[keyof typeof ParticipantInvoiceScalarFieldEnum]
 
 
 export const EmailTemplateScalarFieldEnum = {

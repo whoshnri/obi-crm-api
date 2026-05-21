@@ -1,10 +1,11 @@
 import { Hono } from "hono";
-import { EventBaseType, EventInstanceType, EventStatus } from "../generated/client";
+import { EventBaseType, EventStatus, Prisma } from "../generated/client";
 import { prisma } from "../lib/prisma";
+import { redis } from "../lib/redis";
 import { handleRoute } from "../lib/http";
 import { serializeEvent } from "../lib/serializers";
+import { EVENT_SCHEDULE_HASH } from "../jobs/utils";
 import { createEventSchema, idParamSchema, programmeQuerySchema, updateEventSchema } from "../lib/schemas";
-import { sendEmailEvent } from "../lib/email/send-event-email";
 
 export const eventsRouter = new Hono()
   .get("/", (c) =>
@@ -25,10 +26,9 @@ export const eventsRouter = new Hono()
           name: input.name,
           programmeId: input.programmeId,
           baseType: input.baseType as EventBaseType,
-          instanceType: (input.instanceType ?? "send_admin_reminder") as EventInstanceType,
           scheduledAt: new Date(input.scheduledAt),
           status: (input.status ?? "pending") as EventStatus,
-          config: (input.config ?? {}) as any
+          config: (input.config ?? {}) as Prisma.InputJsonValue
         }
       });
       return serializeEvent(event);
@@ -50,10 +50,9 @@ export const eventsRouter = new Hono()
         data: {
           name: input.name,
           baseType: input.baseType as EventBaseType | undefined,
-          instanceType: input.instanceType as EventInstanceType | undefined,
           scheduledAt: input.scheduledAt ? new Date(input.scheduledAt) : undefined,
           status: input.status as EventStatus | undefined,
-          config: input.config as any
+          config: input.config as Prisma.InputJsonValue | undefined
         }
       });
       return serializeEvent(event);
@@ -69,51 +68,15 @@ export const eventsRouter = new Hono()
   .post("/:id/run", (c) =>
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
-      const event = await prisma.event.findUnique({
-        where: { id },
-        include: {
-          programme: {
-            select: {
-              id: true,
-              name: true,
-              startDate: true,
-              participants: {
-                include: {
-                  participant: true
-                }
-              }
-            }
-          }
-        }
-      });
+      const event = await prisma.event.findUnique({ where: { id } });
       if (!event) throw new Error("Event not found");
 
-      await prisma.event.update({
+      const updated = await prisma.event.update({
         where: { id },
-        data: { status: EventStatus.processing }
+        data: { status: EventStatus.pending }
       });
 
-      try {
-        await sendEmailEvent({
-          event,
-          programme: event.programme,
-          participants: event.programme.participants.map((entry) => ({
-            ...entry.participant,
-            programmes: [{ programmeId: entry.programmeId, paymentStatus: entry.paymentStatus }]
-          }))
-        });
-
-        const updated = await prisma.event.update({
-          where: { id },
-          data: { status: EventStatus.completed }
-        });
-        return serializeEvent(updated);
-      } catch (error) {
-        await prisma.event.update({
-          where: { id },
-          data: { status: EventStatus.failed }
-        });
-        throw error;
-      }
+      await redis.hset(EVENT_SCHEDULE_HASH, { [id]: new Date().toISOString() });
+      return serializeEvent(updated);
     })
   );

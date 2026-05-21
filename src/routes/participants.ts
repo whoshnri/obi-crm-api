@@ -1,29 +1,42 @@
 import { Hono } from "hono";
-import { PaymentStatus } from "../generated/client";
+import { PaymentStatus, Prisma } from "../generated/client";
 import { prisma } from "../lib/prisma";
 import { handleRoute } from "../lib/http";
-import { serializeParticipant } from "../lib/serializers";
+import { serializeProgramParticipant } from "../lib/serializers";
 import { createParticipantSchema, idParamSchema, programmeQuerySchema, updateParticipantSchema } from "../lib/schemas";
+import { createStripeCustomerForParticipant } from "../lib/stripe";
 
 export const participantsRouter = new Hono()
   .get("/", (c) =>
     handleRoute(c, async () => {
       const { programmeId } = programmeQuerySchema.parse(c.req.query());
-      const participants = await prisma.participant.findMany({
-        where: programmeId ? { programmes: { some: { programmeId } } } : undefined,
-        include: { programmes: { select: { programmeId: true, paymentStatus: true } } },
+      const participants = await prisma.programmeParticipant.findMany({
+        where: { programmeId },
+        include: { programme: true, participant: true },
         orderBy: { createdAt: "desc" }
       });
-      return participants.map((participant) => serializeParticipant(participant, programmeId));
+
+      return participants.map(serializeProgramParticipant);
     })
   )
   .post("/", (c) =>
     handleRoute(c, async () => {
       const input = createParticipantSchema.parse(await c.req.json());
-      const participant = await prisma.$transaction(async (tx) => {
-        const record = await tx.participant.upsert({
-          where: { email: input.email },
-          create: {
+      if (!input.programmeId) throw new Error("Programme id is required.");
+      const programmeId = input.programmeId;
+      const participantMetadata = (input.metadata ?? {}) as Prisma.InputJsonValue;
+      const programmeParticipantMetadata = (input.programmeParticipantMetadata ?? {}) as Prisma.InputJsonValue;
+
+      const programParticipant = await prisma.$transaction(async (tx) => {
+        const stripeCustomerId = await createStripeCustomerForParticipant({
+          name: input.name,
+          email: input.email,
+          organisation: input.organisation,
+          phone: input.phone
+        });
+
+        const participant = await tx.participant.create({
+          data: {
             name: input.name,
             email: input.email,
             organisation: input.organisation,
@@ -31,112 +44,94 @@ export const participantsRouter = new Hono()
             phone: input.phone,
             socialLinks: input.socialLinks ?? [],
             photoId: input.photoId,
+            stripeCustomerId,
             notes: input.notes,
-            metadata: (input.metadata ?? {}) as any
-          },
-          update: {
-            name: input.name,
-            organisation: input.organisation,
-            address: input.address,
-            phone: input.phone,
-            socialLinks: input.socialLinks,
-            photoId: input.photoId,
-            notes: input.notes,
-            metadata: input.metadata as any
+            metadata: participantMetadata
           }
         });
 
-        if (input.programmeId) {
-          await tx.programmeParticipant.upsert({
-            where: {
-              programmeId_participantId: {
-                programmeId: input.programmeId,
-                participantId: record.id
-              }
-            },
-            create: {
-              programmeId: input.programmeId,
-              participantId: record.id,
-              paymentStatus: (input.paymentStatus ?? "not_invoiced") as PaymentStatus
-            },
-            update: {
-              paymentStatus: input.paymentStatus as PaymentStatus | undefined
-            }
-          });
-        }
-
-        return tx.participant.findUniqueOrThrow({
-          where: { id: record.id },
-          include: { programmes: { select: { programmeId: true, paymentStatus: true } } }
+        return tx.programmeParticipant.create({
+          data: {
+            programmeId,
+            participantId: participant.id,
+            paymentStatus: (input.paymentStatus ?? "not_invoiced") as PaymentStatus,
+            metadata: programmeParticipantMetadata
+          },
+          include: { programme: true, participant: true, invoice: true }
         });
       });
-      return serializeParticipant(participant, input.programmeId);
+
+      return serializeProgramParticipant(programParticipant);
     })
   )
   .get("/:id", (c) =>
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
-      const participant = await prisma.participant.findUnique({
+      const participant = await prisma.programmeParticipant.findUnique({
         where: { id },
-        include: { programmes: { select: { programmeId: true, paymentStatus: true } } }
+        include: { programme: true, participant: true, invoice: true }
       });
-      return participant ? serializeParticipant(participant) : null;
+      
+      return participant ? serializeProgramParticipant(participant) : null
+  
     })
   )
   .patch("/:id", (c) =>
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
       const input = updateParticipantSchema.parse(await c.req.json());
-      const participant = await prisma.participant.update({
+      const participantMetadata = input.metadata as Prisma.InputJsonValue | undefined;
+      const programmeParticipantMetadata = input.programmeParticipantMetadata as Prisma.InputJsonValue | undefined;
+      const programParticipant = await prisma.programmeParticipant.findUniqueOrThrow({
         where: { id },
-        data: {
-          name: input.name,
-          email: input.email,
-          organisation: input.organisation,
-          address: input.address,
-          phone: input.phone,
-          socialLinks: input.socialLinks,
-          photoId: input.photoId,
-          notes: input.notes,
-          stripeCustomerId: input.stripeCustomerId,
-          stripeInvoiceIds: input.stripeInvoiceIds,
-          metadata: input.metadata as any,
-          programmes: input.paymentStatus
-            ? {
-                updateMany: {
-                  where: {},
-                  data: { paymentStatus: input.paymentStatus as PaymentStatus }
-                }
-              }
-            : undefined
-        },
-        include: { programmes: { select: { programmeId: true, paymentStatus: true } } }
+        select: { participantId: true }
       });
-      return serializeParticipant(participant);
+
+      await prisma.$transaction(async (tx) => {
+        await tx.participant.update({
+          where: { id: programParticipant.participantId },
+          data: {
+            name: input.name,
+            email: input.email,
+            organisation: input.organisation,
+            address: input.address,
+            phone: input.phone,
+            socialLinks: input.socialLinks,
+            photoId: input.photoId,
+            notes: input.notes,
+            stripeCustomerId: input.stripeCustomerId,
+            metadata: participantMetadata
+          }
+        });
+
+        if (input.paymentStatus || input.programmeParticipantMetadata) {
+          await tx.programmeParticipant.update({
+            where: { id },
+            data: {
+              paymentStatus: input.paymentStatus as PaymentStatus | undefined,
+              metadata: programmeParticipantMetadata
+            }
+          });
+        }
+      });
+
+      return { ok: true, id };
     })
   )
   .delete("/:id", (c) =>
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
-      await prisma.participant.delete({ where: { id } });
+      await prisma.programmeParticipant.delete({ where: { id } });
       return { ok: true };
     })
   )
   .post("/:id/mark-paid", (c) =>
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
-      const participant = await prisma.participant.update({
+      await prisma.programmeParticipant.update({
         where: { id },
-        data: {
-          programmes: {
-            updateMany: {
-              where: {},
-              data: { paymentStatus: PaymentStatus.paid }
-            }
-          }
-        },
-        include: { programmes: { select: { programmeId: true, paymentStatus: true } } }
+        data: { paymentStatus: PaymentStatus.paid }
       });
-      return serializeParticipant(participant);
+      return { ok: true, id };
     })
   );

@@ -138,7 +138,7 @@ export const formDefinitionSchema = z.object({
 });
 
 export const createFormSchema = formDefinitionSchema.omit({ id: true }).extend({
-  programmeId: z.string().min(1).optional().nullable(),
+  programmeId: z.string().min(1),
   eventId: z.string().min(1).optional().nullable()
 });
 

@@ -1,6 +1,6 @@
 type RenderContext = {
   participant: Record<string, unknown>;
-  programme: Record<string, unknown>;
+  // programme: Record<string, unknown>;
 };
 
 function getPathValue(context: RenderContext, path: string) {
@@ -9,10 +9,10 @@ function getPathValue(context: RenderContext, path: string) {
 
   if (parts.length === 1) {
     const key = parts[0];
-    return context.participant[key] ?? context.programme[key] ?? "";
+    return context.participant[key]
   }
 
-  const root = parts[0] === "programme" ? context.programme : parts[0] === "participant" ? context.participant : null;
+  const root = parts[0] === "participant" ? context.participant : null;
   if (!root) return "";
 
   return parts.slice(1).reduce<unknown>((value, key) => {

@@ -31,8 +31,7 @@ export const eventConfigSchema = z.record(z.string(), z.unknown());
 export const createEventSchema = z.object({
   name: z.string().min(1),
   programmeId: z.string().min(1),
-  baseType: z.enum(["send_email"]),
-  instanceType: z.enum(["send_invoice", "send_prework_email", "send_admin_reminder", "send_form"]).optional(),
+  baseType: z.enum(["send_email", "send_invoice"]),
   status: z.enum(["pending", "processing", "completed", "failed"]).optional(),
   scheduledAt: z.string().datetime().or(z.string().min(1)),
   config: eventConfigSchema.optional()
@@ -46,8 +45,7 @@ export const saveProgrammeEventFlowStateSchema = z.object({
     z.object({
       id: z.string().min(1).optional(),
       name: z.string().min(1),
-      baseType: z.enum(["send_email"]),
-      instanceType: z.enum(["send_invoice", "send_prework_email", "send_admin_reminder", "send_form"]).optional(),
+      baseType: z.enum(["send_email", "send_invoice"]),
       status: z.enum(["pending", "processing", "completed", "failed"]).optional(),
       scheduledAt: z.string().datetime().or(z.string().min(1)),
       config: eventConfigSchema.optional()
@@ -96,26 +94,43 @@ export const createParticipantSchema = z.object({
   photoId: z.string().optional(),
   paymentStatus: z.enum(["not_invoiced", "invoiced", "paid", "overdue"]).optional(),
   notes: z.string().optional(),
-  metadata: z.record(z.string(), z.unknown()).optional()
+  metadata: z.record(z.string(), z.unknown()).optional(),
+  programmeParticipantMetadata: z.record(z.string(), z.unknown()).optional()
 });
 
 export const updateParticipantSchema = createParticipantSchema.omit({ programmeId: true }).partial().extend({
-  stripeCustomerId: z.string().optional(),
-  stripeInvoiceIds: z.array(z.string()).optional()
+  stripeCustomerId: z.string().optional()
 });
 
-export const createInvoiceSchema = z.object({
-  programmeId: z.string().min(1),
-  participantId: z.string().min(1),
+export const invoiceLineItemSchema = z.object({
+  description: z.string().min(1),
   amount: z.number(),
+  currency: z.string().optional()
+});
+
+const invoiceInputSchema = z.object({
+  programmeId: z.string().min(1),
+  programmeParticipantId: z.string().min(1).optional(),
+  participantId: z.string().min(1).optional(),
+  amount: z.number().optional(),
   currency: z.string().optional(),
   status: z.enum(["draft", "sent", "paid", "overdue"]).optional(),
   dueDate: z.string().datetime().or(z.string().min(1)),
   paidAt: z.string().datetime().or(z.string().min(1)).optional(),
-  stripeInvoiceUrl: z.string().optional()
+  stripeInvoiceId: z.string().optional(),
+  stripeInvoiceUrl: z.string().optional(),
+  stripeInvoiceItemIds: z.array(z.string()).optional(),
+  lineItems: z.array(invoiceLineItemSchema).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional()
 });
 
-export const updateInvoiceSchema = createInvoiceSchema.omit({ programmeId: true, participantId: true }).partial();
+export const createInvoiceSchema = invoiceInputSchema.refine((input) => input.programmeParticipantId || input.participantId, {
+  message: "participantId or programmeParticipantId is required"
+});
+
+export const updateInvoiceSchema = invoiceInputSchema
+  .omit({ programmeId: true, participantId: true, programmeParticipantId: true })
+  .partial();
 
 export const createEmailTemplateSchema = z.object({
   programmeId: z.string().min(1),
