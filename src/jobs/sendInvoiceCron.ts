@@ -2,7 +2,6 @@ import { Bunqueue, type Job } from "bunqueue/client";
 import { EventBaseType, EventStatus, InvoiceStatus, PaymentStatus, Prisma, StepStatus } from "../generated/client";
 import { prisma } from "../lib/prisma";
 import { redis } from "../lib/redis";
-import { stripe } from "../lib/stripe";
 import {
   EVENT_SCHEDULE_HASH,
   errorMessage,
@@ -98,89 +97,19 @@ async function writeParticipantInvoice(input: InvoiceDbRetryJob) {
 
 async function processInvoiceJob(job: Job<InvoiceExecutionJob>): Promise<InvoiceJobResult> {
   const data = job.data;
-  const dueDate = new Date(Date.now() + data.daysUntilDue * 24 * 60 * 60 * 1000);
-  const lineItems = data.lineItems.length
-    ? data.lineItems
-    : [{ description: data.programmeName, amount: data.amount, currency: data.currency }];
+  console.log("[invoice:job:stub]", JSON.stringify({
+    eventId: data.eventId,
+    programmeId: data.programmeId,
+    participantId: data.participantId,
+    programmeParticipantId: data.programmeParticipantId,
+    stripeCustomerId: data.stripeCustomerId,
+    amount: data.amount,
+    currency: data.currency,
+    daysUntilDue: data.daysUntilDue,
+    lineItems: data.lineItems
+  }));
 
-  const invoice = await stripe.invoices.create({
-    customer: data.stripeCustomerId,
-    collection_method: "send_invoice",
-    days_until_due: data.daysUntilDue,
-    auto_advance: true
-  });
-
-  try {
-    const stripeInvoiceItemIds: string[] = [];
-    for (const item of lineItems) {
-      const invoiceItem = await stripe.invoiceItems.create({
-        customer: data.stripeCustomerId,
-        invoice: invoice.id,
-        amount: item.amount,
-        currency: (item.currency ?? data.currency).toLowerCase(),
-        description: item.description || data.programmeName
-      });
-      stripeInvoiceItemIds.push(invoiceItem.id);
-    }
-
-    const finalizedInvoice = await stripe.invoices.finalizeInvoice(invoice.id);
-    await writeParticipantInvoice({
-      stripeInvoiceId: finalizedInvoice.id,
-      stripeInvoiceUrl: finalizedInvoice.hosted_invoice_url,
-      programmeId: data.programmeId,
-      participantId: data.participantId,
-      programmeParticipantId: data.programmeParticipantId,
-      amount: data.amount,
-      currency: data.currency,
-      dueDate: dueDate.toISOString(),
-      lineItems
-    });
-
-    await prisma.participantInvoice.updateMany({
-      where: { stripeInvoiceId: finalizedInvoice.id },
-      data: { stripeInvoiceItemIds }
-    });
-
-    await prisma.eventParticipantStatus.upsert({
-      where: { eventId_participantId: { eventId: data.eventId, participantId: data.participantId } },
-      create: { eventId: data.eventId, participantId: data.participantId, status: StepStatus.sent, metadata: {} },
-      update: { status: StepStatus.sent, metadata: {} }
-    });
-
-    return { participantId: data.participantId };
-  } catch (error) {
-    const message = errorMessage(error);
-    await invoiceDbRetryQueue.add(
-      "retry-db-write",
-      {
-        stripeInvoiceId: invoice.id,
-        stripeInvoiceUrl: invoice.hosted_invoice_url,
-        programmeId: data.programmeId,
-        participantId: data.participantId,
-        programmeParticipantId: data.programmeParticipantId,
-        amount: data.amount,
-        currency: data.currency,
-        dueDate: dueDate.toISOString(),
-        lineItems
-      },
-      { delay: THIRTY_MINUTES_MS, attempts: 5, backoff: THIRTY_MINUTES_MS, durable: true }
-    );
-    await prisma.eventParticipantStatus.upsert({
-      where: { eventId_participantId: { eventId: data.eventId, participantId: data.participantId } },
-      create: {
-        eventId: data.eventId,
-        participantId: data.participantId,
-        status: StepStatus.not_sent,
-        metadata: { error: message } as Prisma.InputJsonValue
-      },
-      update: {
-        status: StepStatus.not_sent,
-        metadata: { error: message } as Prisma.InputJsonValue
-      }
-    });
-    console.error("[invoice:job:error]", JSON.stringify({ eventId: data.eventId, participantId: data.participantId, message }));
-    throw error;
-  }
+  return { participantId: data.participantId };
 }
 
 export const invoiceDbRetryQueue = new Bunqueue<InvoiceDbRetryJob, { invoiceId: string }>("invoice-db-retry", {
@@ -312,7 +241,16 @@ export async function runSendInvoiceCronTick() {
       matchedEventIds.map(async (eventId) => {
         try {
           const event = await prisma.event.findUnique({ where: { id: eventId }, select: { baseType: true, status: true } });
-          if (!event || event.baseType !== EventBaseType.send_invoice || event.status !== EventStatus.pending) return;
+          if (!event || event.baseType !== EventBaseType.send_invoice) {
+            await redis.hdel(EVENT_SCHEDULE_HASH, eventId);
+            return;
+          }
+
+          if (event.status !== EventStatus.pending) {
+            await redis.hdel(EVENT_SCHEDULE_HASH, eventId);
+            return;
+          }
+
           await processInvoiceEvent(eventId);
         } catch (error) {
           console.error("[invoice:cron:event:error]", JSON.stringify({ eventId, message: errorMessage(error) }));
@@ -322,6 +260,10 @@ export async function runSendInvoiceCronTick() {
   } catch (error) {
     console.error("[invoice:cron:error]", JSON.stringify({ message: errorMessage(error) }));
   }
+}
+
+export async function runSendInvoiceEventNow(eventId: string) {
+  return processInvoiceEvent(eventId);
 }
 
 export function startSendInvoiceCron() {

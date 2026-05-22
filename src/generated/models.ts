@@ -11,6 +11,7 @@
 export type * from './models/Participant'
 export type * from './models/ProgrammeParticipant'
 export type * from './models/Programme'
+export type * from './models/EventFlow'
 export type * from './models/Event'
 export type * from './models/EventParticipantStatus'
 export type * from './models/Form'

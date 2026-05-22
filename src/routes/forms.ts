@@ -109,6 +109,20 @@ export const formsRouter = new Hono()
           metadata: (input.metadata ?? {}) as any
         }
       });
+
+      // notify admins of submission
+      try {
+        const { addNotificationForAdmins } = await import("../lib/notifications");
+        await addNotificationForAdmins({
+          type: "form_submitted",
+          title: "Form submitted",
+          message: `New submission for form ${id}`,
+          meta: { formId: id, submissionId: submission.id }
+        });
+      } catch (err) {
+        console.error("failed to add form submission notification", err);
+      }
+
       return serializeFormSubmission(submission);
     })
   )

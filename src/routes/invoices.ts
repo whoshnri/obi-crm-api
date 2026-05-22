@@ -104,6 +104,18 @@ export const invoicesRouter = new Hono()
         return participantInvoice;
       });
 
+      try {
+        const { addNotificationForAdmins } = await import("../lib/notifications");
+        await addNotificationForAdmins({
+          type: "invoice_created",
+          title: "Invoice created",
+          message: `Invoice created for participant ${invoice.participantId}`,
+          meta: { invoiceId: invoice.id, participantId: invoice.participantId }
+        });
+      } catch (err) {
+        console.error("failed to add invoice notification", err);
+      }
+
       return serializeInvoice(invoice);
     })
   )

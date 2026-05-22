@@ -33,6 +33,11 @@ export type ProgrammeParticipant = Prisma.ProgrammeParticipantModel
  */
 export type Programme = Prisma.ProgrammeModel
 /**
+ * Model EventFlow
+ * 
+ */
+export type EventFlow = Prisma.EventFlowModel
+/**
  * Model Event
  * 
  */

@@ -19,7 +19,9 @@ export const eventFlowSchema = z.record(z.string(), z.string());
 
 export const createProgrammeSchema = z.object({
   name: z.string().min(1),
-  startDate: z.string().datetime().or(z.string().min(1)),
+  startDate: z.iso.datetime().or(z.string().min(1)),
+  description: z.string().optional().nullable(),
+  costPerParticipant: z.number().nonnegative().optional().nullable(),
   eventFlow: eventFlowSchema.optional(),
   participantDefinition: participantDefinitionSchema.optional()
 });

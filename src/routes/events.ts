@@ -5,6 +5,9 @@ import { redis } from "../lib/redis";
 import { handleRoute } from "../lib/http";
 import { serializeEvent } from "../lib/serializers";
 import { EVENT_SCHEDULE_HASH } from "../jobs/utils";
+import { runSendEmailEventNow } from "../jobs/sendEmailCron";
+import { runSendInvoiceEventNow } from "../jobs/sendInvoiceCron";
+import { addNotificationForAdmins } from "../lib/notifications";
 import { createEventSchema, idParamSchema, programmeQuerySchema, updateEventSchema } from "../lib/schemas";
 
 export const eventsRouter = new Hono()
@@ -77,6 +80,37 @@ export const eventsRouter = new Hono()
       });
 
       await redis.hset(EVENT_SCHEDULE_HASH, { [id]: new Date().toISOString() });
-      return serializeEvent(updated);
+
+      if (event.baseType === EventBaseType.send_email) {
+        await runSendEmailEventNow(id);
+      }
+
+      if (event.baseType === EventBaseType.send_invoice) {
+        await runSendInvoiceEventNow(id);
+      }
+
+      const finalEvent = await prisma.event.findUnique({ where: { id } });
+
+      // create notifications for admins
+      try {
+        const status = (finalEvent ?? updated).status;
+        const notifType = status === "completed" ? "event_completed" : status === "failed" ? "event_failed" : undefined;
+        if (notifType) {
+          await addNotificationForAdmins({
+            type: notifType as any,
+            title: `Event ${status}`,
+            message: `Event ${(finalEvent ?? updated).name} ${status}`,
+            meta: { eventId: id, programmeId: (finalEvent ?? updated).programmeId }
+          });
+        }
+      } catch (err) {
+        // best-effort; don't block response
+        console.error("failed to add notification", err);
+      }
+
+      const result = serializeEvent(finalEvent ?? updated);
+      // inform client that we added a notification to the cache
+      // (small non-sensitive flag)
+      return { ...result, isNewNotif: true };
     })
   );

@@ -387,6 +387,7 @@ export const ModelName = {
   Participant: 'Participant',
   ProgrammeParticipant: 'ProgrammeParticipant',
   Programme: 'Programme',
+  EventFlow: 'EventFlow',
   Event: 'Event',
   EventParticipantStatus: 'EventParticipantStatus',
   Form: 'Form',
@@ -415,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "participant" | "programmeParticipant" | "programme" | "event" | "eventParticipantStatus" | "form" | "formSubmission" | "formTable" | "participantInvoice" | "emailTemplate" | "admin" | "adminSession" | "opportunity" | "opportunityPipeline" | "opportunityPipelineStep" | "opportunityEvent"
+    modelProps: "participant" | "programmeParticipant" | "programme" | "eventFlow" | "event" | "eventParticipantStatus" | "form" | "formSubmission" | "formTable" | "participantInvoice" | "emailTemplate" | "admin" | "adminSession" | "opportunity" | "opportunityPipeline" | "opportunityPipelineStep" | "opportunityEvent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -638,6 +639,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProgrammeCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProgrammeCountAggregateOutputType> | number
+        }
+      }
+    }
+    EventFlow: {
+      payload: Prisma.$EventFlowPayload<ExtArgs>
+      fields: Prisma.EventFlowFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EventFlowFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventFlowPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EventFlowFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventFlowPayload>
+        }
+        findFirst: {
+          args: Prisma.EventFlowFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventFlowPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EventFlowFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventFlowPayload>
+        }
+        findMany: {
+          args: Prisma.EventFlowFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventFlowPayload>[]
+        }
+        create: {
+          args: Prisma.EventFlowCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventFlowPayload>
+        }
+        createMany: {
+          args: Prisma.EventFlowCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EventFlowCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventFlowPayload>[]
+        }
+        delete: {
+          args: Prisma.EventFlowDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventFlowPayload>
+        }
+        update: {
+          args: Prisma.EventFlowUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventFlowPayload>
+        }
+        deleteMany: {
+          args: Prisma.EventFlowDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EventFlowUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EventFlowUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventFlowPayload>[]
+        }
+        upsert: {
+          args: Prisma.EventFlowUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventFlowPayload>
+        }
+        aggregate: {
+          args: Prisma.EventFlowAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEventFlow>
+        }
+        groupBy: {
+          args: Prisma.EventFlowGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventFlowGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EventFlowCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventFlowCountAggregateOutputType> | number
         }
       }
     }
@@ -1678,18 +1753,32 @@ export type ProgrammeParticipantScalarFieldEnum = (typeof ProgrammeParticipantSc
 export const ProgrammeScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  description: 'description',
+  costPerParticipant: 'costPerParticipant',
   startDate: 'startDate',
-  eventFlow: 'eventFlow',
   participantDefinition: 'participantDefinition'
 } as const
 
 export type ProgrammeScalarFieldEnum = (typeof ProgrammeScalarFieldEnum)[keyof typeof ProgrammeScalarFieldEnum]
 
 
+export const EventFlowScalarFieldEnum = {
+  id: 'id',
+  programmeId: 'programmeId',
+  flow: 'flow',
+  deployedAt: 'deployedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EventFlowScalarFieldEnum = (typeof EventFlowScalarFieldEnum)[keyof typeof EventFlowScalarFieldEnum]
+
+
 export const EventScalarFieldEnum = {
   id: 'id',
   name: 'name',
   programmeId: 'programmeId',
+  eventFlowId: 'eventFlowId',
   baseType: 'baseType',
   scheduledAt: 'scheduledAt',
   status: 'status',
@@ -1978,6 +2067,20 @@ export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
  * Reference to a field of type 'EventBaseType'
  */
 export type EnumEventBaseTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventBaseType'>
@@ -2016,20 +2119,6 @@ export type EnumStepStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'StepStatus[]'
  */
 export type ListEnumStepStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StepStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -2222,6 +2311,7 @@ export type GlobalOmitConfig = {
   participant?: Prisma.ParticipantOmit
   programmeParticipant?: Prisma.ProgrammeParticipantOmit
   programme?: Prisma.ProgrammeOmit
+  eventFlow?: Prisma.EventFlowOmit
   event?: Prisma.EventOmit
   eventParticipantStatus?: Prisma.EventParticipantStatusOmit
   form?: Prisma.FormOmit

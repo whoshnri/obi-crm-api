@@ -1,6 +1,6 @@
 import Redis from "ioredis";
 
-const redisUrl = Bun.env.REDIS_URL;
+const redisUrl = process.env.REDIS_URL;
 
 if (!redisUrl) {
   throw new Error("REDIS_URL is required");
@@ -19,6 +19,6 @@ redis.on("error", (error) => {
   console.error("[redis:error]", JSON.stringify({ message: error.message }));
 });
 
-if (Bun.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== "production") {
   globalForRedis.redis = redis;
 }

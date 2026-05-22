@@ -19,6 +19,7 @@ export const participantsRouter = new Hono()
       return participants.map(serializeProgramParticipant);
     })
   )
+  
   .post("/", (c) =>
     handleRoute(c, async () => {
       const input = createParticipantSchema.parse(await c.req.json());
@@ -60,6 +61,19 @@ export const participantsRouter = new Hono()
           include: { programme: true, participant: true, invoice: true }
         });
       });
+
+      // notify admins
+      try {
+        const { addNotificationForAdmins } = await import("../lib/notifications");
+        await addNotificationForAdmins({
+          type: "participant_enrolled",
+          title: "New participant enrolled",
+          message: `${programParticipant.participant.name} enrolled in programme ${programParticipant.programme.name}`,
+          meta: { programmeId: programParticipant.programmeId, participantId: programParticipant.participantId }
+        });
+      } catch (err) {
+        console.error("failed to add participant notification", err);
+      }
 
       return serializeProgramParticipant(programParticipant);
     })

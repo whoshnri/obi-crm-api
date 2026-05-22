@@ -54,6 +54,7 @@ export const ModelName = {
   Participant: 'Participant',
   ProgrammeParticipant: 'ProgrammeParticipant',
   Programme: 'Programme',
+  EventFlow: 'EventFlow',
   Event: 'Event',
   EventParticipantStatus: 'EventParticipantStatus',
   Form: 'Form',
@@ -121,18 +122,32 @@ export type ProgrammeParticipantScalarFieldEnum = (typeof ProgrammeParticipantSc
 export const ProgrammeScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  description: 'description',
+  costPerParticipant: 'costPerParticipant',
   startDate: 'startDate',
-  eventFlow: 'eventFlow',
   participantDefinition: 'participantDefinition'
 } as const
 
 export type ProgrammeScalarFieldEnum = (typeof ProgrammeScalarFieldEnum)[keyof typeof ProgrammeScalarFieldEnum]
 
 
+export const EventFlowScalarFieldEnum = {
+  id: 'id',
+  programmeId: 'programmeId',
+  flow: 'flow',
+  deployedAt: 'deployedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EventFlowScalarFieldEnum = (typeof EventFlowScalarFieldEnum)[keyof typeof EventFlowScalarFieldEnum]
+
+
 export const EventScalarFieldEnum = {
   id: 'id',
   name: 'name',
   programmeId: 'programmeId',
+  eventFlowId: 'eventFlowId',
   baseType: 'baseType',
   scheduledAt: 'scheduledAt',
   status: 'status',

@@ -27,10 +27,24 @@ async function processEmailEvent(eventId: string) {
 
   const config = parseEventConfig(event.config);
   const templateId = getStringConfig(config, "templateId");
-  if (!templateId) throw new Error(`Email event ${event.id} is missing config.templateId`);
 
-  const template = await prisma.emailTemplate.findUnique({ where: { id: templateId } });
-  if (!template) throw new Error(`Email template ${templateId} was not found`);
+  const template = templateId ? await prisma.emailTemplate.findUnique({ where: { id: templateId } }) : null;
+  const subject = template?.subject ?? getStringConfig(config, "subject");
+  const body = template?.body ?? getStringConfig(config, "body");
+
+  if (!subject || !body) {
+    await prisma.event.update({ where: { id: event.id }, data: { status: EventStatus.failed } });
+    await redis.hdel(EVENT_SCHEDULE_HASH, event.id);
+    console.error(
+      "[email:event:error]",
+      JSON.stringify({ eventId: event.id, message: `Email event ${event.id} is missing template content and config.subject/config.body` })
+    );
+    return;
+  }
+
+  if (templateId && !template) {
+    console.error("[email:event:warning]", JSON.stringify({ eventId: event.id, message: `Email template ${templateId} was not found; falling back to event config` }));
+  }
 
   await prisma.event.update({ where: { id: event.id }, data: { status: EventStatus.processing } });
 
@@ -38,7 +52,7 @@ async function processEmailEvent(eventId: string) {
     event.programme.participants.map(async (programmeParticipant) => {
       const participant = programmeParticipant.participant;
       try {
-        await sendEmail(participant.email, template.subject, template.body);
+        await sendEmail(participant.email, subject, body);
         await prisma.eventParticipantStatus.upsert({
           where: {
             eventId_participantId: {
@@ -103,6 +117,10 @@ async function processEmailEvent(eventId: string) {
   });
 }
 
+export async function runSendEmailEventNow(eventId: string) {
+  return processEmailEvent(eventId);
+}
+
 export async function runSendEmailCronTick() {
   try {
     const scheduledEvents = await redis.hgetall(EVENT_SCHEDULE_HASH);
@@ -114,7 +132,16 @@ export async function runSendEmailCronTick() {
       matchedEventIds.map(async (eventId) => {
         try {
           const event = await prisma.event.findUnique({ where: { id: eventId }, select: { baseType: true, status: true } });
-          if (!event || event.baseType !== EventBaseType.send_email || event.status !== EventStatus.pending) return;
+          if (!event || event.baseType !== EventBaseType.send_email) {
+            await redis.hdel(EVENT_SCHEDULE_HASH, eventId);
+            return;
+          }
+
+          if (event.status !== EventStatus.pending) {
+            await redis.hdel(EVENT_SCHEDULE_HASH, eventId);
+            return;
+          }
+
           await processEmailEvent(eventId);
         } catch (error) {
           console.error("[email:cron:event:error]", JSON.stringify({ eventId, message: errorMessage(error) }));
@@ -127,7 +154,7 @@ export async function runSendEmailCronTick() {
 }
 
 export function startSendEmailCron() {
-  Bun.cron("*/30 * * * *", () => {
+  Bun.cron("* * * * *", () => {
     void runSendEmailCronTick();
   });
 }

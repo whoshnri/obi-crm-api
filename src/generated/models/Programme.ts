@@ -20,49 +20,77 @@ export type ProgrammeModel = runtime.Types.Result.DefaultSelection<Prisma.$Progr
 
 export type AggregateProgramme = {
   _count: ProgrammeCountAggregateOutputType | null
+  _avg: ProgrammeAvgAggregateOutputType | null
+  _sum: ProgrammeSumAggregateOutputType | null
   _min: ProgrammeMinAggregateOutputType | null
   _max: ProgrammeMaxAggregateOutputType | null
+}
+
+export type ProgrammeAvgAggregateOutputType = {
+  costPerParticipant: number | null
+}
+
+export type ProgrammeSumAggregateOutputType = {
+  costPerParticipant: number | null
 }
 
 export type ProgrammeMinAggregateOutputType = {
   id: string | null
   name: string | null
+  description: string | null
+  costPerParticipant: number | null
   startDate: Date | null
 }
 
 export type ProgrammeMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  description: string | null
+  costPerParticipant: number | null
   startDate: Date | null
 }
 
 export type ProgrammeCountAggregateOutputType = {
   id: number
   name: number
+  description: number
+  costPerParticipant: number
   startDate: number
-  eventFlow: number
   participantDefinition: number
   _all: number
 }
 
 
+export type ProgrammeAvgAggregateInputType = {
+  costPerParticipant?: true
+}
+
+export type ProgrammeSumAggregateInputType = {
+  costPerParticipant?: true
+}
+
 export type ProgrammeMinAggregateInputType = {
   id?: true
   name?: true
+  description?: true
+  costPerParticipant?: true
   startDate?: true
 }
 
 export type ProgrammeMaxAggregateInputType = {
   id?: true
   name?: true
+  description?: true
+  costPerParticipant?: true
   startDate?: true
 }
 
 export type ProgrammeCountAggregateInputType = {
   id?: true
   name?: true
+  description?: true
+  costPerParticipant?: true
   startDate?: true
-  eventFlow?: true
   participantDefinition?: true
   _all?: true
 }
@@ -105,6 +133,18 @@ export type ProgrammeAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inte
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ProgrammeAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ProgrammeSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ProgrammeMinAggregateInputType
@@ -135,6 +175,8 @@ export type ProgrammeGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   _count?: ProgrammeCountAggregateInputType | true
+  _avg?: ProgrammeAvgAggregateInputType
+  _sum?: ProgrammeSumAggregateInputType
   _min?: ProgrammeMinAggregateInputType
   _max?: ProgrammeMaxAggregateInputType
 }
@@ -142,10 +184,13 @@ export type ProgrammeGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type ProgrammeGroupByOutputType = {
   id: string
   name: string
+  description: string | null
+  costPerParticipant: number | null
   startDate: Date
-  eventFlow: runtime.JsonValue
   participantDefinition: runtime.JsonValue
   _count: ProgrammeCountAggregateOutputType | null
+  _avg: ProgrammeAvgAggregateOutputType | null
+  _sum: ProgrammeSumAggregateOutputType | null
   _min: ProgrammeMinAggregateOutputType | null
   _max: ProgrammeMaxAggregateOutputType | null
 }
@@ -171,9 +216,11 @@ export type ProgrammeWhereInput = {
   NOT?: Prisma.ProgrammeWhereInput | Prisma.ProgrammeWhereInput[]
   id?: Prisma.StringFilter<"Programme"> | string
   name?: Prisma.StringFilter<"Programme"> | string
+  description?: Prisma.StringNullableFilter<"Programme"> | string | null
+  costPerParticipant?: Prisma.FloatNullableFilter<"Programme"> | number | null
   startDate?: Prisma.DateTimeFilter<"Programme"> | Date | string
-  eventFlow?: Prisma.JsonFilter<"Programme">
   participantDefinition?: Prisma.JsonFilter<"Programme">
+  eventFlow?: Prisma.XOR<Prisma.EventFlowNullableScalarRelationFilter, Prisma.EventFlowWhereInput> | null
   participants?: Prisma.ProgrammeParticipantListRelationFilter
   events?: Prisma.EventListRelationFilter
   formTables?: Prisma.FormTableListRelationFilter
@@ -185,9 +232,11 @@ export type ProgrammeWhereInput = {
 export type ProgrammeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  costPerParticipant?: Prisma.SortOrderInput | Prisma.SortOrder
   startDate?: Prisma.SortOrder
-  eventFlow?: Prisma.SortOrder
   participantDefinition?: Prisma.SortOrder
+  eventFlow?: Prisma.EventFlowOrderByWithRelationInput
   participants?: Prisma.ProgrammeParticipantOrderByRelationAggregateInput
   events?: Prisma.EventOrderByRelationAggregateInput
   formTables?: Prisma.FormTableOrderByRelationAggregateInput
@@ -202,9 +251,11 @@ export type ProgrammeWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ProgrammeWhereInput[]
   NOT?: Prisma.ProgrammeWhereInput | Prisma.ProgrammeWhereInput[]
   name?: Prisma.StringFilter<"Programme"> | string
+  description?: Prisma.StringNullableFilter<"Programme"> | string | null
+  costPerParticipant?: Prisma.FloatNullableFilter<"Programme"> | number | null
   startDate?: Prisma.DateTimeFilter<"Programme"> | Date | string
-  eventFlow?: Prisma.JsonFilter<"Programme">
   participantDefinition?: Prisma.JsonFilter<"Programme">
+  eventFlow?: Prisma.XOR<Prisma.EventFlowNullableScalarRelationFilter, Prisma.EventFlowWhereInput> | null
   participants?: Prisma.ProgrammeParticipantListRelationFilter
   events?: Prisma.EventListRelationFilter
   formTables?: Prisma.FormTableListRelationFilter
@@ -216,12 +267,15 @@ export type ProgrammeWhereUniqueInput = Prisma.AtLeast<{
 export type ProgrammeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  costPerParticipant?: Prisma.SortOrderInput | Prisma.SortOrder
   startDate?: Prisma.SortOrder
-  eventFlow?: Prisma.SortOrder
   participantDefinition?: Prisma.SortOrder
   _count?: Prisma.ProgrammeCountOrderByAggregateInput
+  _avg?: Prisma.ProgrammeAvgOrderByAggregateInput
   _max?: Prisma.ProgrammeMaxOrderByAggregateInput
   _min?: Prisma.ProgrammeMinOrderByAggregateInput
+  _sum?: Prisma.ProgrammeSumOrderByAggregateInput
 }
 
 export type ProgrammeScalarWhereWithAggregatesInput = {
@@ -230,17 +284,20 @@ export type ProgrammeScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ProgrammeScalarWhereWithAggregatesInput | Prisma.ProgrammeScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Programme"> | string
   name?: Prisma.StringWithAggregatesFilter<"Programme"> | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"Programme"> | string | null
+  costPerParticipant?: Prisma.FloatNullableWithAggregatesFilter<"Programme"> | number | null
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Programme"> | Date | string
-  eventFlow?: Prisma.JsonWithAggregatesFilter<"Programme">
   participantDefinition?: Prisma.JsonWithAggregatesFilter<"Programme">
 }
 
 export type ProgrammeCreateInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
@@ -252,9 +309,11 @@ export type ProgrammeCreateInput = {
 export type ProgrammeUncheckedCreateInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
@@ -266,9 +325,11 @@ export type ProgrammeUncheckedCreateInput = {
 export type ProgrammeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
@@ -280,9 +341,11 @@ export type ProgrammeUpdateInput = {
 export type ProgrammeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
@@ -294,24 +357,27 @@ export type ProgrammeUncheckedUpdateInput = {
 export type ProgrammeCreateManyInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ProgrammeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ProgrammeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -323,21 +389,34 @@ export type ProgrammeScalarRelationFilter = {
 export type ProgrammeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  costPerParticipant?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
-  eventFlow?: Prisma.SortOrder
   participantDefinition?: Prisma.SortOrder
+}
+
+export type ProgrammeAvgOrderByAggregateInput = {
+  costPerParticipant?: Prisma.SortOrder
 }
 
 export type ProgrammeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  costPerParticipant?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
 }
 
 export type ProgrammeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  costPerParticipant?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
+}
+
+export type ProgrammeSumOrderByAggregateInput = {
+  costPerParticipant?: Prisma.SortOrder
 }
 
 export type ProgrammeNullableScalarRelationFilter = {
@@ -357,6 +436,28 @@ export type ProgrammeUpdateOneRequiredWithoutParticipantsNestedInput = {
   upsert?: Prisma.ProgrammeUpsertWithoutParticipantsInput
   connect?: Prisma.ProgrammeWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutParticipantsInput, Prisma.ProgrammeUpdateWithoutParticipantsInput>, Prisma.ProgrammeUncheckedUpdateWithoutParticipantsInput>
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type ProgrammeCreateNestedOneWithoutEventFlowInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutEventFlowInput, Prisma.ProgrammeUncheckedCreateWithoutEventFlowInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutEventFlowInput
+  connect?: Prisma.ProgrammeWhereUniqueInput
+}
+
+export type ProgrammeUpdateOneRequiredWithoutEventFlowNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutEventFlowInput, Prisma.ProgrammeUncheckedCreateWithoutEventFlowInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutEventFlowInput
+  upsert?: Prisma.ProgrammeUpsertWithoutEventFlowInput
+  connect?: Prisma.ProgrammeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutEventFlowInput, Prisma.ProgrammeUpdateWithoutEventFlowInput>, Prisma.ProgrammeUncheckedUpdateWithoutEventFlowInput>
 }
 
 export type ProgrammeCreateNestedOneWithoutEventsInput = {
@@ -434,9 +535,11 @@ export type ProgrammeUpdateOneRequiredWithoutEmailTemplatesNestedInput = {
 export type ProgrammeCreateWithoutParticipantsInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowCreateNestedOneWithoutProgrammeInput
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
@@ -447,9 +550,11 @@ export type ProgrammeCreateWithoutParticipantsInput = {
 export type ProgrammeUncheckedCreateWithoutParticipantsInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedCreateNestedOneWithoutProgrammeInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
@@ -476,9 +581,11 @@ export type ProgrammeUpdateToOneWithWhereWithoutParticipantsInput = {
 export type ProgrammeUpdateWithoutParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUpdateOneWithoutProgrammeNestedInput
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
@@ -489,9 +596,87 @@ export type ProgrammeUpdateWithoutParticipantsInput = {
 export type ProgrammeUncheckedUpdateWithoutParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
+  formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
+  forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+}
+
+export type ProgrammeCreateWithoutEventFlowInput = {
+  id?: string
+  name: string
+  description?: string | null
+  costPerParticipant?: number | null
+  startDate: Date | string
+  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
+  events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
+  formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
+  forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
+  participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+}
+
+export type ProgrammeUncheckedCreateWithoutEventFlowInput = {
+  id?: string
+  name: string
+  description?: string | null
+  costPerParticipant?: number | null
+  startDate: Date | string
+  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
+  formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
+  forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+}
+
+export type ProgrammeCreateOrConnectWithoutEventFlowInput = {
+  where: Prisma.ProgrammeWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutEventFlowInput, Prisma.ProgrammeUncheckedCreateWithoutEventFlowInput>
+}
+
+export type ProgrammeUpsertWithoutEventFlowInput = {
+  update: Prisma.XOR<Prisma.ProgrammeUpdateWithoutEventFlowInput, Prisma.ProgrammeUncheckedUpdateWithoutEventFlowInput>
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutEventFlowInput, Prisma.ProgrammeUncheckedCreateWithoutEventFlowInput>
+  where?: Prisma.ProgrammeWhereInput
+}
+
+export type ProgrammeUpdateToOneWithWhereWithoutEventFlowInput = {
+  where?: Prisma.ProgrammeWhereInput
+  data: Prisma.XOR<Prisma.ProgrammeUpdateWithoutEventFlowInput, Prisma.ProgrammeUncheckedUpdateWithoutEventFlowInput>
+}
+
+export type ProgrammeUpdateWithoutEventFlowInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
+  events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
+  formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
+  forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+}
+
+export type ProgrammeUncheckedUpdateWithoutEventFlowInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
@@ -502,9 +687,11 @@ export type ProgrammeUncheckedUpdateWithoutParticipantsInput = {
 export type ProgrammeCreateWithoutEventsInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
@@ -515,9 +702,11 @@ export type ProgrammeCreateWithoutEventsInput = {
 export type ProgrammeUncheckedCreateWithoutEventsInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
@@ -544,9 +733,11 @@ export type ProgrammeUpdateToOneWithWhereWithoutEventsInput = {
 export type ProgrammeUpdateWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
@@ -557,9 +748,11 @@ export type ProgrammeUpdateWithoutEventsInput = {
 export type ProgrammeUncheckedUpdateWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
@@ -570,9 +763,11 @@ export type ProgrammeUncheckedUpdateWithoutEventsInput = {
 export type ProgrammeCreateWithoutFormsInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
@@ -583,9 +778,11 @@ export type ProgrammeCreateWithoutFormsInput = {
 export type ProgrammeUncheckedCreateWithoutFormsInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
@@ -612,9 +809,11 @@ export type ProgrammeUpdateToOneWithWhereWithoutFormsInput = {
 export type ProgrammeUpdateWithoutFormsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
@@ -625,9 +824,11 @@ export type ProgrammeUpdateWithoutFormsInput = {
 export type ProgrammeUncheckedUpdateWithoutFormsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
@@ -638,9 +839,11 @@ export type ProgrammeUncheckedUpdateWithoutFormsInput = {
 export type ProgrammeCreateWithoutFormTablesInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
@@ -651,9 +854,11 @@ export type ProgrammeCreateWithoutFormTablesInput = {
 export type ProgrammeUncheckedCreateWithoutFormTablesInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
@@ -680,9 +885,11 @@ export type ProgrammeUpdateToOneWithWhereWithoutFormTablesInput = {
 export type ProgrammeUpdateWithoutFormTablesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
@@ -693,9 +900,11 @@ export type ProgrammeUpdateWithoutFormTablesInput = {
 export type ProgrammeUncheckedUpdateWithoutFormTablesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
@@ -706,9 +915,11 @@ export type ProgrammeUncheckedUpdateWithoutFormTablesInput = {
 export type ProgrammeCreateWithoutParticipantInvoicesInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
@@ -719,9 +930,11 @@ export type ProgrammeCreateWithoutParticipantInvoicesInput = {
 export type ProgrammeUncheckedCreateWithoutParticipantInvoicesInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
@@ -748,9 +961,11 @@ export type ProgrammeUpdateToOneWithWhereWithoutParticipantInvoicesInput = {
 export type ProgrammeUpdateWithoutParticipantInvoicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
@@ -761,9 +976,11 @@ export type ProgrammeUpdateWithoutParticipantInvoicesInput = {
 export type ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
@@ -774,9 +991,11 @@ export type ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput = {
 export type ProgrammeCreateWithoutEmailTemplatesInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
@@ -787,9 +1006,11 @@ export type ProgrammeCreateWithoutEmailTemplatesInput = {
 export type ProgrammeUncheckedCreateWithoutEmailTemplatesInput = {
   id?: string
   name: string
+  description?: string | null
+  costPerParticipant?: number | null
   startDate: Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedCreateNestedOneWithoutProgrammeInput
   participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
@@ -816,9 +1037,11 @@ export type ProgrammeUpdateToOneWithWhereWithoutEmailTemplatesInput = {
 export type ProgrammeUpdateWithoutEmailTemplatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
@@ -829,9 +1052,11 @@ export type ProgrammeUpdateWithoutEmailTemplatesInput = {
 export type ProgrammeUncheckedUpdateWithoutEmailTemplatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  eventFlow?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput
   participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
@@ -918,9 +1143,11 @@ export type ProgrammeCountOutputTypeCountEmailTemplatesArgs<ExtArgs extends runt
 export type ProgrammeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  description?: boolean
+  costPerParticipant?: boolean
   startDate?: boolean
-  eventFlow?: boolean
   participantDefinition?: boolean
+  eventFlow?: boolean | Prisma.Programme$eventFlowArgs<ExtArgs>
   participants?: boolean | Prisma.Programme$participantsArgs<ExtArgs>
   events?: boolean | Prisma.Programme$eventsArgs<ExtArgs>
   formTables?: boolean | Prisma.Programme$formTablesArgs<ExtArgs>
@@ -933,29 +1160,33 @@ export type ProgrammeSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type ProgrammeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  description?: boolean
+  costPerParticipant?: boolean
   startDate?: boolean
-  eventFlow?: boolean
   participantDefinition?: boolean
 }, ExtArgs["result"]["programme"]>
 
 export type ProgrammeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  description?: boolean
+  costPerParticipant?: boolean
   startDate?: boolean
-  eventFlow?: boolean
   participantDefinition?: boolean
 }, ExtArgs["result"]["programme"]>
 
 export type ProgrammeSelectScalar = {
   id?: boolean
   name?: boolean
+  description?: boolean
+  costPerParticipant?: boolean
   startDate?: boolean
-  eventFlow?: boolean
   participantDefinition?: boolean
 }
 
-export type ProgrammeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "startDate" | "eventFlow" | "participantDefinition", ExtArgs["result"]["programme"]>
+export type ProgrammeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "costPerParticipant" | "startDate" | "participantDefinition", ExtArgs["result"]["programme"]>
 export type ProgrammeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  eventFlow?: boolean | Prisma.Programme$eventFlowArgs<ExtArgs>
   participants?: boolean | Prisma.Programme$participantsArgs<ExtArgs>
   events?: boolean | Prisma.Programme$eventsArgs<ExtArgs>
   formTables?: boolean | Prisma.Programme$formTablesArgs<ExtArgs>
@@ -970,6 +1201,7 @@ export type ProgrammeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type $ProgrammePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Programme"
   objects: {
+    eventFlow: Prisma.$EventFlowPayload<ExtArgs> | null
     participants: Prisma.$ProgrammeParticipantPayload<ExtArgs>[]
     events: Prisma.$EventPayload<ExtArgs>[]
     formTables: Prisma.$FormTablePayload<ExtArgs>[]
@@ -980,8 +1212,9 @@ export type $ProgrammePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    description: string | null
+    costPerParticipant: number | null
     startDate: Date
-    eventFlow: runtime.JsonValue
     participantDefinition: runtime.JsonValue
   }, ExtArgs["result"]["programme"]>
   composites: {}
@@ -1377,6 +1610,7 @@ readonly fields: ProgrammeFieldRefs;
  */
 export interface Prisma__ProgrammeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  eventFlow<T extends Prisma.Programme$eventFlowArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$eventFlowArgs<ExtArgs>>): Prisma.Prisma__EventFlowClient<runtime.Types.Result.GetResult<Prisma.$EventFlowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   participants<T extends Prisma.Programme$participantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$participantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgrammeParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.Programme$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   formTables<T extends Prisma.Programme$formTablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$formTablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormTablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1414,8 +1648,9 @@ export interface Prisma__ProgrammeClient<T, Null = never, ExtArgs extends runtim
 export interface ProgrammeFieldRefs {
   readonly id: Prisma.FieldRef<"Programme", 'String'>
   readonly name: Prisma.FieldRef<"Programme", 'String'>
+  readonly description: Prisma.FieldRef<"Programme", 'String'>
+  readonly costPerParticipant: Prisma.FieldRef<"Programme", 'Float'>
   readonly startDate: Prisma.FieldRef<"Programme", 'DateTime'>
-  readonly eventFlow: Prisma.FieldRef<"Programme", 'Json'>
   readonly participantDefinition: Prisma.FieldRef<"Programme", 'Json'>
 }
     
@@ -1807,6 +2042,25 @@ export type ProgrammeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many Programmes to delete.
    */
   limit?: number
+}
+
+/**
+ * Programme.eventFlow
+ */
+export type Programme$eventFlowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EventFlow
+   */
+  select?: Prisma.EventFlowSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EventFlow
+   */
+  omit?: Prisma.EventFlowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EventFlowInclude<ExtArgs> | null
+  where?: Prisma.EventFlowWhereInput
 }
 
 /**

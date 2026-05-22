@@ -699,10 +699,6 @@ export type EnumInvoiceStatusFieldUpdateOperationsInput = {
   set?: $Enums.InvoiceStatus
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type ParticipantInvoiceUpdatestripeInvoiceItemIdsInput = {
   set?: string[]
   push?: string | string[]

@@ -63,22 +63,22 @@ enum OpportunityEventStatus {
 }
 
 model Participant {
-  id                  String                   @id @default(cuid())
-  name                String
-  email               String                   @unique
-  organisation        String?
-  address             String?
-  phone               String?
-  socialLinks         String[]                 @default([])
-  photoId             String?
-  stripeCustomerId    String?                  @unique
-  createdAt           DateTime                 @default(now())
-  updatedAt           DateTime                 @updatedAt
-  notes               String?
-  metadata            Json                     @default("{}")
-  programmes          ProgrammeParticipant[]
-  eventStatuses       EventParticipantStatus[]
-  formSubmissions     FormSubmission[]
+  id                String                   @id @default(cuid())
+  name              String
+  email             String                   @unique
+  organisation      String?
+  address           String?
+  phone             String?
+  socialLinks       String[]                 @default([])
+  photoId           String?
+  stripeCustomerId  String?                  @unique
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  notes             String?
+  metadata          Json                     @default("{}")
+  programmes        ProgrammeParticipant[]
+  eventStatuses     EventParticipantStatus[]
+  formSubmissions   FormSubmission[]
   participantInvoices ParticipantInvoice[]
 }
 
@@ -102,9 +102,11 @@ model ProgrammeParticipant {
 model Programme {
   id                    String                 @id @default(cuid())
   name                  String
+  description           String?
+  costPerParticipant    Float?
   startDate             DateTime
-  eventFlow             Json                   @default("{}")
   participantDefinition Json
+  eventFlow             EventFlow?
   participants          ProgrammeParticipant[]
   events                Event[]
   formTables            FormTable[]
@@ -113,16 +115,29 @@ model Programme {
   emailTemplates        EmailTemplate[]
 }
 
+model EventFlow {
+  id          String    @id @default(cuid())
+  programmeId String    @unique
+  flow        Json      @default("{}")
+  deployedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  programme   Programme @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  events      Event[]
+}
+
 model Event {
   id                  String                   @id @default(cuid())
   name                String
   programmeId         String
+  eventFlowId         String?
   baseType            EventBaseType
   scheduledAt         DateTime
   status              EventStatus              @default(pending)
   config              Json
   createdAt           DateTime                 @default(now())
   programme           Programme                @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  eventFlow           EventFlow?               @relation(fields: [eventFlowId], references: [id], onDelete: SetNull)
   participantStatuses EventParticipantStatus[]
   formTables          FormTable[]
   forms               Form[]
