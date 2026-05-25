@@ -1,14 +1,14 @@
 import { Hono } from "hono";
-import { EventBaseType, EventStatus, Prisma } from "../generated/client";
-import { prisma } from "../lib/prisma";
-import { redis } from "../lib/redis";
-import { handleRoute } from "../lib/http";
-import { serializeEvent } from "../lib/serializers";
-import { EVENT_SCHEDULE_HASH } from "../jobs/utils";
-import { runSendEmailEventNow } from "../jobs/sendEmailCron";
-import { runSendInvoiceEventNow } from "../jobs/sendInvoiceCron";
-import { addNotificationForAdmins } from "../lib/notifications";
-import { createEventSchema, idParamSchema, programmeQuerySchema, updateEventSchema } from "../lib/schemas";
+import { EventBaseType, EventStatus, Prisma } from "../generated/client.js";
+import { prisma } from "../lib/prisma.js";
+import { redis } from "../lib/redis.js";
+import { handleRoute } from "../lib/http.js";
+import { serializeEvent } from "../lib/serializers.js";
+import { EVENT_SCHEDULE_HASH } from "../jobs/utils.js";
+import { runSendEmailEventNow } from "../jobs/sendEmailCron.js";
+import { runSendInvoiceEventNow } from "../jobs/sendInvoiceCron.js";
+import { addNotificationForAdmins } from "../lib/notifications.js";
+import { createEventSchema, idParamSchema, programmeQuerySchema, updateEventSchema } from "../lib/schemas.js";
 
 export const eventsRouter = new Hono()
   .get("/", (c) =>

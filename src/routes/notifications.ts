@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { handleRoute } from "../lib/http";
-import { getNotificationsForAdmin, markAllNotificationsSeen } from "../lib/notifications";
+import { handleRoute } from "../lib/http.js";
+import { getNotificationsForAdmin, markAllNotificationsSeen } from "../lib/notifications.js";
 
 export const notificationsRouter = new Hono()
   .get("/", (c) =>

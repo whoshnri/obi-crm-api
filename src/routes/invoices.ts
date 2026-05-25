@@ -1,9 +1,9 @@
 import { Hono } from "hono";
-import { InvoiceStatus, PaymentStatus, Prisma } from "../generated/client";
-import { prisma } from "../lib/prisma";
-import { handleRoute } from "../lib/http";
-import { serializeInvoice } from "../lib/serializers";
-import { createInvoiceSchema, idParamSchema, programmeQuerySchema, updateInvoiceSchema } from "../lib/schemas";
+import { InvoiceStatus, PaymentStatus, Prisma } from "../generated/client.js";
+import { prisma } from "../lib/prisma.js";
+import { handleRoute } from "../lib/http.js";
+import { serializeInvoice } from "../lib/serializers.js";
+import { createInvoiceSchema, idParamSchema, programmeQuerySchema, updateInvoiceSchema } from "../lib/schemas.js";
 
 function totalLineItems(lineItems: Array<{ amount: number }>) {
   return lineItems.reduce((total, item) => total + item.amount, 0);
@@ -105,7 +105,7 @@ export const invoicesRouter = new Hono()
       });
 
       try {
-        const { addNotificationForAdmins } = await import("../lib/notifications");
+        const { addNotificationForAdmins } = await import("../lib/notifications.js");
         await addNotificationForAdmins({
           type: "invoice_created",
           title: "Invoice created",

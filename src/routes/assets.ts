@@ -1,7 +1,7 @@
 import { mkdir } from "node:fs/promises";
 import { basename, join, normalize } from "node:path";
 import { Hono } from "hono";
-import { handleRoute } from "../lib/http";
+import { handleRoute } from "../lib/http.js";
 
 const assetsRoot = normalize(join(import.meta.dir, "../../../assets"));
 

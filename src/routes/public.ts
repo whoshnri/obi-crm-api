@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import type { Context } from "hono";
-import { prisma } from "../lib/prisma";
-import { handleRoute } from "../lib/http";
+import { prisma } from "../lib/prisma.js";
+import { handleRoute } from "../lib/http.js";
 
 type ParticipantField = {
   key: string;

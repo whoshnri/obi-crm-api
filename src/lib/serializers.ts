@@ -1,4 +1,4 @@
-import type { Participant, ParticipantInvoice, Prisma, Programme, ProgrammeParticipant } from "../generated/client";
+import type { Participant, ParticipantInvoice, Prisma, Programme, ProgrammeParticipant } from "../generated/client.js";
 
 type JsonRecord = Record<string, unknown>;
 
