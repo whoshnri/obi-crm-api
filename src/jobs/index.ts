@@ -1,5 +1,5 @@
-import { startSendEmailCron } from "./sendEmailCron.js";
-import { startSendInvoiceCron } from "./sendInvoiceCron.js";
+import { startSendEmailCron } from "./sendEmailCron";
+import { startSendInvoiceCron } from "./sendInvoiceCron";
 
 let started = false;
 

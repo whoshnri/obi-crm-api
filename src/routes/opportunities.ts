@@ -1,14 +1,14 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { OpportunityEventStatus, OpportunityStatus } from "../generated/client.js";
-import { handleRoute } from "../lib/http.js";
+import { OpportunityEventStatus, OpportunityStatus } from "../generated/client";
+import { handleRoute } from "../lib/http";
 import {
   cancelOpportunityCron,
   getOpportunityCronJobId,
   scheduleOpportunityCron
-} from "../lib/opportunity-scheduler.js";
-import { prisma } from "../lib/prisma.js";
-import { idParamSchema } from "../lib/schemas.js";
+} from "../lib/opportunity-scheduler";
+import { prisma } from "../lib/prisma";
+import { idParamSchema } from "../lib/schemas";
 
 const opportunityInputSchema = z.object({
   name: z.string().min(1),

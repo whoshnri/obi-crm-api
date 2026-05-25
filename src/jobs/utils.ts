@@ -1,5 +1,5 @@
-import type { Event, Prisma } from "../generated/client.js";
-import { prisma } from "../lib/prisma.js";
+import type { Event, Prisma } from "../generated/client";
+import { prisma } from "../lib/prisma";
 
 export const EVENT_SCHEDULE_HASH = "event_schedule";
 export const FIFTEEN_MINUTES_MS = 15 * 60 * 1000;

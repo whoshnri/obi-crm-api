@@ -1,4 +1,4 @@
-import { prisma } from "./prisma.js";
+import { prisma } from "./prisma";
 
 export function getOpportunityCronJobId(opportunityId: string, pipelineStepId: string) {
   return `obi-opportunity-${opportunityId}-${pipelineStepId}`;

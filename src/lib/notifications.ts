@@ -1,5 +1,5 @@
-import { prisma } from "./prisma.js";
-import { redis } from "./redis.js";
+import { prisma } from "./prisma";
+import { redis } from "./redis";
 
 export type NotificationType =
   | "event_deployed"

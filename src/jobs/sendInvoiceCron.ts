@@ -1,7 +1,7 @@
 import { Bunqueue, type Job } from "bunqueue/client";
-import { EventBaseType, EventStatus, InvoiceStatus, PaymentStatus, Prisma, StepStatus } from "../generated/client.js";
-import { prisma } from "../lib/prisma.js";
-import { redis } from "../lib/redis.js";
+import { EventBaseType, EventStatus, InvoiceStatus, PaymentStatus, Prisma, StepStatus } from "../generated/client";
+import { prisma } from "../lib/prisma";
+import { redis } from "../lib/redis";
 import {
   EVENT_SCHEDULE_HASH,
   errorMessage,
@@ -11,7 +11,7 @@ import {
   isWithinScheduleWindow,
   parseEventConfig,
   sendAdminFeedback
-} from "./utils.js";
+} from "./utils";
 
 type InvoiceLineItem = {
   description: string;

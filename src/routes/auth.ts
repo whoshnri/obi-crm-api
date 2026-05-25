@@ -12,9 +12,9 @@ import {
   sha256,
   signAccessToken,
   verifyAccessToken
-} from "../lib/auth.js";
-import { handleRoute } from "../lib/http.js";
-import { prisma } from "../lib/prisma.js";
+} from "../lib/auth";
+import { handleRoute } from "../lib/http";
+import { prisma } from "../lib/prisma";
 
 const loginSchema = z.object({
   email: z.string().email(),

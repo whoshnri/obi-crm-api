@@ -2,22 +2,22 @@ import 'dotenv/config'
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import "./jobs/index.js";
-import { authMiddleware } from "./lib/auth.js";
-import { logApiError } from "./lib/http.js";
-import { assetsRouter } from "./routes/assets.js";
-import { authRouter } from "./routes/auth.js";
-import { adminsRouter } from "./routes/admins.js";
-import { eventsRouter } from "./routes/events.js";
-import { formsRouter } from "./routes/forms.js";
-import { invoicesRouter } from "./routes/invoices.js";
-import { opportunitiesRouter } from "./routes/opportunities.js";
-import { participantsRouter } from "./routes/participants.js";
-import { programmesRouter } from "./routes/programmes.js";
-import { publicRouter } from "./routes/public.js";
-import { templatesRouter } from "./routes/templates.js";
-import { webhooksRouter } from "./routes/webhooks.js";
-import { notificationsRouter } from "./routes/notifications.js";
+import "./jobs/index";
+import { authMiddleware } from "./lib/auth";
+import { logApiError } from "./lib/http";
+import { assetsRouter } from "./routes/assets";
+import { authRouter } from "./routes/auth";
+import { adminsRouter } from "./routes/admins";
+import { eventsRouter } from "./routes/events";
+import { formsRouter } from "./routes/forms";
+import { invoicesRouter } from "./routes/invoices";
+import { opportunitiesRouter } from "./routes/opportunities";
+import { participantsRouter } from "./routes/participants";
+import { programmesRouter } from "./routes/programmes";
+import { publicRouter } from "./routes/public";
+import { templatesRouter } from "./routes/templates";
+import { webhooksRouter } from "./routes/webhooks";
+import { notificationsRouter } from "./routes/notifications";
 
 const app = new Hono();
 
