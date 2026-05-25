@@ -8,6 +8,21 @@ const REFRESH_TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60;
 const ACCESS_COOKIE = "obi_access_token";
 const REFRESH_COOKIE = "obi_refresh_token";
 
+function isSecureCookieEnvironment() {
+  return Bun.env.NODE_ENV === "production" || Boolean(Bun.env.VERCEL);
+}
+
+function getCookieOptions(maxAge: number) {
+  const secure = isSecureCookieEnvironment();
+  return {
+    httpOnly: true,
+    secure,
+    sameSite: secure ? "None" : "Lax",
+    path: "/",
+    maxAge
+  } as const;
+}
+
 type JwtPayload = {
   sub: string;
   email: string;
@@ -86,31 +101,19 @@ export function createRefreshToken() {
 }
 
 export function setRefreshCookie(c: Context, token: string) {
-  setCookie(c, REFRESH_COOKIE, token, {
-    httpOnly: true,
-    secure: Bun.env.NODE_ENV === "production",
-    sameSite: "Lax",
-    path: "/",
-    maxAge: REFRESH_TOKEN_TTL_SECONDS
-  });
+  setCookie(c, REFRESH_COOKIE, token, getCookieOptions(REFRESH_TOKEN_TTL_SECONDS));
 }
 
 export function setAccessCookie(c: Context, token: string) {
-  setCookie(c, ACCESS_COOKIE, token, {
-    httpOnly: true,
-    secure: Bun.env.NODE_ENV === "production",
-    sameSite: "Lax",
-    path: "/",
-    maxAge: ACCESS_TOKEN_TTL_SECONDS
-  });
+  setCookie(c, ACCESS_COOKIE, token, getCookieOptions(ACCESS_TOKEN_TTL_SECONDS));
 }
 
 export function clearAccessCookie(c: Context) {
-  deleteCookie(c, ACCESS_COOKIE, { path: "/" });
+  deleteCookie(c, ACCESS_COOKIE, getCookieOptions(0));
 }
 
 export function clearRefreshCookie(c: Context) {
-  deleteCookie(c, REFRESH_COOKIE, { path: "/" });
+  deleteCookie(c, REFRESH_COOKIE, getCookieOptions(0));
 }
 
 export function getAccessCookie(c: Context) {

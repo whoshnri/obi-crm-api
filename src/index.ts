@@ -20,11 +20,25 @@ import { notificationsRouter } from "./routes/notifications";
 
 const app = new Hono();
 
+const allowedOrigins = new Set(
+  [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+    Bun.env.OBI_CRM_ORIGIN,
+    Bun.env.OBI_FORMS_APP_ORIGIN,
+    ...(Bun.env.OBI_ALLOWED_ORIGINS ?? "")
+      .split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean)
+  ].filter(Boolean)
+);
+
 app.use("*", logger());
 app.use(
   "*",
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"],
+    origin: (origin) => (allowedOrigins.has(origin) ? origin : null),
     allowHeaders: ["Content-Type", "Authorization", "X-API-Key"],
     allowMethods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
     credentials: true
