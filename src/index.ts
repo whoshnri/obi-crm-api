@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import "./jobs";
+import "./jobs/index";
 import { authMiddleware } from "./lib/auth";
 import { logApiError } from "./lib/http";
 import { assetsRouter } from "./routes/assets";
