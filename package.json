@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "bun --watch src/index.ts",
     "start": "bun src/index.ts",
-    "prisma:generate": "bunx prisma generate",
+    "postinstall": "npm run prisma:generate",
+    "prisma:generate": "prisma generate && node scripts/fix-esm-imports.mjs",
+    "fix:esm-imports": "node scripts/fix-esm-imports.mjs",
     "typecheck": "tsc --noEmit"
   },
   "prisma": {
