@@ -132,23 +132,29 @@ export function serializeProgramme(programme: {
   startDate: Date;
   participantDefinition: Prisma.JsonValue;
   eventFlow?: {
+    id?: string;
     flow: Prisma.JsonValue;
     deployedAt: Date | null;
+    events?: Array<Parameters<typeof serializeEvent>[0]>;
   } | null;
   participants?: Array<{ participantId: string }>;
-  events?: Array<Parameters<typeof serializeEvent>[0]>;
 }) {
+  const flowEvents = programme.eventFlow?.events ?? [];
   return {
     id: programme.id,
     name: programme.name,
     description: programme.description ?? undefined,
     costPerParticipant: programme.costPerParticipant ?? undefined,
     startDate: programme.startDate.toISOString(),
-    eventFlow: isRecord(programme.eventFlow?.flow) ? programme.eventFlow.flow : {},
+    eventFlow: {
+      id: programme.eventFlow?.id,
+      flow: isRecord(programme.eventFlow?.flow) ? programme.eventFlow.flow : {},
+      deployedAt: programme.eventFlow?.deployedAt?.toISOString() ?? null,
+      events: flowEvents.map(serializeEvent)
+    },
     eventFlowDeployedAt: programme.eventFlow?.deployedAt?.toISOString() ?? null,
     participantDefinition: isRecord(programme.participantDefinition) ? programme.participantDefinition : { fields: [] },
-    participants: programme.participants?.map((participant) => participant.participantId) ?? [],
-    events: programme.events?.map(serializeEvent) ?? []
+    participants: programme.participants?.map((participant) => participant.participantId) ?? []
   };
 }
 

@@ -23,7 +23,15 @@ export const programmesRouter = new Hono()
   .get("/", (c) =>
     handleRoute(c, async () => {
       const programmes = await prisma.programme.findMany({
-        orderBy: { startDate: "desc" }
+        orderBy: { startDate: "desc" },
+        include: {
+          eventFlow: {
+            include: {
+              events: { orderBy: { scheduledAt: "asc" } }
+            }
+          },
+          participants: true
+        }
       });
       return programmes.map(serializeProgramme);
     })
@@ -37,7 +45,7 @@ export const programmesRouter = new Hono()
           description: input.description ?? null,
           costPerParticipant: input.costPerParticipant ?? null,
           startDate: new Date(input.startDate),
-          participantDefinition: input.participantDefinition ?? defaultParticipantDefinition,
+          participantDefinition: (input.participantDefinition ?? defaultParticipantDefinition) as Prisma.InputJsonValue,
           eventFlow: {
             create: {
               flow: input.eventFlow ?? {},
@@ -49,7 +57,12 @@ export const programmesRouter = new Hono()
           }
         },
         include: {
-          eventFlow: true
+          eventFlow: {
+            include: {
+              events: { orderBy: { scheduledAt: "asc" } }
+            }
+          },
+          participants: true
         }
       });
       return serializeProgramme(programme);
@@ -121,8 +134,12 @@ export const programmesRouter = new Hono()
       const programme = await prisma.programme.findUnique({
         where: { id },
         include: {
-          eventFlow: true,
-          events: { orderBy: { scheduledAt: "asc" } },
+          eventFlow: {
+            include: {
+              events: { orderBy: { scheduledAt: "asc" } }
+            }
+          },
+          participants: true,
           formTables: true,
           participantInvoices: true,
           emailTemplates: true
@@ -142,7 +159,7 @@ export const programmesRouter = new Hono()
           description: input.description,
           costPerParticipant: input.costPerParticipant,
           startDate: input.startDate ? new Date(input.startDate) : undefined,
-          participantDefinition: input.participantDefinition,
+          participantDefinition: input.participantDefinition as Prisma.InputJsonValue | undefined,
           eventFlow: input.eventFlow
             ? {
                 upsert: {
@@ -158,7 +175,12 @@ export const programmesRouter = new Hono()
             : undefined
         },
         include: {
-          eventFlow: true
+          eventFlow: {
+            include: {
+              events: { orderBy: { scheduledAt: "asc" } }
+            }
+          },
+          participants: true
         }
       });
       return serializeProgramme(programme);
@@ -192,7 +214,12 @@ export const programmesRouter = new Hono()
           }
         },
         include: {
-          eventFlow: true
+          eventFlow: {
+            include: {
+              events: { orderBy: { scheduledAt: "asc" } }
+            }
+          },
+          participants: true
         }
       });
       return serializeProgramme(programme);
@@ -238,7 +265,12 @@ export const programmesRouter = new Hono()
           }
         },
         include: {
-          eventFlow: true
+          eventFlow: {
+            include: {
+              events: { orderBy: { scheduledAt: "asc" } }
+            }
+          },
+          participants: true
         }
       });
 
@@ -273,8 +305,12 @@ export const programmesRouter = new Hono()
       const programme = await prisma.programme.findUnique({
         where: { id },
         include: {
-          eventFlow: true,
-          events: { orderBy: { scheduledAt: "asc" } }
+          eventFlow: {
+            include: {
+              events: { orderBy: { scheduledAt: "asc" } }
+            }
+          },
+          participants: true
         }
       });
 
@@ -285,7 +321,7 @@ export const programmesRouter = new Hono()
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
       const events = await prisma.event.findMany({
-        where: { programmeId: id, status: "pending" },
+        where: { programmeId: id, eventFlow: { programmeId: id }, status: "pending" },
         select: { id: true, scheduledAt: true }
       });
 
@@ -333,7 +369,7 @@ export const programmesRouter = new Hono()
       const participantDefinition = participantDefinitionSchema.parse(await c.req.json());
       const programme = await prisma.programme.update({
         where: { id },
-        data: { participantDefinition }
+        data: { participantDefinition: participantDefinition as Prisma.InputJsonValue }
       });
       return serializeProgramme(programme);
     })

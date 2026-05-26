@@ -12,7 +12,8 @@ export const participantDefinitionSchema = z.object({
       required: z.boolean(),
       visible: z.boolean().default(true)
     })
-  )
+  ),
+  setup: z.record(z.string(), z.unknown()).optional()
 });
 
 export const eventFlowSchema = z.record(z.string(), z.string());

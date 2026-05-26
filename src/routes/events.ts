@@ -24,10 +24,16 @@ export const eventsRouter = new Hono()
   .post("/", (c) =>
     handleRoute(c, async () => {
       const input = createEventSchema.parse(await c.req.json());
+      const eventFlow =
+        (await prisma.eventFlow.findUnique({ where: { programmeId: input.programmeId } })) ??
+        (await prisma.eventFlow.create({
+          data: { programmeId: input.programmeId, flow: {}, deployedAt: null }
+        }));
       const event = await prisma.event.create({
         data: {
           name: input.name,
           programmeId: input.programmeId,
+          eventFlowId: eventFlow.id,
           baseType: input.baseType as EventBaseType,
           scheduledAt: new Date(input.scheduledAt),
           status: (input.status ?? "pending") as EventStatus,
