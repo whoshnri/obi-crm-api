@@ -40,6 +40,7 @@ export const programmesRouter = new Hono()
           description: input.description ?? null,
           costPerParticipant: input.costPerParticipant ?? null,
           startDate: new Date(input.startDate),
+          registrationResourceId: input.registrationResourceId ?? null,
           metadata: (input.metadata ?? {}) as Prisma.InputJsonValue,
           adminAssignments: {
             create: {
@@ -174,6 +175,8 @@ export const programmesRouter = new Hono()
           description: input.description,
           costPerParticipant: input.costPerParticipant,
           startDate: input.startDate ? new Date(input.startDate) : undefined,
+          registrationResourceId:
+            input.registrationResourceId === undefined ? undefined : input.registrationResourceId ?? null,
           metadata: input.metadata as Prisma.InputJsonValue | undefined,
           eventFlow: input.eventFlow
             ? {

@@ -222,6 +222,7 @@ model Programme {
   costPerParticipant    Float?
   startDate             DateTime
   metadata              Json                       @default("{}")
+  registrationResourceId String?                    @unique
   eventFlow             EventFlow?
   participants          ProgrammeParticipant[]
   events                Event[]
@@ -233,6 +234,7 @@ model Programme {
   commsChannel          ProgrammeCommsChannel?
   tasks                 Task[]
   resources             ProgrammeResource[]
+  registrationResource  ProgrammeResource?         @relation("ProgrammeRegistrationResource", fields: [registrationResourceId], references: [id], onDelete: SetNull)
 }
 
 model EventFlow {
@@ -644,6 +646,7 @@ model ProgrammeResource {
   updatedAt   DateTime     @updatedAt
   programme   Programme    @relation(fields: [programmeId], references: [id], onDelete: Cascade)
   addedBy     Admin?       @relation("ProgrammeResourceAddedBy", fields: [addedById], references: [id], onDelete: SetNull)
+  registrationForProgramme Programme? @relation("ProgrammeRegistrationResource")
 
   @@index([programmeId])
   @@index([addedById])

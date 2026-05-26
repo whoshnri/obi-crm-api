@@ -92,6 +92,15 @@ export const formsRouter = new Hono()
       const { id } = idParamSchema.parse(c.req.param());
       const submissions = await prisma.formSubmission.findMany({
         where: { formId: id },
+        include: {
+          participant: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        },
         orderBy: { createdAt: "desc" }
       });
       return submissions.map(serializeFormSubmission);
@@ -101,12 +110,58 @@ export const formsRouter = new Hono()
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
       const input = createSubmissionSchema.parse(await c.req.json());
+      const form = await prisma.form.findUnique({
+        where: { id },
+        select: { id: true, programmeId: true }
+      });
+
+      if (!form) {
+        return c.json({ error: "Form not found" }, 404);
+      }
+
+      let respondentId = input.respondentId ?? null;
+      if (input.respondentEmail) {
+        const normalizedEmail = input.respondentEmail.trim().toLowerCase();
+        const participant = await prisma.participant.findFirst({
+          where: form.programmeId
+            ? {
+                email: normalizedEmail,
+                programmes: {
+                  some: {
+                    programmeId: form.programmeId
+                  }
+                }
+              }
+            : {
+                email: normalizedEmail
+              },
+          select: {
+            id: true
+          }
+        });
+
+        if (!participant) {
+          return c.json({ error: "No participant found for that email in this programme." }, 422);
+        }
+
+        respondentId = participant.id;
+      }
+
       const submission = await prisma.formSubmission.create({
         data: {
           formId: id,
-          respondentId: input.respondentId ?? null,
+          respondentId,
           answers: input.answers as any,
           metadata: (input.metadata ?? {}) as any
+        },
+        include: {
+          participant: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
         }
       });
 

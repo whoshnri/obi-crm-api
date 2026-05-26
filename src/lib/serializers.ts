@@ -131,6 +131,7 @@ export function serializeProgramme(programme: {
   costPerParticipant: number | null;
   startDate: Date;
   metadata: Prisma.JsonValue;
+  registrationResourceId?: string | null;
   eventFlow?: {
     id?: string;
     flow: Prisma.JsonValue;
@@ -146,6 +147,7 @@ export function serializeProgramme(programme: {
     description: programme.description ?? undefined,
     costPerParticipant: programme.costPerParticipant ?? undefined,
     startDate: programme.startDate.toISOString(),
+    registrationResourceId: programme.registrationResourceId ?? undefined,
     eventFlow: {
       id: programme.eventFlow?.id,
       flow: isRecord(programme.eventFlow?.flow) ? programme.eventFlow.flow : {},
@@ -210,6 +212,11 @@ export function serializeFormSubmission(submission: {
   id: string;
   formId: string;
   respondentId: string | null;
+  participant?: {
+    id: string;
+    name: string;
+    email: string;
+  } | null;
   answers: Prisma.JsonValue;
   metadata: Prisma.JsonValue;
   createdAt: Date;
@@ -218,6 +225,13 @@ export function serializeFormSubmission(submission: {
     id: submission.id,
     formId: submission.formId,
     respondentId: submission.respondentId ?? undefined,
+    respondent: submission.participant
+      ? {
+          id: submission.participant.id,
+          name: submission.participant.name,
+          email: submission.participant.email,
+        }
+      : undefined,
     answers: isRecord(submission.answers) ? submission.answers : {},
     metadata: isRecord(submission.metadata) ? submission.metadata : {},
     createdAt: submission.createdAt.toISOString()

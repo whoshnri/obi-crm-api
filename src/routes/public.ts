@@ -25,7 +25,17 @@ export const publicRouter = new Hono()
         select: {
           id: true,
           name: true,
-          startDate: true
+          startDate: true,
+          registrationResourceId: true,
+          registrationResource: {
+            select: {
+              id: true,
+              label: true,
+              url: true,
+              type: true,
+              description: true
+            }
+          }
         }
       });
 
@@ -34,7 +44,9 @@ export const publicRouter = new Hono()
       return {
         id: programme.id,
         name: programme.name,
-        startDate: programme.startDate.toISOString()
+        startDate: programme.startDate.toISOString(),
+        registrationResourceId: programme.registrationResourceId ?? undefined,
+        registrationResource: programme.registrationResource ?? undefined
       };
     })
   )

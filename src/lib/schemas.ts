@@ -11,6 +11,7 @@ export const createProgrammeSchema = z.object({
   description: z.string().optional().nullable(),
   costPerParticipant: z.number().nonnegative().optional().nullable(),
   ownerAdminId: z.string().min(1),
+  registrationResourceId: z.string().min(1).optional().nullable(),
   metadata: z.record(z.string(), z.unknown()).optional(),
   eventFlow: eventFlowSchema.optional(),
 });

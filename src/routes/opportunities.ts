@@ -167,6 +167,7 @@ export const opportunitiesRouter = new Hono()
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
       const input = applyPipelineSchema.parse(await c.req.json());
+      const opportunityIds = [...new Set(input.opportunityIds)];
       const pipeline = await prisma.opportunityPipeline.findUnique({
         where: { id },
         include: { steps: true }
@@ -175,7 +176,7 @@ export const opportunitiesRouter = new Hono()
 
       const events = await prisma.$transaction(async (tx) => {
         const created = [];
-        for (const opportunityId of input.opportunityIds) {
+        for (const opportunityId of opportunityIds) {
           for (const step of pipeline.steps) {
             const cronJobId = getOpportunityCronJobId(opportunityId, step.id);
             const scheduledAt = new Date(Date.now() + step.delayDays * 24 * 60 * 60 * 1000);

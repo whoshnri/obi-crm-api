@@ -216,6 +216,7 @@ export type ProgrammeResourceWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"ProgrammeResource"> | Date | string
   programme?: Prisma.XOR<Prisma.ProgrammeScalarRelationFilter, Prisma.ProgrammeWhereInput>
   addedBy?: Prisma.XOR<Prisma.AdminNullableScalarRelationFilter, Prisma.AdminWhereInput> | null
+  registrationForProgramme?: Prisma.XOR<Prisma.ProgrammeNullableScalarRelationFilter, Prisma.ProgrammeWhereInput> | null
 }
 
 export type ProgrammeResourceOrderByWithRelationInput = {
@@ -230,6 +231,7 @@ export type ProgrammeResourceOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   programme?: Prisma.ProgrammeOrderByWithRelationInput
   addedBy?: Prisma.AdminOrderByWithRelationInput
+  registrationForProgramme?: Prisma.ProgrammeOrderByWithRelationInput
 }
 
 export type ProgrammeResourceWhereUniqueInput = Prisma.AtLeast<{
@@ -247,6 +249,7 @@ export type ProgrammeResourceWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"ProgrammeResource"> | Date | string
   programme?: Prisma.XOR<Prisma.ProgrammeScalarRelationFilter, Prisma.ProgrammeWhereInput>
   addedBy?: Prisma.XOR<Prisma.AdminNullableScalarRelationFilter, Prisma.AdminWhereInput> | null
+  registrationForProgramme?: Prisma.XOR<Prisma.ProgrammeNullableScalarRelationFilter, Prisma.ProgrammeWhereInput> | null
 }, "id">
 
 export type ProgrammeResourceOrderByWithAggregationInput = {
@@ -289,6 +292,7 @@ export type ProgrammeResourceCreateInput = {
   updatedAt?: Date | string
   programme: Prisma.ProgrammeCreateNestedOneWithoutResourcesInput
   addedBy?: Prisma.AdminCreateNestedOneWithoutProgrammeResourcesInput
+  registrationForProgramme?: Prisma.ProgrammeCreateNestedOneWithoutRegistrationResourceInput
 }
 
 export type ProgrammeResourceUncheckedCreateInput = {
@@ -301,6 +305,7 @@ export type ProgrammeResourceUncheckedCreateInput = {
   addedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  registrationForProgramme?: Prisma.ProgrammeUncheckedCreateNestedOneWithoutRegistrationResourceInput
 }
 
 export type ProgrammeResourceUpdateInput = {
@@ -313,6 +318,7 @@ export type ProgrammeResourceUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   programme?: Prisma.ProgrammeUpdateOneRequiredWithoutResourcesNestedInput
   addedBy?: Prisma.AdminUpdateOneWithoutProgrammeResourcesNestedInput
+  registrationForProgramme?: Prisma.ProgrammeUpdateOneWithoutRegistrationResourceNestedInput
 }
 
 export type ProgrammeResourceUncheckedUpdateInput = {
@@ -325,6 +331,7 @@ export type ProgrammeResourceUncheckedUpdateInput = {
   addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationForProgramme?: Prisma.ProgrammeUncheckedUpdateOneWithoutRegistrationResourceNestedInput
 }
 
 export type ProgrammeResourceCreateManyInput = {
@@ -365,6 +372,11 @@ export type ProgrammeResourceListRelationFilter = {
   every?: Prisma.ProgrammeResourceWhereInput
   some?: Prisma.ProgrammeResourceWhereInput
   none?: Prisma.ProgrammeResourceWhereInput
+}
+
+export type ProgrammeResourceNullableScalarRelationFilter = {
+  is?: Prisma.ProgrammeResourceWhereInput | null
+  isNot?: Prisma.ProgrammeResourceWhereInput | null
 }
 
 export type ProgrammeResourceOrderByRelationAggregateInput = {
@@ -414,6 +426,12 @@ export type ProgrammeResourceCreateNestedManyWithoutProgrammeInput = {
   connect?: Prisma.ProgrammeResourceWhereUniqueInput | Prisma.ProgrammeResourceWhereUniqueInput[]
 }
 
+export type ProgrammeResourceCreateNestedOneWithoutRegistrationForProgrammeInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeResourceCreateWithoutRegistrationForProgrammeInput, Prisma.ProgrammeResourceUncheckedCreateWithoutRegistrationForProgrammeInput>
+  connectOrCreate?: Prisma.ProgrammeResourceCreateOrConnectWithoutRegistrationForProgrammeInput
+  connect?: Prisma.ProgrammeResourceWhereUniqueInput
+}
+
 export type ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput = {
   create?: Prisma.XOR<Prisma.ProgrammeResourceCreateWithoutProgrammeInput, Prisma.ProgrammeResourceUncheckedCreateWithoutProgrammeInput> | Prisma.ProgrammeResourceCreateWithoutProgrammeInput[] | Prisma.ProgrammeResourceUncheckedCreateWithoutProgrammeInput[]
   connectOrCreate?: Prisma.ProgrammeResourceCreateOrConnectWithoutProgrammeInput | Prisma.ProgrammeResourceCreateOrConnectWithoutProgrammeInput[]
@@ -433,6 +451,16 @@ export type ProgrammeResourceUpdateManyWithoutProgrammeNestedInput = {
   update?: Prisma.ProgrammeResourceUpdateWithWhereUniqueWithoutProgrammeInput | Prisma.ProgrammeResourceUpdateWithWhereUniqueWithoutProgrammeInput[]
   updateMany?: Prisma.ProgrammeResourceUpdateManyWithWhereWithoutProgrammeInput | Prisma.ProgrammeResourceUpdateManyWithWhereWithoutProgrammeInput[]
   deleteMany?: Prisma.ProgrammeResourceScalarWhereInput | Prisma.ProgrammeResourceScalarWhereInput[]
+}
+
+export type ProgrammeResourceUpdateOneWithoutRegistrationForProgrammeNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeResourceCreateWithoutRegistrationForProgrammeInput, Prisma.ProgrammeResourceUncheckedCreateWithoutRegistrationForProgrammeInput>
+  connectOrCreate?: Prisma.ProgrammeResourceCreateOrConnectWithoutRegistrationForProgrammeInput
+  upsert?: Prisma.ProgrammeResourceUpsertWithoutRegistrationForProgrammeInput
+  disconnect?: Prisma.ProgrammeResourceWhereInput | boolean
+  delete?: Prisma.ProgrammeResourceWhereInput | boolean
+  connect?: Prisma.ProgrammeResourceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeResourceUpdateToOneWithWhereWithoutRegistrationForProgrammeInput, Prisma.ProgrammeResourceUpdateWithoutRegistrationForProgrammeInput>, Prisma.ProgrammeResourceUncheckedUpdateWithoutRegistrationForProgrammeInput>
 }
 
 export type ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput = {
@@ -504,6 +532,7 @@ export type ProgrammeResourceCreateWithoutProgrammeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   addedBy?: Prisma.AdminCreateNestedOneWithoutProgrammeResourcesInput
+  registrationForProgramme?: Prisma.ProgrammeCreateNestedOneWithoutRegistrationResourceInput
 }
 
 export type ProgrammeResourceUncheckedCreateWithoutProgrammeInput = {
@@ -515,6 +544,7 @@ export type ProgrammeResourceUncheckedCreateWithoutProgrammeInput = {
   addedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  registrationForProgramme?: Prisma.ProgrammeUncheckedCreateNestedOneWithoutRegistrationResourceInput
 }
 
 export type ProgrammeResourceCreateOrConnectWithoutProgrammeInput = {
@@ -525,6 +555,35 @@ export type ProgrammeResourceCreateOrConnectWithoutProgrammeInput = {
 export type ProgrammeResourceCreateManyProgrammeInputEnvelope = {
   data: Prisma.ProgrammeResourceCreateManyProgrammeInput | Prisma.ProgrammeResourceCreateManyProgrammeInput[]
   skipDuplicates?: boolean
+}
+
+export type ProgrammeResourceCreateWithoutRegistrationForProgrammeInput = {
+  id?: string
+  label: string
+  url: string
+  type?: $Enums.ResourceType
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  programme: Prisma.ProgrammeCreateNestedOneWithoutResourcesInput
+  addedBy?: Prisma.AdminCreateNestedOneWithoutProgrammeResourcesInput
+}
+
+export type ProgrammeResourceUncheckedCreateWithoutRegistrationForProgrammeInput = {
+  id?: string
+  programmeId: string
+  label: string
+  url: string
+  type?: $Enums.ResourceType
+  description?: string | null
+  addedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProgrammeResourceCreateOrConnectWithoutRegistrationForProgrammeInput = {
+  where: Prisma.ProgrammeResourceWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProgrammeResourceCreateWithoutRegistrationForProgrammeInput, Prisma.ProgrammeResourceUncheckedCreateWithoutRegistrationForProgrammeInput>
 }
 
 export type ProgrammeResourceUpsertWithWhereUniqueWithoutProgrammeInput = {
@@ -558,6 +617,41 @@ export type ProgrammeResourceScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"ProgrammeResource"> | Date | string
 }
 
+export type ProgrammeResourceUpsertWithoutRegistrationForProgrammeInput = {
+  update: Prisma.XOR<Prisma.ProgrammeResourceUpdateWithoutRegistrationForProgrammeInput, Prisma.ProgrammeResourceUncheckedUpdateWithoutRegistrationForProgrammeInput>
+  create: Prisma.XOR<Prisma.ProgrammeResourceCreateWithoutRegistrationForProgrammeInput, Prisma.ProgrammeResourceUncheckedCreateWithoutRegistrationForProgrammeInput>
+  where?: Prisma.ProgrammeResourceWhereInput
+}
+
+export type ProgrammeResourceUpdateToOneWithWhereWithoutRegistrationForProgrammeInput = {
+  where?: Prisma.ProgrammeResourceWhereInput
+  data: Prisma.XOR<Prisma.ProgrammeResourceUpdateWithoutRegistrationForProgrammeInput, Prisma.ProgrammeResourceUncheckedUpdateWithoutRegistrationForProgrammeInput>
+}
+
+export type ProgrammeResourceUpdateWithoutRegistrationForProgrammeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  programme?: Prisma.ProgrammeUpdateOneRequiredWithoutResourcesNestedInput
+  addedBy?: Prisma.AdminUpdateOneWithoutProgrammeResourcesNestedInput
+}
+
+export type ProgrammeResourceUncheckedUpdateWithoutRegistrationForProgrammeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  programmeId?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type ProgrammeResourceCreateWithoutAddedByInput = {
   id?: string
   label: string
@@ -567,6 +661,7 @@ export type ProgrammeResourceCreateWithoutAddedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   programme: Prisma.ProgrammeCreateNestedOneWithoutResourcesInput
+  registrationForProgramme?: Prisma.ProgrammeCreateNestedOneWithoutRegistrationResourceInput
 }
 
 export type ProgrammeResourceUncheckedCreateWithoutAddedByInput = {
@@ -578,6 +673,7 @@ export type ProgrammeResourceUncheckedCreateWithoutAddedByInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  registrationForProgramme?: Prisma.ProgrammeUncheckedCreateNestedOneWithoutRegistrationResourceInput
 }
 
 export type ProgrammeResourceCreateOrConnectWithoutAddedByInput = {
@@ -626,6 +722,7 @@ export type ProgrammeResourceUpdateWithoutProgrammeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addedBy?: Prisma.AdminUpdateOneWithoutProgrammeResourcesNestedInput
+  registrationForProgramme?: Prisma.ProgrammeUpdateOneWithoutRegistrationResourceNestedInput
 }
 
 export type ProgrammeResourceUncheckedUpdateWithoutProgrammeInput = {
@@ -637,6 +734,7 @@ export type ProgrammeResourceUncheckedUpdateWithoutProgrammeInput = {
   addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationForProgramme?: Prisma.ProgrammeUncheckedUpdateOneWithoutRegistrationResourceNestedInput
 }
 
 export type ProgrammeResourceUncheckedUpdateManyWithoutProgrammeInput = {
@@ -670,6 +768,7 @@ export type ProgrammeResourceUpdateWithoutAddedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   programme?: Prisma.ProgrammeUpdateOneRequiredWithoutResourcesNestedInput
+  registrationForProgramme?: Prisma.ProgrammeUpdateOneWithoutRegistrationResourceNestedInput
 }
 
 export type ProgrammeResourceUncheckedUpdateWithoutAddedByInput = {
@@ -681,6 +780,7 @@ export type ProgrammeResourceUncheckedUpdateWithoutAddedByInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationForProgramme?: Prisma.ProgrammeUncheckedUpdateOneWithoutRegistrationResourceNestedInput
 }
 
 export type ProgrammeResourceUncheckedUpdateManyWithoutAddedByInput = {
@@ -708,6 +808,7 @@ export type ProgrammeResourceSelect<ExtArgs extends runtime.Types.Extensions.Int
   updatedAt?: boolean
   programme?: boolean | Prisma.ProgrammeDefaultArgs<ExtArgs>
   addedBy?: boolean | Prisma.ProgrammeResource$addedByArgs<ExtArgs>
+  registrationForProgramme?: boolean | Prisma.ProgrammeResource$registrationForProgrammeArgs<ExtArgs>
 }, ExtArgs["result"]["programmeResource"]>
 
 export type ProgrammeResourceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -754,6 +855,7 @@ export type ProgrammeResourceOmit<ExtArgs extends runtime.Types.Extensions.Inter
 export type ProgrammeResourceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   programme?: boolean | Prisma.ProgrammeDefaultArgs<ExtArgs>
   addedBy?: boolean | Prisma.ProgrammeResource$addedByArgs<ExtArgs>
+  registrationForProgramme?: boolean | Prisma.ProgrammeResource$registrationForProgrammeArgs<ExtArgs>
 }
 export type ProgrammeResourceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   programme?: boolean | Prisma.ProgrammeDefaultArgs<ExtArgs>
@@ -769,6 +871,7 @@ export type $ProgrammeResourcePayload<ExtArgs extends runtime.Types.Extensions.I
   objects: {
     programme: Prisma.$ProgrammePayload<ExtArgs>
     addedBy: Prisma.$AdminPayload<ExtArgs> | null
+    registrationForProgramme: Prisma.$ProgrammePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1176,6 +1279,7 @@ export interface Prisma__ProgrammeResourceClient<T, Null = never, ExtArgs extend
   readonly [Symbol.toStringTag]: "PrismaPromise"
   programme<T extends Prisma.ProgrammeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProgrammeDefaultArgs<ExtArgs>>): Prisma.Prisma__ProgrammeClient<runtime.Types.Result.GetResult<Prisma.$ProgrammePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   addedBy<T extends Prisma.ProgrammeResource$addedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProgrammeResource$addedByArgs<ExtArgs>>): Prisma.Prisma__AdminClient<runtime.Types.Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  registrationForProgramme<T extends Prisma.ProgrammeResource$registrationForProgrammeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProgrammeResource$registrationForProgrammeArgs<ExtArgs>>): Prisma.Prisma__ProgrammeClient<runtime.Types.Result.GetResult<Prisma.$ProgrammePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1631,6 +1735,25 @@ export type ProgrammeResource$addedByArgs<ExtArgs extends runtime.Types.Extensio
    */
   include?: Prisma.AdminInclude<ExtArgs> | null
   where?: Prisma.AdminWhereInput
+}
+
+/**
+ * ProgrammeResource.registrationForProgramme
+ */
+export type ProgrammeResource$registrationForProgrammeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Programme
+   */
+  select?: Prisma.ProgrammeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Programme
+   */
+  omit?: Prisma.ProgrammeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProgrammeInclude<ExtArgs> | null
+  where?: Prisma.ProgrammeWhereInput
 }
 
 /**

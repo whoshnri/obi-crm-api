@@ -146,6 +146,7 @@ export const updateFormSchema = createFormSchema.partial();
 
 export const createSubmissionSchema = z.object({
   respondentId: z.string().optional().nullable(),
+  respondentEmail: z.string().email().optional().nullable(),
   answers: answersSchema,
   metadata: z.record(z.string(), z.unknown()).optional()
 });
