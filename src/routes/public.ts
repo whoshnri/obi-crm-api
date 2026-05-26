@@ -50,6 +50,51 @@ export const publicRouter = new Hono()
       };
     })
   )
+  .post("/forms/:slug/access-check", (c) =>
+    handleRoute(c, async () => {
+      const slug = c.req.param("slug");
+      const body = await c.req.json().catch(() => null);
+      const payload = isRecord(body) && isRecord(body.data) ? body.data : body;
+      if (!isRecord(payload)) return badRequest(c, "Expected a JSON object.");
+
+      const email = getStringValue(payload, "email");
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return badRequest(c, "A valid email address is required.");
+      }
+
+      const form = await prisma.form.findUnique({
+        where: { slug },
+        select: { id: true, programmeId: true }
+      });
+
+      if (!form) {
+        return c.json({ allowed: false, error: "Form not found." }, 404);
+      }
+
+      if (!form.programmeId) {
+        return { allowed: true };
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
+      const participant = await prisma.participant.findFirst({
+        where: {
+          email: normalizedEmail,
+          programmes: {
+            some: {
+              programmeId: form.programmeId
+            }
+          }
+        },
+        select: { id: true }
+      });
+
+      if (!participant) {
+        return { allowed: false, error: "No participant found for that email in this programme." };
+      }
+
+      return { allowed: true };
+    })
+  )
   .post("/enroll-participant", (c) =>
     handleRoute(c, async () => {
       const body = await c.req.json().catch(() => null);
