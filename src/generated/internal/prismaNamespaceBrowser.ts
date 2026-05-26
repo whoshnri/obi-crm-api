@@ -151,7 +151,7 @@ export const ProgrammeScalarFieldEnum = {
   description: 'description',
   costPerParticipant: 'costPerParticipant',
   startDate: 'startDate',
-  participantDefinition: 'participantDefinition'
+  metadata: 'metadata'
 } as const
 
 export type ProgrammeScalarFieldEnum = (typeof ProgrammeScalarFieldEnum)[keyof typeof ProgrammeScalarFieldEnum]

@@ -221,7 +221,7 @@ model Programme {
   description           String?
   costPerParticipant    Float?
   startDate             DateTime
-  participantDefinition Json
+  metadata              Json                       @default("{}")
   eventFlow             EventFlow?
   participants          ProgrammeParticipant[]
   events                Event[]

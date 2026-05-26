@@ -130,7 +130,7 @@ export function serializeProgramme(programme: {
   description: string | null;
   costPerParticipant: number | null;
   startDate: Date;
-  participantDefinition: Prisma.JsonValue;
+  metadata: Prisma.JsonValue;
   eventFlow?: {
     id?: string;
     flow: Prisma.JsonValue;
@@ -153,7 +153,7 @@ export function serializeProgramme(programme: {
       events: flowEvents.map(serializeEvent)
     },
     eventFlowDeployedAt: programme.eventFlow?.deployedAt?.toISOString() ?? null,
-    participantDefinition: isRecord(programme.participantDefinition) ? programme.participantDefinition : { fields: [] },
+    metadata: isRecord(programme.metadata) ? programme.metadata : {},
     participants: programme.participants?.map((participant) => participant.participantId) ?? []
   };
 }

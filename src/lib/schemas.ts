@@ -3,19 +3,6 @@ import { z } from "zod";
 export const idParamSchema = z.object({ id: z.string().min(1) });
 export const programmeQuerySchema = z.object({ programmeId: z.string().optional() });
 
-export const participantDefinitionSchema = z.object({
-  fields: z.array(
-    z.object({
-      key: z.string().min(1),
-      label: z.string().min(1),
-      type: z.enum(["text", "email", "textarea"]),
-      required: z.boolean(),
-      visible: z.boolean().default(true)
-    })
-  ),
-  setup: z.record(z.string(), z.unknown()).optional()
-});
-
 export const eventFlowSchema = z.record(z.string(), z.string());
 
 export const createProgrammeSchema = z.object({
@@ -23,8 +10,9 @@ export const createProgrammeSchema = z.object({
   startDate: z.iso.datetime().or(z.string().min(1)),
   description: z.string().optional().nullable(),
   costPerParticipant: z.number().nonnegative().optional().nullable(),
+  ownerAdminId: z.string().min(1),
+  metadata: z.record(z.string(), z.unknown()).optional(),
   eventFlow: eventFlowSchema.optional(),
-  participantDefinition: participantDefinitionSchema.optional()
 });
 
 export const updateProgrammeSchema = createProgrammeSchema.partial();

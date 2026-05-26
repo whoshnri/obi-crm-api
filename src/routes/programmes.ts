@@ -10,14 +10,9 @@ import {
   createProgrammeSchema,
   eventFlowSchema,
   idParamSchema,
-  participantDefinitionSchema,
   saveProgrammeEventFlowStateSchema,
   updateProgrammeSchema
 } from "../lib/schemas";
-
-const defaultParticipantDefinition = {
-  fields: []
-};
 
 export const programmesRouter = new Hono()
   .get("/", (c) =>
@@ -45,7 +40,12 @@ export const programmesRouter = new Hono()
           description: input.description ?? null,
           costPerParticipant: input.costPerParticipant ?? null,
           startDate: new Date(input.startDate),
-          participantDefinition: (input.participantDefinition ?? defaultParticipantDefinition) as Prisma.InputJsonValue,
+          metadata: (input.metadata ?? {}) as Prisma.InputJsonValue,
+          adminAssignments: {
+            create: {
+              adminId: input.ownerAdminId
+            }
+          },
           eventFlow: {
             create: {
               flow: input.eventFlow ?? {},
@@ -152,6 +152,21 @@ export const programmesRouter = new Hono()
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
       const input = updateProgrammeSchema.parse(await c.req.json());
+      if (input.ownerAdminId) {
+        await prisma.adminProgrammeAssignment.upsert({
+          where: {
+            adminId_programmeId: {
+              adminId: input.ownerAdminId,
+              programmeId: id
+            }
+          },
+          create: {
+            adminId: input.ownerAdminId,
+            programmeId: id
+          },
+          update: {}
+        });
+      }
       const programme = await prisma.programme.update({
         where: { id },
         data: {
@@ -159,7 +174,7 @@ export const programmesRouter = new Hono()
           description: input.description,
           costPerParticipant: input.costPerParticipant,
           startDate: input.startDate ? new Date(input.startDate) : undefined,
-          participantDefinition: input.participantDefinition as Prisma.InputJsonValue | undefined,
+          metadata: input.metadata as Prisma.InputJsonValue | undefined,
           eventFlow: input.eventFlow
             ? {
                 upsert: {
@@ -361,16 +376,5 @@ export const programmesRouter = new Hono()
       }
 
       return { ok: true, scheduled: events.length };
-    })
-  )
-  .put("/:id/participant-definition", (c) =>
-    handleRoute(c, async () => {
-      const { id } = idParamSchema.parse(c.req.param());
-      const participantDefinition = participantDefinitionSchema.parse(await c.req.json());
-      const programme = await prisma.programme.update({
-        where: { id },
-        data: { participantDefinition: participantDefinition as Prisma.InputJsonValue }
-      });
-      return serializeProgramme(programme);
     })
   );
