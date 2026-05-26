@@ -85,3 +85,123 @@ export const OpportunityEventStatus = {
 } as const
 
 export type OpportunityEventStatus = (typeof OpportunityEventStatus)[keyof typeof OpportunityEventStatus]
+
+
+export const Permission = {
+  admin_create: 'admin_create',
+  admin_update: 'admin_update',
+  admin_delete: 'admin_delete',
+  admin_view: 'admin_view',
+  role_create: 'role_create',
+  role_update: 'role_update',
+  role_delete: 'role_delete',
+  role_view: 'role_view',
+  role_assign: 'role_assign',
+  programme_create: 'programme_create',
+  programme_update: 'programme_update',
+  programme_delete: 'programme_delete',
+  programme_view: 'programme_view',
+  programme_assign_admin: 'programme_assign_admin',
+  participant_create: 'participant_create',
+  participant_update: 'participant_update',
+  participant_delete: 'participant_delete',
+  participant_view: 'participant_view',
+  invoice_create: 'invoice_create',
+  invoice_update: 'invoice_update',
+  invoice_delete: 'invoice_delete',
+  invoice_view: 'invoice_view',
+  invoice_send: 'invoice_send',
+  event_create: 'event_create',
+  event_update: 'event_update',
+  event_delete: 'event_delete',
+  event_view: 'event_view',
+  event_trigger: 'event_trigger',
+  form_create: 'form_create',
+  form_update: 'form_update',
+  form_delete: 'form_delete',
+  form_view: 'form_view',
+  form_submissions_view: 'form_submissions_view',
+  opportunity_create: 'opportunity_create',
+  opportunity_update: 'opportunity_update',
+  opportunity_delete: 'opportunity_delete',
+  opportunity_view: 'opportunity_view',
+  comms_post: 'comms_post',
+  comms_delete: 'comms_delete',
+  comms_view: 'comms_view',
+  comms_tag: 'comms_tag',
+  task_create: 'task_create',
+  task_update: 'task_update',
+  task_delete: 'task_delete',
+  task_view: 'task_view',
+  task_assign: 'task_assign',
+  resource_create: 'resource_create',
+  resource_update: 'resource_update',
+  resource_delete: 'resource_delete',
+  resource_view: 'resource_view',
+  notification_view: 'notification_view',
+  notification_manage: 'notification_manage',
+  org_settings_view: 'org_settings_view',
+  org_settings_update: 'org_settings_update'
+} as const
+
+export type Permission = (typeof Permission)[keyof typeof Permission]
+
+
+export const NotificationType = {
+  form_submission: 'form_submission',
+  form_submitted: 'form_submitted',
+  event_run: 'event_run',
+  event_deployed: 'event_deployed',
+  event_failed: 'event_failed',
+  event_completed: 'event_completed',
+  payment_received: 'payment_received',
+  payment_overdue: 'payment_overdue',
+  invoice_sent: 'invoice_sent',
+  invoice_created: 'invoice_created',
+  participant_added: 'participant_added',
+  participant_updated: 'participant_updated',
+  participant_enrolled: 'participant_enrolled',
+  programme_update: 'programme_update',
+  task_assigned: 'task_assigned',
+  task_completed: 'task_completed',
+  comms_tag: 'comms_tag',
+  admin_added: 'admin_added',
+  opportunity_converted: 'opportunity_converted',
+  error: 'error',
+  info: 'info'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const TaskPriority = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+  urgent: 'urgent'
+} as const
+
+export type TaskPriority = (typeof TaskPriority)[keyof typeof TaskPriority]
+
+
+export const TaskStatus = {
+  open: 'open',
+  in_progress: 'in_progress',
+  blocked: 'blocked',
+  done: 'done',
+  cancelled: 'cancelled'
+} as const
+
+export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
+
+
+export const ResourceType = {
+  link: 'link',
+  document: 'document',
+  video: 'video',
+  spreadsheet: 'spreadsheet',
+  image: 'image',
+  other: 'other'
+} as const
+
+export type ResourceType = (typeof ResourceType)[keyof typeof ResourceType]

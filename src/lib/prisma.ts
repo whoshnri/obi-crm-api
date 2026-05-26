@@ -41,3 +41,5 @@ export const prisma =
 if (Bun.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
+
+

@@ -25,7 +25,6 @@ enum EventBaseType {
   send_invoice
 }
 
-
 enum EventStatus {
   pending
   processing
@@ -62,37 +61,154 @@ enum OpportunityEventStatus {
   failed
 }
 
+enum Permission {
+  admin_create
+  admin_update
+  admin_delete
+  admin_view
+  role_create
+  role_update
+  role_delete
+  role_view
+  role_assign
+  programme_create
+  programme_update
+  programme_delete
+  programme_view
+  programme_assign_admin
+  participant_create
+  participant_update
+  participant_delete
+  participant_view
+  invoice_create
+  invoice_update
+  invoice_delete
+  invoice_view
+  invoice_send
+  event_create
+  event_update
+  event_delete
+  event_view
+  event_trigger
+  form_create
+  form_update
+  form_delete
+  form_view
+  form_submissions_view
+  opportunity_create
+  opportunity_update
+  opportunity_delete
+  opportunity_view
+  comms_post
+  comms_delete
+  comms_view
+  comms_tag
+  task_create
+  task_update
+  task_delete
+  task_view
+  task_assign
+  resource_create
+  resource_update
+  resource_delete
+  resource_view
+  notification_view
+  notification_manage
+  org_settings_view
+  org_settings_update
+}
+
+enum NotificationType {
+  form_submission
+  form_submitted
+  event_run
+  event_deployed
+  event_failed
+  event_completed
+  payment_received
+  payment_overdue
+  invoice_sent
+  invoice_created
+  participant_added
+  participant_updated
+  participant_enrolled
+  programme_update
+  task_assigned
+  task_completed
+  comms_tag
+  admin_added
+  opportunity_converted
+  error
+  info
+}
+
+enum TaskPriority {
+  low
+  medium
+  high
+  urgent
+}
+
+enum TaskStatus {
+  open
+  in_progress
+  blocked
+  done
+  cancelled
+}
+
+enum ResourceType {
+  link
+  document
+  video
+  spreadsheet
+  image
+  other
+}
+
+model Role {
+  id                   String                     @id @default(cuid())
+  name                 String                     @unique
+  description          String?
+  isSystem             Boolean                    @default(false)
+  permissions          String[]                   @default([])
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+  admins               Admin[]                    @relation("AdminRoleAssignments")
+  programmeAssignments AdminProgrammeAssignment[]
+}
+
 model Participant {
-  id                String                   @id @default(cuid())
-  name              String
-  email             String                   @unique
-  organisation      String?
-  address           String?
-  phone             String?
-  socialLinks       String[]                 @default([])
-  photoId           String?
-  stripeCustomerId  String?                  @unique
-  createdAt         DateTime                 @default(now())
-  updatedAt         DateTime                 @updatedAt
-  notes             String?
-  metadata          Json                     @default("{}")
-  programmes        ProgrammeParticipant[]
-  eventStatuses     EventParticipantStatus[]
-  formSubmissions   FormSubmission[]
+  id                  String                   @id @default(cuid())
+  name                String
+  email               String                   @unique
+  organisation        String?
+  address             String?
+  phone               String?
+  socialLinks         String[]                 @default([])
+  photoId             String?
+  stripeCustomerId    String?                  @unique
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @updatedAt
+  notes               String?
+  metadata            Json                     @default("{}")
+  programmes          ProgrammeParticipant[]
+  eventStatuses       EventParticipantStatus[]
+  formSubmissions     FormSubmission[]
   participantInvoices ParticipantInvoice[]
 }
 
 model ProgrammeParticipant {
-  id            String        @id @default(cuid())
+  id            String              @id @default(cuid())
   programmeId   String
   participantId String
-  invoiceId     String?       @unique
-  paymentStatus PaymentStatus @default(not_invoiced)
-  metadata      Json          @default("{}")
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  programme     Programme     @relation(fields: [programmeId], references: [id], onDelete: Cascade)
-  participant   Participant   @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  invoiceId     String?             @unique
+  paymentStatus PaymentStatus       @default(not_invoiced)
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  programme     Programme           @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  participant   Participant         @relation(fields: [participantId], references: [id], onDelete: Cascade)
   invoice       ParticipantInvoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
 
   @@unique([programmeId, participantId])
@@ -100,7 +216,7 @@ model ProgrammeParticipant {
 }
 
 model Programme {
-  id                    String                 @id @default(cuid())
+  id                    String                     @id @default(cuid())
   name                  String
   description           String?
   costPerParticipant    Float?
@@ -113,6 +229,10 @@ model Programme {
   forms                 Form[]
   participantInvoices   ParticipantInvoice[]
   emailTemplates        EmailTemplate[]
+  adminAssignments      AdminProgrammeAssignment[]
+  commsChannel          ProgrammeCommsChannel?
+  tasks                 Task[]
+  resources             ProgrammeResource[]
 }
 
 model EventFlow {
@@ -234,16 +354,30 @@ model EmailTemplate {
 }
 
 model Admin {
-  id                   String         @id @default(cuid())
-  name                 String
-  email                String         @unique
-  role                 AdminRole      @default(read_only)
-  password             String
-  notificationsEnabled Boolean        @default(true)
-  photoId              String?
-  createdAt            DateTime       @default(now())
-  updatedAt            DateTime       @updatedAt
-  sessions             AdminSession[]
+  id                    String                     @id @default(cuid())
+  name                  String
+  email                 String                     @unique
+  role                  AdminRole                  @default(read_only)
+  roleId                String?
+  password              String
+  notificationsEnabled  Boolean                    @default(true)
+  photoId               String?
+  createdAt             DateTime                   @default(now())
+  updatedAt             DateTime                   @updatedAt
+  sessions              AdminSession[]
+  roleModel             Role?                      @relation("AdminRoleAssignments", fields: [roleId], references: [id], onDelete: SetNull)
+  programmeAssignments  AdminProgrammeAssignment[]
+  orgCommsThreads       OrgCommsThread[]           @relation("OrgCommsAuthor")
+  orgCommsReplies       OrgCommsReply[]            @relation("OrgCommsReplyAuthor")
+  orgCommsTags          OrgCommsTag[]
+  programmeCommsThreads ProgrammeCommsThread[]     @relation("ProgrammeCommsAuthor")
+  programmeCommsReplies ProgrammeCommsReply[]      @relation("ProgrammeCommsReplyAuthor")
+  programmeCommsTags    ProgrammeCommsTag[]
+  notifications         Notification[]
+  assignedTasks         Task[]                     @relation("TaskAssignee")
+  createdTasks          Task[]                     @relation("TaskCreator")
+  assignedTaskItems     TaskItem[]                 @relation("TaskItemAssignee")
+  programmeResources    ProgrammeResource[]        @relation("ProgrammeResourceAddedBy")
 }
 
 model AdminSession {
@@ -322,4 +456,195 @@ model OpportunityEvent {
   @@index([opportunityId])
   @@index([pipelineId])
   @@index([pipelineStepId])
+}
+
+model AdminProgrammeAssignment {
+  id          String    @id @default(cuid())
+  adminId     String
+  programmeId String
+  roleId      String?
+  assignedAt  DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  admin       Admin     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  programme   Programme @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  role        Role?     @relation(fields: [roleId], references: [id], onDelete: SetNull)
+
+  @@unique([adminId, programmeId])
+  @@index([adminId])
+  @@index([programmeId])
+  @@index([roleId])
+}
+
+model OrgCommsThread {
+  id        String          @id @default(cuid())
+  authorId  String
+  title     String
+  body      String
+  isPinned  Boolean         @default(false)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  author    Admin           @relation("OrgCommsAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  tags      OrgCommsTag[]
+  replies   OrgCommsReply[]
+
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model OrgCommsReply {
+  id        String          @id @default(cuid())
+  threadId  String
+  authorId  String
+  body      String
+  parentId  String?
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  thread    OrgCommsThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  author    Admin           @relation("OrgCommsReplyAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  parent    OrgCommsReply?  @relation("OrgCommsReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  children  OrgCommsReply[] @relation("OrgCommsReplies")
+
+  @@index([threadId])
+  @@index([authorId])
+  @@index([parentId])
+}
+
+model OrgCommsTag {
+  id       String         @id @default(cuid())
+  threadId String
+  adminId  String
+  thread   OrgCommsThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  admin    Admin          @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@unique([threadId, adminId])
+  @@index([adminId])
+}
+
+model ProgrammeCommsChannel {
+  id          String                 @id @default(cuid())
+  programmeId String                 @unique
+  createdAt   DateTime               @default(now())
+  programme   Programme              @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  threads     ProgrammeCommsThread[]
+}
+
+model ProgrammeCommsThread {
+  id        String                @id @default(cuid())
+  channelId String
+  authorId  String
+  title     String
+  body      String
+  isPinned  Boolean               @default(false)
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+  channel   ProgrammeCommsChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  author    Admin                 @relation("ProgrammeCommsAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  tags      ProgrammeCommsTag[]
+  replies   ProgrammeCommsReply[]
+
+  @@index([channelId])
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model ProgrammeCommsReply {
+  id        String                @id @default(cuid())
+  threadId  String
+  authorId  String
+  body      String
+  parentId  String?
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+  thread    ProgrammeCommsThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  author    Admin                 @relation("ProgrammeCommsReplyAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  parent    ProgrammeCommsReply?  @relation("ProgrammeCommsReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  children  ProgrammeCommsReply[] @relation("ProgrammeCommsReplies")
+
+  @@index([threadId])
+  @@index([authorId])
+  @@index([parentId])
+}
+
+model ProgrammeCommsTag {
+  id       String               @id @default(cuid())
+  threadId String
+  adminId  String
+  thread   ProgrammeCommsThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  admin    Admin                @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@unique([threadId, adminId])
+  @@index([adminId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  adminId   String
+  type      NotificationType
+  title     String
+  body      String?
+  read      Boolean          @default(false)
+  payload   Json             @default("{}")
+  createdAt DateTime         @default(now())
+  admin     Admin            @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([read])
+  @@index([createdAt])
+}
+
+model Task {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  programmeId String?
+  assigneeId  String?
+  createdById String
+  priority    TaskPriority @default(medium)
+  status      TaskStatus   @default(open)
+  dueDate     DateTime?
+  metadata    Json         @default("{}")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  assignee    Admin?       @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  createdBy   Admin        @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  programme   Programme?   @relation(fields: [programmeId], references: [id], onDelete: SetNull)
+  items       TaskItem[]
+
+  @@index([assigneeId])
+  @@index([createdById])
+  @@index([programmeId])
+  @@index([status])
+}
+
+model TaskItem {
+  id         String   @id @default(cuid())
+  taskId     String
+  label      String
+  completed  Boolean  @default(false)
+  assigneeId String?
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  assignee   Admin?   @relation("TaskItemAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+
+  @@index([taskId])
+  @@index([assigneeId])
+}
+
+model ProgrammeResource {
+  id          String       @id @default(cuid())
+  programmeId String
+  label       String
+  url         String
+  type        ResourceType @default(link)
+  description String?
+  addedById   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  programme   Programme    @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  addedBy     Admin?       @relation("ProgrammeResourceAddedBy", fields: [addedById], references: [id], onDelete: SetNull)
+
+  @@index([programmeId])
+  @@index([addedById])
 }

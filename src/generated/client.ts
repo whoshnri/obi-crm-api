@@ -31,8 +31,8 @@ export * from "./enums"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Participants
- * const participants = await prisma.participant.findMany()
+ * // Fetch zero or more Roles
+ * const roles = await prisma.role.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -41,6 +41,11 @@ export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
+/**
+ * Model Role
+ * 
+ */
+export type Role = Prisma.RoleModel
 /**
  * Model Participant
  * 
@@ -126,3 +131,63 @@ export type OpportunityPipelineStep = Prisma.OpportunityPipelineStepModel
  * 
  */
 export type OpportunityEvent = Prisma.OpportunityEventModel
+/**
+ * Model AdminProgrammeAssignment
+ * 
+ */
+export type AdminProgrammeAssignment = Prisma.AdminProgrammeAssignmentModel
+/**
+ * Model OrgCommsThread
+ * 
+ */
+export type OrgCommsThread = Prisma.OrgCommsThreadModel
+/**
+ * Model OrgCommsReply
+ * 
+ */
+export type OrgCommsReply = Prisma.OrgCommsReplyModel
+/**
+ * Model OrgCommsTag
+ * 
+ */
+export type OrgCommsTag = Prisma.OrgCommsTagModel
+/**
+ * Model ProgrammeCommsChannel
+ * 
+ */
+export type ProgrammeCommsChannel = Prisma.ProgrammeCommsChannelModel
+/**
+ * Model ProgrammeCommsThread
+ * 
+ */
+export type ProgrammeCommsThread = Prisma.ProgrammeCommsThreadModel
+/**
+ * Model ProgrammeCommsReply
+ * 
+ */
+export type ProgrammeCommsReply = Prisma.ProgrammeCommsReplyModel
+/**
+ * Model ProgrammeCommsTag
+ * 
+ */
+export type ProgrammeCommsTag = Prisma.ProgrammeCommsTagModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model Task
+ * 
+ */
+export type Task = Prisma.TaskModel
+/**
+ * Model TaskItem
+ * 
+ */
+export type TaskItem = Prisma.TaskItemModel
+/**
+ * Model ProgrammeResource
+ * 
+ */
+export type ProgrammeResource = Prisma.ProgrammeResourceModel

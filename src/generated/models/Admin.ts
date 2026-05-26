@@ -29,6 +29,7 @@ export type AdminMinAggregateOutputType = {
   name: string | null
   email: string | null
   role: $Enums.AdminRole | null
+  roleId: string | null
   password: string | null
   notificationsEnabled: boolean | null
   photoId: string | null
@@ -41,6 +42,7 @@ export type AdminMaxAggregateOutputType = {
   name: string | null
   email: string | null
   role: $Enums.AdminRole | null
+  roleId: string | null
   password: string | null
   notificationsEnabled: boolean | null
   photoId: string | null
@@ -53,6 +55,7 @@ export type AdminCountAggregateOutputType = {
   name: number
   email: number
   role: number
+  roleId: number
   password: number
   notificationsEnabled: number
   photoId: number
@@ -67,6 +70,7 @@ export type AdminMinAggregateInputType = {
   name?: true
   email?: true
   role?: true
+  roleId?: true
   password?: true
   notificationsEnabled?: true
   photoId?: true
@@ -79,6 +83,7 @@ export type AdminMaxAggregateInputType = {
   name?: true
   email?: true
   role?: true
+  roleId?: true
   password?: true
   notificationsEnabled?: true
   photoId?: true
@@ -91,6 +96,7 @@ export type AdminCountAggregateInputType = {
   name?: true
   email?: true
   role?: true
+  roleId?: true
   password?: true
   notificationsEnabled?: true
   photoId?: true
@@ -176,6 +182,7 @@ export type AdminGroupByOutputType = {
   name: string
   email: string
   role: $Enums.AdminRole
+  roleId: string | null
   password: string
   notificationsEnabled: boolean
   photoId: string | null
@@ -209,12 +216,26 @@ export type AdminWhereInput = {
   name?: Prisma.StringFilter<"Admin"> | string
   email?: Prisma.StringFilter<"Admin"> | string
   role?: Prisma.EnumAdminRoleFilter<"Admin"> | $Enums.AdminRole
+  roleId?: Prisma.StringNullableFilter<"Admin"> | string | null
   password?: Prisma.StringFilter<"Admin"> | string
   notificationsEnabled?: Prisma.BoolFilter<"Admin"> | boolean
   photoId?: Prisma.StringNullableFilter<"Admin"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   sessions?: Prisma.AdminSessionListRelationFilter
+  roleModel?: Prisma.XOR<Prisma.RoleNullableScalarRelationFilter, Prisma.RoleWhereInput> | null
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentListRelationFilter
+  orgCommsThreads?: Prisma.OrgCommsThreadListRelationFilter
+  orgCommsReplies?: Prisma.OrgCommsReplyListRelationFilter
+  orgCommsTags?: Prisma.OrgCommsTagListRelationFilter
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadListRelationFilter
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyListRelationFilter
+  programmeCommsTags?: Prisma.ProgrammeCommsTagListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
+  assignedTasks?: Prisma.TaskListRelationFilter
+  createdTasks?: Prisma.TaskListRelationFilter
+  assignedTaskItems?: Prisma.TaskItemListRelationFilter
+  programmeResources?: Prisma.ProgrammeResourceListRelationFilter
 }
 
 export type AdminOrderByWithRelationInput = {
@@ -222,12 +243,26 @@ export type AdminOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  roleId?: Prisma.SortOrderInput | Prisma.SortOrder
   password?: Prisma.SortOrder
   notificationsEnabled?: Prisma.SortOrder
   photoId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sessions?: Prisma.AdminSessionOrderByRelationAggregateInput
+  roleModel?: Prisma.RoleOrderByWithRelationInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentOrderByRelationAggregateInput
+  orgCommsThreads?: Prisma.OrgCommsThreadOrderByRelationAggregateInput
+  orgCommsReplies?: Prisma.OrgCommsReplyOrderByRelationAggregateInput
+  orgCommsTags?: Prisma.OrgCommsTagOrderByRelationAggregateInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadOrderByRelationAggregateInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyOrderByRelationAggregateInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagOrderByRelationAggregateInput
+  notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  assignedTasks?: Prisma.TaskOrderByRelationAggregateInput
+  createdTasks?: Prisma.TaskOrderByRelationAggregateInput
+  assignedTaskItems?: Prisma.TaskItemOrderByRelationAggregateInput
+  programmeResources?: Prisma.ProgrammeResourceOrderByRelationAggregateInput
 }
 
 export type AdminWhereUniqueInput = Prisma.AtLeast<{
@@ -238,12 +273,26 @@ export type AdminWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.AdminWhereInput | Prisma.AdminWhereInput[]
   name?: Prisma.StringFilter<"Admin"> | string
   role?: Prisma.EnumAdminRoleFilter<"Admin"> | $Enums.AdminRole
+  roleId?: Prisma.StringNullableFilter<"Admin"> | string | null
   password?: Prisma.StringFilter<"Admin"> | string
   notificationsEnabled?: Prisma.BoolFilter<"Admin"> | boolean
   photoId?: Prisma.StringNullableFilter<"Admin"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   sessions?: Prisma.AdminSessionListRelationFilter
+  roleModel?: Prisma.XOR<Prisma.RoleNullableScalarRelationFilter, Prisma.RoleWhereInput> | null
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentListRelationFilter
+  orgCommsThreads?: Prisma.OrgCommsThreadListRelationFilter
+  orgCommsReplies?: Prisma.OrgCommsReplyListRelationFilter
+  orgCommsTags?: Prisma.OrgCommsTagListRelationFilter
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadListRelationFilter
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyListRelationFilter
+  programmeCommsTags?: Prisma.ProgrammeCommsTagListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
+  assignedTasks?: Prisma.TaskListRelationFilter
+  createdTasks?: Prisma.TaskListRelationFilter
+  assignedTaskItems?: Prisma.TaskItemListRelationFilter
+  programmeResources?: Prisma.ProgrammeResourceListRelationFilter
 }, "id" | "email">
 
 export type AdminOrderByWithAggregationInput = {
@@ -251,6 +300,7 @@ export type AdminOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  roleId?: Prisma.SortOrderInput | Prisma.SortOrder
   password?: Prisma.SortOrder
   notificationsEnabled?: Prisma.SortOrder
   photoId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -269,6 +319,7 @@ export type AdminScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Admin"> | string
   email?: Prisma.StringWithAggregatesFilter<"Admin"> | string
   role?: Prisma.EnumAdminRoleWithAggregatesFilter<"Admin"> | $Enums.AdminRole
+  roleId?: Prisma.StringNullableWithAggregatesFilter<"Admin"> | string | null
   password?: Prisma.StringWithAggregatesFilter<"Admin"> | string
   notificationsEnabled?: Prisma.BoolWithAggregatesFilter<"Admin"> | boolean
   photoId?: Prisma.StringNullableWithAggregatesFilter<"Admin"> | string | null
@@ -287,6 +338,19 @@ export type AdminCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateInput = {
@@ -294,12 +358,25 @@ export type AdminUncheckedCreateInput = {
   name: string
   email: string
   role?: $Enums.AdminRole
+  roleId?: string | null
   password: string
   notificationsEnabled?: boolean
   photoId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUpdateInput = {
@@ -313,6 +390,19 @@ export type AdminUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateInput = {
@@ -320,12 +410,25 @@ export type AdminUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateManyInput = {
@@ -333,6 +436,7 @@ export type AdminCreateManyInput = {
   name: string
   email: string
   role?: $Enums.AdminRole
+  roleId?: string | null
   password: string
   notificationsEnabled?: boolean
   photoId?: string | null
@@ -357,6 +461,7 @@ export type AdminUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -364,11 +469,22 @@ export type AdminUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type AdminListRelationFilter = {
+  every?: Prisma.AdminWhereInput
+  some?: Prisma.AdminWhereInput
+  none?: Prisma.AdminWhereInput
+}
+
+export type AdminOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type AdminCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  roleId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   notificationsEnabled?: Prisma.SortOrder
   photoId?: Prisma.SortOrder
@@ -381,6 +497,7 @@ export type AdminMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  roleId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   notificationsEnabled?: Prisma.SortOrder
   photoId?: Prisma.SortOrder
@@ -393,6 +510,7 @@ export type AdminMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  roleId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   notificationsEnabled?: Prisma.SortOrder
   photoId?: Prisma.SortOrder
@@ -405,12 +523,55 @@ export type AdminScalarRelationFilter = {
   isNot?: Prisma.AdminWhereInput
 }
 
-export type EnumAdminRoleFieldUpdateOperationsInput = {
-  set?: $Enums.AdminRole
+export type AdminNullableScalarRelationFilter = {
+  is?: Prisma.AdminWhereInput | null
+  isNot?: Prisma.AdminWhereInput | null
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
+export type AdminCreateNestedManyWithoutRoleModelInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutRoleModelInput, Prisma.AdminUncheckedCreateWithoutRoleModelInput> | Prisma.AdminCreateWithoutRoleModelInput[] | Prisma.AdminUncheckedCreateWithoutRoleModelInput[]
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutRoleModelInput | Prisma.AdminCreateOrConnectWithoutRoleModelInput[]
+  createMany?: Prisma.AdminCreateManyRoleModelInputEnvelope
+  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+}
+
+export type AdminUncheckedCreateNestedManyWithoutRoleModelInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutRoleModelInput, Prisma.AdminUncheckedCreateWithoutRoleModelInput> | Prisma.AdminCreateWithoutRoleModelInput[] | Prisma.AdminUncheckedCreateWithoutRoleModelInput[]
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutRoleModelInput | Prisma.AdminCreateOrConnectWithoutRoleModelInput[]
+  createMany?: Prisma.AdminCreateManyRoleModelInputEnvelope
+  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+}
+
+export type AdminUpdateManyWithoutRoleModelNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutRoleModelInput, Prisma.AdminUncheckedCreateWithoutRoleModelInput> | Prisma.AdminCreateWithoutRoleModelInput[] | Prisma.AdminUncheckedCreateWithoutRoleModelInput[]
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutRoleModelInput | Prisma.AdminCreateOrConnectWithoutRoleModelInput[]
+  upsert?: Prisma.AdminUpsertWithWhereUniqueWithoutRoleModelInput | Prisma.AdminUpsertWithWhereUniqueWithoutRoleModelInput[]
+  createMany?: Prisma.AdminCreateManyRoleModelInputEnvelope
+  set?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  disconnect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  delete?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  update?: Prisma.AdminUpdateWithWhereUniqueWithoutRoleModelInput | Prisma.AdminUpdateWithWhereUniqueWithoutRoleModelInput[]
+  updateMany?: Prisma.AdminUpdateManyWithWhereWithoutRoleModelInput | Prisma.AdminUpdateManyWithWhereWithoutRoleModelInput[]
+  deleteMany?: Prisma.AdminScalarWhereInput | Prisma.AdminScalarWhereInput[]
+}
+
+export type AdminUncheckedUpdateManyWithoutRoleModelNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutRoleModelInput, Prisma.AdminUncheckedCreateWithoutRoleModelInput> | Prisma.AdminCreateWithoutRoleModelInput[] | Prisma.AdminUncheckedCreateWithoutRoleModelInput[]
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutRoleModelInput | Prisma.AdminCreateOrConnectWithoutRoleModelInput[]
+  upsert?: Prisma.AdminUpsertWithWhereUniqueWithoutRoleModelInput | Prisma.AdminUpsertWithWhereUniqueWithoutRoleModelInput[]
+  createMany?: Prisma.AdminCreateManyRoleModelInputEnvelope
+  set?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  disconnect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  delete?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  update?: Prisma.AdminUpdateWithWhereUniqueWithoutRoleModelInput | Prisma.AdminUpdateWithWhereUniqueWithoutRoleModelInput[]
+  updateMany?: Prisma.AdminUpdateManyWithWhereWithoutRoleModelInput | Prisma.AdminUpdateManyWithWhereWithoutRoleModelInput[]
+  deleteMany?: Prisma.AdminScalarWhereInput | Prisma.AdminScalarWhereInput[]
+}
+
+export type EnumAdminRoleFieldUpdateOperationsInput = {
+  set?: $Enums.AdminRole
 }
 
 export type AdminCreateNestedOneWithoutSessionsInput = {
@@ -427,6 +588,272 @@ export type AdminUpdateOneRequiredWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutSessionsInput, Prisma.AdminUpdateWithoutSessionsInput>, Prisma.AdminUncheckedUpdateWithoutSessionsInput>
 }
 
+export type AdminCreateNestedOneWithoutProgrammeAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeAssignmentsInput, Prisma.AdminUncheckedCreateWithoutProgrammeAssignmentsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutProgrammeAssignmentsInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneRequiredWithoutProgrammeAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeAssignmentsInput, Prisma.AdminUncheckedCreateWithoutProgrammeAssignmentsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutProgrammeAssignmentsInput
+  upsert?: Prisma.AdminUpsertWithoutProgrammeAssignmentsInput
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutProgrammeAssignmentsInput, Prisma.AdminUpdateWithoutProgrammeAssignmentsInput>, Prisma.AdminUncheckedUpdateWithoutProgrammeAssignmentsInput>
+}
+
+export type AdminCreateNestedOneWithoutOrgCommsThreadsInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsThreadsInput, Prisma.AdminUncheckedCreateWithoutOrgCommsThreadsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutOrgCommsThreadsInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneRequiredWithoutOrgCommsThreadsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsThreadsInput, Prisma.AdminUncheckedCreateWithoutOrgCommsThreadsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutOrgCommsThreadsInput
+  upsert?: Prisma.AdminUpsertWithoutOrgCommsThreadsInput
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutOrgCommsThreadsInput, Prisma.AdminUpdateWithoutOrgCommsThreadsInput>, Prisma.AdminUncheckedUpdateWithoutOrgCommsThreadsInput>
+}
+
+export type AdminCreateNestedOneWithoutOrgCommsRepliesInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsRepliesInput, Prisma.AdminUncheckedCreateWithoutOrgCommsRepliesInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutOrgCommsRepliesInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneRequiredWithoutOrgCommsRepliesNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsRepliesInput, Prisma.AdminUncheckedCreateWithoutOrgCommsRepliesInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutOrgCommsRepliesInput
+  upsert?: Prisma.AdminUpsertWithoutOrgCommsRepliesInput
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutOrgCommsRepliesInput, Prisma.AdminUpdateWithoutOrgCommsRepliesInput>, Prisma.AdminUncheckedUpdateWithoutOrgCommsRepliesInput>
+}
+
+export type AdminCreateNestedOneWithoutOrgCommsTagsInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsTagsInput, Prisma.AdminUncheckedCreateWithoutOrgCommsTagsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutOrgCommsTagsInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneRequiredWithoutOrgCommsTagsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsTagsInput, Prisma.AdminUncheckedCreateWithoutOrgCommsTagsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutOrgCommsTagsInput
+  upsert?: Prisma.AdminUpsertWithoutOrgCommsTagsInput
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutOrgCommsTagsInput, Prisma.AdminUpdateWithoutOrgCommsTagsInput>, Prisma.AdminUncheckedUpdateWithoutOrgCommsTagsInput>
+}
+
+export type AdminCreateNestedOneWithoutProgrammeCommsThreadsInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsThreadsInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsThreadsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutProgrammeCommsThreadsInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneRequiredWithoutProgrammeCommsThreadsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsThreadsInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsThreadsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutProgrammeCommsThreadsInput
+  upsert?: Prisma.AdminUpsertWithoutProgrammeCommsThreadsInput
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutProgrammeCommsThreadsInput, Prisma.AdminUpdateWithoutProgrammeCommsThreadsInput>, Prisma.AdminUncheckedUpdateWithoutProgrammeCommsThreadsInput>
+}
+
+export type AdminCreateNestedOneWithoutProgrammeCommsRepliesInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsRepliesInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsRepliesInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutProgrammeCommsRepliesInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneRequiredWithoutProgrammeCommsRepliesNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsRepliesInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsRepliesInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutProgrammeCommsRepliesInput
+  upsert?: Prisma.AdminUpsertWithoutProgrammeCommsRepliesInput
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutProgrammeCommsRepliesInput, Prisma.AdminUpdateWithoutProgrammeCommsRepliesInput>, Prisma.AdminUncheckedUpdateWithoutProgrammeCommsRepliesInput>
+}
+
+export type AdminCreateNestedOneWithoutProgrammeCommsTagsInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsTagsInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsTagsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutProgrammeCommsTagsInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneRequiredWithoutProgrammeCommsTagsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsTagsInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsTagsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutProgrammeCommsTagsInput
+  upsert?: Prisma.AdminUpsertWithoutProgrammeCommsTagsInput
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutProgrammeCommsTagsInput, Prisma.AdminUpdateWithoutProgrammeCommsTagsInput>, Prisma.AdminUncheckedUpdateWithoutProgrammeCommsTagsInput>
+}
+
+export type AdminCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutNotificationsInput, Prisma.AdminUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneRequiredWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutNotificationsInput, Prisma.AdminUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.AdminUpsertWithoutNotificationsInput
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutNotificationsInput, Prisma.AdminUpdateWithoutNotificationsInput>, Prisma.AdminUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type AdminCreateNestedOneWithoutAssignedTasksInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutAssignedTasksInput, Prisma.AdminUncheckedCreateWithoutAssignedTasksInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutAssignedTasksInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminCreateNestedOneWithoutCreatedTasksInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutCreatedTasksInput, Prisma.AdminUncheckedCreateWithoutCreatedTasksInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutCreatedTasksInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneWithoutAssignedTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutAssignedTasksInput, Prisma.AdminUncheckedCreateWithoutAssignedTasksInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutAssignedTasksInput
+  upsert?: Prisma.AdminUpsertWithoutAssignedTasksInput
+  disconnect?: Prisma.AdminWhereInput | boolean
+  delete?: Prisma.AdminWhereInput | boolean
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutAssignedTasksInput, Prisma.AdminUpdateWithoutAssignedTasksInput>, Prisma.AdminUncheckedUpdateWithoutAssignedTasksInput>
+}
+
+export type AdminUpdateOneRequiredWithoutCreatedTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutCreatedTasksInput, Prisma.AdminUncheckedCreateWithoutCreatedTasksInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutCreatedTasksInput
+  upsert?: Prisma.AdminUpsertWithoutCreatedTasksInput
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutCreatedTasksInput, Prisma.AdminUpdateWithoutCreatedTasksInput>, Prisma.AdminUncheckedUpdateWithoutCreatedTasksInput>
+}
+
+export type AdminCreateNestedOneWithoutAssignedTaskItemsInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutAssignedTaskItemsInput, Prisma.AdminUncheckedCreateWithoutAssignedTaskItemsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutAssignedTaskItemsInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneWithoutAssignedTaskItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutAssignedTaskItemsInput, Prisma.AdminUncheckedCreateWithoutAssignedTaskItemsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutAssignedTaskItemsInput
+  upsert?: Prisma.AdminUpsertWithoutAssignedTaskItemsInput
+  disconnect?: Prisma.AdminWhereInput | boolean
+  delete?: Prisma.AdminWhereInput | boolean
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutAssignedTaskItemsInput, Prisma.AdminUpdateWithoutAssignedTaskItemsInput>, Prisma.AdminUncheckedUpdateWithoutAssignedTaskItemsInput>
+}
+
+export type AdminCreateNestedOneWithoutProgrammeResourcesInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeResourcesInput, Prisma.AdminUncheckedCreateWithoutProgrammeResourcesInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutProgrammeResourcesInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneWithoutProgrammeResourcesNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeResourcesInput, Prisma.AdminUncheckedCreateWithoutProgrammeResourcesInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutProgrammeResourcesInput
+  upsert?: Prisma.AdminUpsertWithoutProgrammeResourcesInput
+  disconnect?: Prisma.AdminWhereInput | boolean
+  delete?: Prisma.AdminWhereInput | boolean
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutProgrammeResourcesInput, Prisma.AdminUpdateWithoutProgrammeResourcesInput>, Prisma.AdminUncheckedUpdateWithoutProgrammeResourcesInput>
+}
+
+export type AdminCreateWithoutRoleModelInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutRoleModelInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutRoleModelInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutRoleModelInput, Prisma.AdminUncheckedCreateWithoutRoleModelInput>
+}
+
+export type AdminCreateManyRoleModelInputEnvelope = {
+  data: Prisma.AdminCreateManyRoleModelInput | Prisma.AdminCreateManyRoleModelInput[]
+  skipDuplicates?: boolean
+}
+
+export type AdminUpsertWithWhereUniqueWithoutRoleModelInput = {
+  where: Prisma.AdminWhereUniqueInput
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutRoleModelInput, Prisma.AdminUncheckedUpdateWithoutRoleModelInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutRoleModelInput, Prisma.AdminUncheckedCreateWithoutRoleModelInput>
+}
+
+export type AdminUpdateWithWhereUniqueWithoutRoleModelInput = {
+  where: Prisma.AdminWhereUniqueInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutRoleModelInput, Prisma.AdminUncheckedUpdateWithoutRoleModelInput>
+}
+
+export type AdminUpdateManyWithWhereWithoutRoleModelInput = {
+  where: Prisma.AdminScalarWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateManyMutationInput, Prisma.AdminUncheckedUpdateManyWithoutRoleModelInput>
+}
+
+export type AdminScalarWhereInput = {
+  AND?: Prisma.AdminScalarWhereInput | Prisma.AdminScalarWhereInput[]
+  OR?: Prisma.AdminScalarWhereInput[]
+  NOT?: Prisma.AdminScalarWhereInput | Prisma.AdminScalarWhereInput[]
+  id?: Prisma.StringFilter<"Admin"> | string
+  name?: Prisma.StringFilter<"Admin"> | string
+  email?: Prisma.StringFilter<"Admin"> | string
+  role?: Prisma.EnumAdminRoleFilter<"Admin"> | $Enums.AdminRole
+  roleId?: Prisma.StringNullableFilter<"Admin"> | string | null
+  password?: Prisma.StringFilter<"Admin"> | string
+  notificationsEnabled?: Prisma.BoolFilter<"Admin"> | boolean
+  photoId?: Prisma.StringNullableFilter<"Admin"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
+}
+
 export type AdminCreateWithoutSessionsInput = {
   id?: string
   name: string
@@ -437,6 +864,19 @@ export type AdminCreateWithoutSessionsInput = {
   photoId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutSessionsInput = {
@@ -444,11 +884,24 @@ export type AdminUncheckedCreateWithoutSessionsInput = {
   name: string
   email: string
   role?: $Enums.AdminRole
+  roleId?: string | null
   password: string
   notificationsEnabled?: boolean
   photoId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutSessionsInput = {
@@ -477,9 +930,1501 @@ export type AdminUpdateWithoutSessionsInput = {
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminCreateWithoutProgrammeAssignmentsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutProgrammeAssignmentsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutProgrammeAssignmentsInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeAssignmentsInput, Prisma.AdminUncheckedCreateWithoutProgrammeAssignmentsInput>
+}
+
+export type AdminUpsertWithoutProgrammeAssignmentsInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutProgrammeAssignmentsInput, Prisma.AdminUncheckedUpdateWithoutProgrammeAssignmentsInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeAssignmentsInput, Prisma.AdminUncheckedCreateWithoutProgrammeAssignmentsInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutProgrammeAssignmentsInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutProgrammeAssignmentsInput, Prisma.AdminUncheckedUpdateWithoutProgrammeAssignmentsInput>
+}
+
+export type AdminUpdateWithoutProgrammeAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutProgrammeAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminCreateWithoutOrgCommsThreadsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutOrgCommsThreadsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutOrgCommsThreadsInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsThreadsInput, Prisma.AdminUncheckedCreateWithoutOrgCommsThreadsInput>
+}
+
+export type AdminUpsertWithoutOrgCommsThreadsInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutOrgCommsThreadsInput, Prisma.AdminUncheckedUpdateWithoutOrgCommsThreadsInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsThreadsInput, Prisma.AdminUncheckedCreateWithoutOrgCommsThreadsInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutOrgCommsThreadsInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutOrgCommsThreadsInput, Prisma.AdminUncheckedUpdateWithoutOrgCommsThreadsInput>
+}
+
+export type AdminUpdateWithoutOrgCommsThreadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutOrgCommsThreadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminCreateWithoutOrgCommsRepliesInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutOrgCommsRepliesInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutOrgCommsRepliesInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsRepliesInput, Prisma.AdminUncheckedCreateWithoutOrgCommsRepliesInput>
+}
+
+export type AdminUpsertWithoutOrgCommsRepliesInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutOrgCommsRepliesInput, Prisma.AdminUncheckedUpdateWithoutOrgCommsRepliesInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsRepliesInput, Prisma.AdminUncheckedCreateWithoutOrgCommsRepliesInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutOrgCommsRepliesInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutOrgCommsRepliesInput, Prisma.AdminUncheckedUpdateWithoutOrgCommsRepliesInput>
+}
+
+export type AdminUpdateWithoutOrgCommsRepliesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutOrgCommsRepliesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminCreateWithoutOrgCommsTagsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutOrgCommsTagsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutOrgCommsTagsInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsTagsInput, Prisma.AdminUncheckedCreateWithoutOrgCommsTagsInput>
+}
+
+export type AdminUpsertWithoutOrgCommsTagsInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutOrgCommsTagsInput, Prisma.AdminUncheckedUpdateWithoutOrgCommsTagsInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutOrgCommsTagsInput, Prisma.AdminUncheckedCreateWithoutOrgCommsTagsInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutOrgCommsTagsInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutOrgCommsTagsInput, Prisma.AdminUncheckedUpdateWithoutOrgCommsTagsInput>
+}
+
+export type AdminUpdateWithoutOrgCommsTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutOrgCommsTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminCreateWithoutProgrammeCommsThreadsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutProgrammeCommsThreadsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutProgrammeCommsThreadsInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsThreadsInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsThreadsInput>
+}
+
+export type AdminUpsertWithoutProgrammeCommsThreadsInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutProgrammeCommsThreadsInput, Prisma.AdminUncheckedUpdateWithoutProgrammeCommsThreadsInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsThreadsInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsThreadsInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutProgrammeCommsThreadsInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutProgrammeCommsThreadsInput, Prisma.AdminUncheckedUpdateWithoutProgrammeCommsThreadsInput>
+}
+
+export type AdminUpdateWithoutProgrammeCommsThreadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutProgrammeCommsThreadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminCreateWithoutProgrammeCommsRepliesInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutProgrammeCommsRepliesInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutProgrammeCommsRepliesInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsRepliesInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsRepliesInput>
+}
+
+export type AdminUpsertWithoutProgrammeCommsRepliesInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutProgrammeCommsRepliesInput, Prisma.AdminUncheckedUpdateWithoutProgrammeCommsRepliesInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsRepliesInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsRepliesInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutProgrammeCommsRepliesInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutProgrammeCommsRepliesInput, Prisma.AdminUncheckedUpdateWithoutProgrammeCommsRepliesInput>
+}
+
+export type AdminUpdateWithoutProgrammeCommsRepliesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutProgrammeCommsRepliesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminCreateWithoutProgrammeCommsTagsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutProgrammeCommsTagsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutProgrammeCommsTagsInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsTagsInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsTagsInput>
+}
+
+export type AdminUpsertWithoutProgrammeCommsTagsInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutProgrammeCommsTagsInput, Prisma.AdminUncheckedUpdateWithoutProgrammeCommsTagsInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeCommsTagsInput, Prisma.AdminUncheckedCreateWithoutProgrammeCommsTagsInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutProgrammeCommsTagsInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutProgrammeCommsTagsInput, Prisma.AdminUncheckedUpdateWithoutProgrammeCommsTagsInput>
+}
+
+export type AdminUpdateWithoutProgrammeCommsTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutProgrammeCommsTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminCreateWithoutNotificationsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutNotificationsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutNotificationsInput, Prisma.AdminUncheckedCreateWithoutNotificationsInput>
+}
+
+export type AdminUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutNotificationsInput, Prisma.AdminUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutNotificationsInput, Prisma.AdminUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutNotificationsInput, Prisma.AdminUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type AdminUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminCreateWithoutAssignedTasksInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutAssignedTasksInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutAssignedTasksInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutAssignedTasksInput, Prisma.AdminUncheckedCreateWithoutAssignedTasksInput>
+}
+
+export type AdminCreateWithoutCreatedTasksInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutCreatedTasksInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutCreatedTasksInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutCreatedTasksInput, Prisma.AdminUncheckedCreateWithoutCreatedTasksInput>
+}
+
+export type AdminUpsertWithoutAssignedTasksInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutAssignedTasksInput, Prisma.AdminUncheckedUpdateWithoutAssignedTasksInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutAssignedTasksInput, Prisma.AdminUncheckedCreateWithoutAssignedTasksInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutAssignedTasksInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutAssignedTasksInput, Prisma.AdminUncheckedUpdateWithoutAssignedTasksInput>
+}
+
+export type AdminUpdateWithoutAssignedTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutAssignedTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUpsertWithoutCreatedTasksInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutCreatedTasksInput, Prisma.AdminUncheckedUpdateWithoutCreatedTasksInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutCreatedTasksInput, Prisma.AdminUncheckedCreateWithoutCreatedTasksInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutCreatedTasksInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutCreatedTasksInput, Prisma.AdminUncheckedUpdateWithoutCreatedTasksInput>
+}
+
+export type AdminUpdateWithoutCreatedTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutCreatedTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminCreateWithoutAssignedTaskItemsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutAssignedTaskItemsInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutAssignedTaskItemsInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutAssignedTaskItemsInput, Prisma.AdminUncheckedCreateWithoutAssignedTaskItemsInput>
+}
+
+export type AdminUpsertWithoutAssignedTaskItemsInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutAssignedTaskItemsInput, Prisma.AdminUncheckedUpdateWithoutAssignedTaskItemsInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutAssignedTaskItemsInput, Prisma.AdminUncheckedCreateWithoutAssignedTaskItemsInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutAssignedTaskItemsInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutAssignedTaskItemsInput, Prisma.AdminUncheckedUpdateWithoutAssignedTaskItemsInput>
+}
+
+export type AdminUpdateWithoutAssignedTaskItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutAssignedTaskItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminCreateWithoutProgrammeResourcesInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+}
+
+export type AdminUncheckedCreateWithoutProgrammeResourcesInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+}
+
+export type AdminCreateOrConnectWithoutProgrammeResourcesInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeResourcesInput, Prisma.AdminUncheckedCreateWithoutProgrammeResourcesInput>
+}
+
+export type AdminUpsertWithoutProgrammeResourcesInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutProgrammeResourcesInput, Prisma.AdminUncheckedUpdateWithoutProgrammeResourcesInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutProgrammeResourcesInput, Prisma.AdminUncheckedCreateWithoutProgrammeResourcesInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutProgrammeResourcesInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutProgrammeResourcesInput, Prisma.AdminUncheckedUpdateWithoutProgrammeResourcesInput>
+}
+
+export type AdminUpdateWithoutProgrammeResourcesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutProgrammeResourcesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+}
+
+export type AdminCreateManyRoleModelInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AdminUpdateWithoutRoleModelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutRoleModelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateManyWithoutRoleModelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -498,10 +2443,34 @@ export type AdminUncheckedUpdateWithoutSessionsInput = {
 
 export type AdminCountOutputType = {
   sessions: number
+  programmeAssignments: number
+  orgCommsThreads: number
+  orgCommsReplies: number
+  orgCommsTags: number
+  programmeCommsThreads: number
+  programmeCommsReplies: number
+  programmeCommsTags: number
+  notifications: number
+  assignedTasks: number
+  createdTasks: number
+  assignedTaskItems: number
+  programmeResources: number
 }
 
 export type AdminCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | AdminCountOutputTypeCountSessionsArgs
+  programmeAssignments?: boolean | AdminCountOutputTypeCountProgrammeAssignmentsArgs
+  orgCommsThreads?: boolean | AdminCountOutputTypeCountOrgCommsThreadsArgs
+  orgCommsReplies?: boolean | AdminCountOutputTypeCountOrgCommsRepliesArgs
+  orgCommsTags?: boolean | AdminCountOutputTypeCountOrgCommsTagsArgs
+  programmeCommsThreads?: boolean | AdminCountOutputTypeCountProgrammeCommsThreadsArgs
+  programmeCommsReplies?: boolean | AdminCountOutputTypeCountProgrammeCommsRepliesArgs
+  programmeCommsTags?: boolean | AdminCountOutputTypeCountProgrammeCommsTagsArgs
+  notifications?: boolean | AdminCountOutputTypeCountNotificationsArgs
+  assignedTasks?: boolean | AdminCountOutputTypeCountAssignedTasksArgs
+  createdTasks?: boolean | AdminCountOutputTypeCountCreatedTasksArgs
+  assignedTaskItems?: boolean | AdminCountOutputTypeCountAssignedTaskItemsArgs
+  programmeResources?: boolean | AdminCountOutputTypeCountProgrammeResourcesArgs
 }
 
 /**
@@ -521,18 +2490,116 @@ export type AdminCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.AdminSessionWhereInput
 }
 
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountProgrammeAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdminProgrammeAssignmentWhereInput
+}
+
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountOrgCommsThreadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrgCommsThreadWhereInput
+}
+
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountOrgCommsRepliesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrgCommsReplyWhereInput
+}
+
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountOrgCommsTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrgCommsTagWhereInput
+}
+
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountProgrammeCommsThreadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgrammeCommsThreadWhereInput
+}
+
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountProgrammeCommsRepliesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgrammeCommsReplyWhereInput
+}
+
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountProgrammeCommsTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgrammeCommsTagWhereInput
+}
+
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationWhereInput
+}
+
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountAssignedTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskWhereInput
+}
+
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountCreatedTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskWhereInput
+}
+
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountAssignedTaskItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskItemWhereInput
+}
+
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountProgrammeResourcesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgrammeResourceWhereInput
+}
+
 
 export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   email?: boolean
   role?: boolean
+  roleId?: boolean
   password?: boolean
   notificationsEnabled?: boolean
   photoId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   sessions?: boolean | Prisma.Admin$sessionsArgs<ExtArgs>
+  roleModel?: boolean | Prisma.Admin$roleModelArgs<ExtArgs>
+  programmeAssignments?: boolean | Prisma.Admin$programmeAssignmentsArgs<ExtArgs>
+  orgCommsThreads?: boolean | Prisma.Admin$orgCommsThreadsArgs<ExtArgs>
+  orgCommsReplies?: boolean | Prisma.Admin$orgCommsRepliesArgs<ExtArgs>
+  orgCommsTags?: boolean | Prisma.Admin$orgCommsTagsArgs<ExtArgs>
+  programmeCommsThreads?: boolean | Prisma.Admin$programmeCommsThreadsArgs<ExtArgs>
+  programmeCommsReplies?: boolean | Prisma.Admin$programmeCommsRepliesArgs<ExtArgs>
+  programmeCommsTags?: boolean | Prisma.Admin$programmeCommsTagsArgs<ExtArgs>
+  notifications?: boolean | Prisma.Admin$notificationsArgs<ExtArgs>
+  assignedTasks?: boolean | Prisma.Admin$assignedTasksArgs<ExtArgs>
+  createdTasks?: boolean | Prisma.Admin$createdTasksArgs<ExtArgs>
+  assignedTaskItems?: boolean | Prisma.Admin$assignedTaskItemsArgs<ExtArgs>
+  programmeResources?: boolean | Prisma.Admin$programmeResourcesArgs<ExtArgs>
   _count?: boolean | Prisma.AdminCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["admin"]>
 
@@ -541,11 +2608,13 @@ export type AdminSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   name?: boolean
   email?: boolean
   role?: boolean
+  roleId?: boolean
   password?: boolean
   notificationsEnabled?: boolean
   photoId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  roleModel?: boolean | Prisma.Admin$roleModelArgs<ExtArgs>
 }, ExtArgs["result"]["admin"]>
 
 export type AdminSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -553,11 +2622,13 @@ export type AdminSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   name?: boolean
   email?: boolean
   role?: boolean
+  roleId?: boolean
   password?: boolean
   notificationsEnabled?: boolean
   photoId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  roleModel?: boolean | Prisma.Admin$roleModelArgs<ExtArgs>
 }, ExtArgs["result"]["admin"]>
 
 export type AdminSelectScalar = {
@@ -565,6 +2636,7 @@ export type AdminSelectScalar = {
   name?: boolean
   email?: boolean
   role?: boolean
+  roleId?: boolean
   password?: boolean
   notificationsEnabled?: boolean
   photoId?: boolean
@@ -572,24 +2644,55 @@ export type AdminSelectScalar = {
   updatedAt?: boolean
 }
 
-export type AdminOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "role" | "password" | "notificationsEnabled" | "photoId" | "createdAt" | "updatedAt", ExtArgs["result"]["admin"]>
+export type AdminOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "role" | "roleId" | "password" | "notificationsEnabled" | "photoId" | "createdAt" | "updatedAt", ExtArgs["result"]["admin"]>
 export type AdminInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.Admin$sessionsArgs<ExtArgs>
+  roleModel?: boolean | Prisma.Admin$roleModelArgs<ExtArgs>
+  programmeAssignments?: boolean | Prisma.Admin$programmeAssignmentsArgs<ExtArgs>
+  orgCommsThreads?: boolean | Prisma.Admin$orgCommsThreadsArgs<ExtArgs>
+  orgCommsReplies?: boolean | Prisma.Admin$orgCommsRepliesArgs<ExtArgs>
+  orgCommsTags?: boolean | Prisma.Admin$orgCommsTagsArgs<ExtArgs>
+  programmeCommsThreads?: boolean | Prisma.Admin$programmeCommsThreadsArgs<ExtArgs>
+  programmeCommsReplies?: boolean | Prisma.Admin$programmeCommsRepliesArgs<ExtArgs>
+  programmeCommsTags?: boolean | Prisma.Admin$programmeCommsTagsArgs<ExtArgs>
+  notifications?: boolean | Prisma.Admin$notificationsArgs<ExtArgs>
+  assignedTasks?: boolean | Prisma.Admin$assignedTasksArgs<ExtArgs>
+  createdTasks?: boolean | Prisma.Admin$createdTasksArgs<ExtArgs>
+  assignedTaskItems?: boolean | Prisma.Admin$assignedTaskItemsArgs<ExtArgs>
+  programmeResources?: boolean | Prisma.Admin$programmeResourcesArgs<ExtArgs>
   _count?: boolean | Prisma.AdminCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type AdminIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type AdminIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type AdminIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  roleModel?: boolean | Prisma.Admin$roleModelArgs<ExtArgs>
+}
+export type AdminIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  roleModel?: boolean | Prisma.Admin$roleModelArgs<ExtArgs>
+}
 
 export type $AdminPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Admin"
   objects: {
     sessions: Prisma.$AdminSessionPayload<ExtArgs>[]
+    roleModel: Prisma.$RolePayload<ExtArgs> | null
+    programmeAssignments: Prisma.$AdminProgrammeAssignmentPayload<ExtArgs>[]
+    orgCommsThreads: Prisma.$OrgCommsThreadPayload<ExtArgs>[]
+    orgCommsReplies: Prisma.$OrgCommsReplyPayload<ExtArgs>[]
+    orgCommsTags: Prisma.$OrgCommsTagPayload<ExtArgs>[]
+    programmeCommsThreads: Prisma.$ProgrammeCommsThreadPayload<ExtArgs>[]
+    programmeCommsReplies: Prisma.$ProgrammeCommsReplyPayload<ExtArgs>[]
+    programmeCommsTags: Prisma.$ProgrammeCommsTagPayload<ExtArgs>[]
+    notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    assignedTasks: Prisma.$TaskPayload<ExtArgs>[]
+    createdTasks: Prisma.$TaskPayload<ExtArgs>[]
+    assignedTaskItems: Prisma.$TaskItemPayload<ExtArgs>[]
+    programmeResources: Prisma.$ProgrammeResourcePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     email: string
     role: $Enums.AdminRole
+    roleId: string | null
     password: string
     notificationsEnabled: boolean
     photoId: string | null
@@ -990,6 +3093,19 @@ readonly fields: AdminFieldRefs;
 export interface Prisma__AdminClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sessions<T extends Prisma.Admin$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  roleModel<T extends Prisma.Admin$roleModelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$roleModelArgs<ExtArgs>>): Prisma.Prisma__RoleClient<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  programmeAssignments<T extends Prisma.Admin$programmeAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$programmeAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminProgrammeAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orgCommsThreads<T extends Prisma.Admin$orgCommsThreadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$orgCommsThreadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrgCommsThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orgCommsReplies<T extends Prisma.Admin$orgCommsRepliesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$orgCommsRepliesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrgCommsReplyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orgCommsTags<T extends Prisma.Admin$orgCommsTagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$orgCommsTagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrgCommsTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  programmeCommsThreads<T extends Prisma.Admin$programmeCommsThreadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$programmeCommsThreadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgrammeCommsThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  programmeCommsReplies<T extends Prisma.Admin$programmeCommsRepliesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$programmeCommsRepliesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgrammeCommsReplyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  programmeCommsTags<T extends Prisma.Admin$programmeCommsTagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$programmeCommsTagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgrammeCommsTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.Admin$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignedTasks<T extends Prisma.Admin$assignedTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$assignedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdTasks<T extends Prisma.Admin$createdTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$createdTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignedTaskItems<T extends Prisma.Admin$assignedTaskItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$assignedTaskItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  programmeResources<T extends Prisma.Admin$programmeResourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$programmeResourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgrammeResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1023,6 +3139,7 @@ export interface AdminFieldRefs {
   readonly name: Prisma.FieldRef<"Admin", 'String'>
   readonly email: Prisma.FieldRef<"Admin", 'String'>
   readonly role: Prisma.FieldRef<"Admin", 'AdminRole'>
+  readonly roleId: Prisma.FieldRef<"Admin", 'String'>
   readonly password: Prisma.FieldRef<"Admin", 'String'>
   readonly notificationsEnabled: Prisma.FieldRef<"Admin", 'Boolean'>
   readonly photoId: Prisma.FieldRef<"Admin", 'String'>
@@ -1282,6 +3399,10 @@ export type AdminCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    */
   data: Prisma.AdminCreateManyInput | Prisma.AdminCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdminIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1352,6 +3473,10 @@ export type AdminUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many Admins to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdminIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1442,6 +3567,313 @@ export type Admin$sessionsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.AdminSessionScalarFieldEnum | Prisma.AdminSessionScalarFieldEnum[]
+}
+
+/**
+ * Admin.roleModel
+ */
+export type Admin$roleModelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Role
+   */
+  select?: Prisma.RoleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Role
+   */
+  omit?: Prisma.RoleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoleInclude<ExtArgs> | null
+  where?: Prisma.RoleWhereInput
+}
+
+/**
+ * Admin.programmeAssignments
+ */
+export type Admin$programmeAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdminProgrammeAssignment
+   */
+  select?: Prisma.AdminProgrammeAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdminProgrammeAssignment
+   */
+  omit?: Prisma.AdminProgrammeAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdminProgrammeAssignmentInclude<ExtArgs> | null
+  where?: Prisma.AdminProgrammeAssignmentWhereInput
+  orderBy?: Prisma.AdminProgrammeAssignmentOrderByWithRelationInput | Prisma.AdminProgrammeAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.AdminProgrammeAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdminProgrammeAssignmentScalarFieldEnum | Prisma.AdminProgrammeAssignmentScalarFieldEnum[]
+}
+
+/**
+ * Admin.orgCommsThreads
+ */
+export type Admin$orgCommsThreadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrgCommsThread
+   */
+  select?: Prisma.OrgCommsThreadSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrgCommsThread
+   */
+  omit?: Prisma.OrgCommsThreadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrgCommsThreadInclude<ExtArgs> | null
+  where?: Prisma.OrgCommsThreadWhereInput
+  orderBy?: Prisma.OrgCommsThreadOrderByWithRelationInput | Prisma.OrgCommsThreadOrderByWithRelationInput[]
+  cursor?: Prisma.OrgCommsThreadWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrgCommsThreadScalarFieldEnum | Prisma.OrgCommsThreadScalarFieldEnum[]
+}
+
+/**
+ * Admin.orgCommsReplies
+ */
+export type Admin$orgCommsRepliesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrgCommsReply
+   */
+  select?: Prisma.OrgCommsReplySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrgCommsReply
+   */
+  omit?: Prisma.OrgCommsReplyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrgCommsReplyInclude<ExtArgs> | null
+  where?: Prisma.OrgCommsReplyWhereInput
+  orderBy?: Prisma.OrgCommsReplyOrderByWithRelationInput | Prisma.OrgCommsReplyOrderByWithRelationInput[]
+  cursor?: Prisma.OrgCommsReplyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrgCommsReplyScalarFieldEnum | Prisma.OrgCommsReplyScalarFieldEnum[]
+}
+
+/**
+ * Admin.orgCommsTags
+ */
+export type Admin$orgCommsTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrgCommsTag
+   */
+  select?: Prisma.OrgCommsTagSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrgCommsTag
+   */
+  omit?: Prisma.OrgCommsTagOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrgCommsTagInclude<ExtArgs> | null
+  where?: Prisma.OrgCommsTagWhereInput
+  orderBy?: Prisma.OrgCommsTagOrderByWithRelationInput | Prisma.OrgCommsTagOrderByWithRelationInput[]
+  cursor?: Prisma.OrgCommsTagWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrgCommsTagScalarFieldEnum | Prisma.OrgCommsTagScalarFieldEnum[]
+}
+
+/**
+ * Admin.programmeCommsThreads
+ */
+export type Admin$programmeCommsThreadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProgrammeCommsThread
+   */
+  select?: Prisma.ProgrammeCommsThreadSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProgrammeCommsThread
+   */
+  omit?: Prisma.ProgrammeCommsThreadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProgrammeCommsThreadInclude<ExtArgs> | null
+  where?: Prisma.ProgrammeCommsThreadWhereInput
+  orderBy?: Prisma.ProgrammeCommsThreadOrderByWithRelationInput | Prisma.ProgrammeCommsThreadOrderByWithRelationInput[]
+  cursor?: Prisma.ProgrammeCommsThreadWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProgrammeCommsThreadScalarFieldEnum | Prisma.ProgrammeCommsThreadScalarFieldEnum[]
+}
+
+/**
+ * Admin.programmeCommsReplies
+ */
+export type Admin$programmeCommsRepliesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProgrammeCommsReply
+   */
+  select?: Prisma.ProgrammeCommsReplySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProgrammeCommsReply
+   */
+  omit?: Prisma.ProgrammeCommsReplyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProgrammeCommsReplyInclude<ExtArgs> | null
+  where?: Prisma.ProgrammeCommsReplyWhereInput
+  orderBy?: Prisma.ProgrammeCommsReplyOrderByWithRelationInput | Prisma.ProgrammeCommsReplyOrderByWithRelationInput[]
+  cursor?: Prisma.ProgrammeCommsReplyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProgrammeCommsReplyScalarFieldEnum | Prisma.ProgrammeCommsReplyScalarFieldEnum[]
+}
+
+/**
+ * Admin.programmeCommsTags
+ */
+export type Admin$programmeCommsTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProgrammeCommsTag
+   */
+  select?: Prisma.ProgrammeCommsTagSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProgrammeCommsTag
+   */
+  omit?: Prisma.ProgrammeCommsTagOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProgrammeCommsTagInclude<ExtArgs> | null
+  where?: Prisma.ProgrammeCommsTagWhereInput
+  orderBy?: Prisma.ProgrammeCommsTagOrderByWithRelationInput | Prisma.ProgrammeCommsTagOrderByWithRelationInput[]
+  cursor?: Prisma.ProgrammeCommsTagWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProgrammeCommsTagScalarFieldEnum | Prisma.ProgrammeCommsTagScalarFieldEnum[]
+}
+
+/**
+ * Admin.notifications
+ */
+export type Admin$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notification
+   */
+  select?: Prisma.NotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notification
+   */
+  omit?: Prisma.NotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationInclude<ExtArgs> | null
+  where?: Prisma.NotificationWhereInput
+  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * Admin.assignedTasks
+ */
+export type Admin$assignedTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Task
+   */
+  select?: Prisma.TaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Task
+   */
+  omit?: Prisma.TaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskInclude<ExtArgs> | null
+  where?: Prisma.TaskWhereInput
+  orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[]
+  cursor?: Prisma.TaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
+}
+
+/**
+ * Admin.createdTasks
+ */
+export type Admin$createdTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Task
+   */
+  select?: Prisma.TaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Task
+   */
+  omit?: Prisma.TaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskInclude<ExtArgs> | null
+  where?: Prisma.TaskWhereInput
+  orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[]
+  cursor?: Prisma.TaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
+}
+
+/**
+ * Admin.assignedTaskItems
+ */
+export type Admin$assignedTaskItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskItem
+   */
+  select?: Prisma.TaskItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskItem
+   */
+  omit?: Prisma.TaskItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskItemInclude<ExtArgs> | null
+  where?: Prisma.TaskItemWhereInput
+  orderBy?: Prisma.TaskItemOrderByWithRelationInput | Prisma.TaskItemOrderByWithRelationInput[]
+  cursor?: Prisma.TaskItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskItemScalarFieldEnum | Prisma.TaskItemScalarFieldEnum[]
+}
+
+/**
+ * Admin.programmeResources
+ */
+export type Admin$programmeResourcesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProgrammeResource
+   */
+  select?: Prisma.ProgrammeResourceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProgrammeResource
+   */
+  omit?: Prisma.ProgrammeResourceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProgrammeResourceInclude<ExtArgs> | null
+  where?: Prisma.ProgrammeResourceWhereInput
+  orderBy?: Prisma.ProgrammeResourceOrderByWithRelationInput | Prisma.ProgrammeResourceOrderByWithRelationInput[]
+  cursor?: Prisma.ProgrammeResourceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProgrammeResourceScalarFieldEnum | Prisma.ProgrammeResourceScalarFieldEnum[]
 }
 
 /**

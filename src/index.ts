@@ -17,6 +17,7 @@ import { publicRouter } from "./routes/public";
 import { templatesRouter } from "./routes/templates";
 import { webhooksRouter } from "./routes/webhooks";
 import { notificationsRouter } from "./routes/notifications";
+import { orgRouter } from "./routes/org";
 
 const app = new Hono();
 
@@ -59,6 +60,7 @@ app.route("/invoices", invoicesRouter);
 app.route("/templates", templatesRouter);
 app.route("/admins", adminsRouter);
 app.route("/notifications", notificationsRouter);
+app.route("/org", orgRouter);
 app.route("/public", publicRouter);
 app.route("/assets", assetsRouter);
 

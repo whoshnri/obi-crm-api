@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Role: 'Role',
   Participant: 'Participant',
   ProgrammeParticipant: 'ProgrammeParticipant',
   Programme: 'Programme',
@@ -67,7 +68,19 @@ export const ModelName = {
   Opportunity: 'Opportunity',
   OpportunityPipeline: 'OpportunityPipeline',
   OpportunityPipelineStep: 'OpportunityPipelineStep',
-  OpportunityEvent: 'OpportunityEvent'
+  OpportunityEvent: 'OpportunityEvent',
+  AdminProgrammeAssignment: 'AdminProgrammeAssignment',
+  OrgCommsThread: 'OrgCommsThread',
+  OrgCommsReply: 'OrgCommsReply',
+  OrgCommsTag: 'OrgCommsTag',
+  ProgrammeCommsChannel: 'ProgrammeCommsChannel',
+  ProgrammeCommsThread: 'ProgrammeCommsThread',
+  ProgrammeCommsReply: 'ProgrammeCommsReply',
+  ProgrammeCommsTag: 'ProgrammeCommsTag',
+  Notification: 'Notification',
+  Task: 'Task',
+  TaskItem: 'TaskItem',
+  ProgrammeResource: 'ProgrammeResource'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -84,6 +97,19 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const RoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  isSystem: 'isSystem',
+  permissions: 'permissions',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
 
 
 export const ParticipantScalarFieldEnum = {
@@ -248,6 +274,7 @@ export const AdminScalarFieldEnum = {
   name: 'name',
   email: 'email',
   role: 'role',
+  roleId: 'roleId',
   password: 'password',
   notificationsEnabled: 'notificationsEnabled',
   photoId: 'photoId',
@@ -333,6 +360,159 @@ export const OpportunityEventScalarFieldEnum = {
 export type OpportunityEventScalarFieldEnum = (typeof OpportunityEventScalarFieldEnum)[keyof typeof OpportunityEventScalarFieldEnum]
 
 
+export const AdminProgrammeAssignmentScalarFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  programmeId: 'programmeId',
+  roleId: 'roleId',
+  assignedAt: 'assignedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdminProgrammeAssignmentScalarFieldEnum = (typeof AdminProgrammeAssignmentScalarFieldEnum)[keyof typeof AdminProgrammeAssignmentScalarFieldEnum]
+
+
+export const OrgCommsThreadScalarFieldEnum = {
+  id: 'id',
+  authorId: 'authorId',
+  title: 'title',
+  body: 'body',
+  isPinned: 'isPinned',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrgCommsThreadScalarFieldEnum = (typeof OrgCommsThreadScalarFieldEnum)[keyof typeof OrgCommsThreadScalarFieldEnum]
+
+
+export const OrgCommsReplyScalarFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  authorId: 'authorId',
+  body: 'body',
+  parentId: 'parentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrgCommsReplyScalarFieldEnum = (typeof OrgCommsReplyScalarFieldEnum)[keyof typeof OrgCommsReplyScalarFieldEnum]
+
+
+export const OrgCommsTagScalarFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  adminId: 'adminId'
+} as const
+
+export type OrgCommsTagScalarFieldEnum = (typeof OrgCommsTagScalarFieldEnum)[keyof typeof OrgCommsTagScalarFieldEnum]
+
+
+export const ProgrammeCommsChannelScalarFieldEnum = {
+  id: 'id',
+  programmeId: 'programmeId',
+  createdAt: 'createdAt'
+} as const
+
+export type ProgrammeCommsChannelScalarFieldEnum = (typeof ProgrammeCommsChannelScalarFieldEnum)[keyof typeof ProgrammeCommsChannelScalarFieldEnum]
+
+
+export const ProgrammeCommsThreadScalarFieldEnum = {
+  id: 'id',
+  channelId: 'channelId',
+  authorId: 'authorId',
+  title: 'title',
+  body: 'body',
+  isPinned: 'isPinned',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProgrammeCommsThreadScalarFieldEnum = (typeof ProgrammeCommsThreadScalarFieldEnum)[keyof typeof ProgrammeCommsThreadScalarFieldEnum]
+
+
+export const ProgrammeCommsReplyScalarFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  authorId: 'authorId',
+  body: 'body',
+  parentId: 'parentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProgrammeCommsReplyScalarFieldEnum = (typeof ProgrammeCommsReplyScalarFieldEnum)[keyof typeof ProgrammeCommsReplyScalarFieldEnum]
+
+
+export const ProgrammeCommsTagScalarFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  adminId: 'adminId'
+} as const
+
+export type ProgrammeCommsTagScalarFieldEnum = (typeof ProgrammeCommsTagScalarFieldEnum)[keyof typeof ProgrammeCommsTagScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  read: 'read',
+  payload: 'payload',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const TaskScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  programmeId: 'programmeId',
+  assigneeId: 'assigneeId',
+  createdById: 'createdById',
+  priority: 'priority',
+  status: 'status',
+  dueDate: 'dueDate',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+export const TaskItemScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  label: 'label',
+  completed: 'completed',
+  assigneeId: 'assigneeId',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaskItemScalarFieldEnum = (typeof TaskItemScalarFieldEnum)[keyof typeof TaskItemScalarFieldEnum]
+
+
+export const ProgrammeResourceScalarFieldEnum = {
+  id: 'id',
+  programmeId: 'programmeId',
+  label: 'label',
+  url: 'url',
+  type: 'type',
+  description: 'description',
+  addedById: 'addedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProgrammeResourceScalarFieldEnum = (typeof ProgrammeResourceScalarFieldEnum)[keyof typeof ProgrammeResourceScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -356,6 +536,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -363,12 +551,4 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

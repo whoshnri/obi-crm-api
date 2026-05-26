@@ -43,6 +43,9 @@ export const programmesRouter = new Hono()
               flow: input.eventFlow ?? {},
               deployedAt: null
             }
+          },
+          commsChannel: {
+            create: {}
           }
         },
         include: {

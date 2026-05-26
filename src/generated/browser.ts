@@ -18,6 +18,11 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
+ * Model Role
+ * 
+ */
+export type Role = Prisma.RoleModel
+/**
  * Model Participant
  * 
  */
@@ -102,3 +107,63 @@ export type OpportunityPipelineStep = Prisma.OpportunityPipelineStepModel
  * 
  */
 export type OpportunityEvent = Prisma.OpportunityEventModel
+/**
+ * Model AdminProgrammeAssignment
+ * 
+ */
+export type AdminProgrammeAssignment = Prisma.AdminProgrammeAssignmentModel
+/**
+ * Model OrgCommsThread
+ * 
+ */
+export type OrgCommsThread = Prisma.OrgCommsThreadModel
+/**
+ * Model OrgCommsReply
+ * 
+ */
+export type OrgCommsReply = Prisma.OrgCommsReplyModel
+/**
+ * Model OrgCommsTag
+ * 
+ */
+export type OrgCommsTag = Prisma.OrgCommsTagModel
+/**
+ * Model ProgrammeCommsChannel
+ * 
+ */
+export type ProgrammeCommsChannel = Prisma.ProgrammeCommsChannelModel
+/**
+ * Model ProgrammeCommsThread
+ * 
+ */
+export type ProgrammeCommsThread = Prisma.ProgrammeCommsThreadModel
+/**
+ * Model ProgrammeCommsReply
+ * 
+ */
+export type ProgrammeCommsReply = Prisma.ProgrammeCommsReplyModel
+/**
+ * Model ProgrammeCommsTag
+ * 
+ */
+export type ProgrammeCommsTag = Prisma.ProgrammeCommsTagModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model Task
+ * 
+ */
+export type Task = Prisma.TaskModel
+/**
+ * Model TaskItem
+ * 
+ */
+export type TaskItem = Prisma.TaskItemModel
+/**
+ * Model ProgrammeResource
+ * 
+ */
+export type ProgrammeResource = Prisma.ProgrammeResourceModel

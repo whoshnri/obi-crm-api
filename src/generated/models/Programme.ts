@@ -227,6 +227,10 @@ export type ProgrammeWhereInput = {
   forms?: Prisma.FormListRelationFilter
   participantInvoices?: Prisma.ParticipantInvoiceListRelationFilter
   emailTemplates?: Prisma.EmailTemplateListRelationFilter
+  adminAssignments?: Prisma.AdminProgrammeAssignmentListRelationFilter
+  commsChannel?: Prisma.XOR<Prisma.ProgrammeCommsChannelNullableScalarRelationFilter, Prisma.ProgrammeCommsChannelWhereInput> | null
+  tasks?: Prisma.TaskListRelationFilter
+  resources?: Prisma.ProgrammeResourceListRelationFilter
 }
 
 export type ProgrammeOrderByWithRelationInput = {
@@ -243,6 +247,10 @@ export type ProgrammeOrderByWithRelationInput = {
   forms?: Prisma.FormOrderByRelationAggregateInput
   participantInvoices?: Prisma.ParticipantInvoiceOrderByRelationAggregateInput
   emailTemplates?: Prisma.EmailTemplateOrderByRelationAggregateInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentOrderByRelationAggregateInput
+  commsChannel?: Prisma.ProgrammeCommsChannelOrderByWithRelationInput
+  tasks?: Prisma.TaskOrderByRelationAggregateInput
+  resources?: Prisma.ProgrammeResourceOrderByRelationAggregateInput
 }
 
 export type ProgrammeWhereUniqueInput = Prisma.AtLeast<{
@@ -262,6 +270,10 @@ export type ProgrammeWhereUniqueInput = Prisma.AtLeast<{
   forms?: Prisma.FormListRelationFilter
   participantInvoices?: Prisma.ParticipantInvoiceListRelationFilter
   emailTemplates?: Prisma.EmailTemplateListRelationFilter
+  adminAssignments?: Prisma.AdminProgrammeAssignmentListRelationFilter
+  commsChannel?: Prisma.XOR<Prisma.ProgrammeCommsChannelNullableScalarRelationFilter, Prisma.ProgrammeCommsChannelWhereInput> | null
+  tasks?: Prisma.TaskListRelationFilter
+  resources?: Prisma.ProgrammeResourceListRelationFilter
 }, "id">
 
 export type ProgrammeOrderByWithAggregationInput = {
@@ -304,6 +316,10 @@ export type ProgrammeCreateInput = {
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeUncheckedCreateInput = {
@@ -320,6 +336,10 @@ export type ProgrammeUncheckedCreateInput = {
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeUpdateInput = {
@@ -336,6 +356,10 @@ export type ProgrammeUpdateInput = {
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeUncheckedUpdateInput = {
@@ -352,6 +376,10 @@ export type ProgrammeUncheckedUpdateInput = {
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeCreateManyInput = {
@@ -532,6 +560,64 @@ export type ProgrammeUpdateOneRequiredWithoutEmailTemplatesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutEmailTemplatesInput, Prisma.ProgrammeUpdateWithoutEmailTemplatesInput>, Prisma.ProgrammeUncheckedUpdateWithoutEmailTemplatesInput>
 }
 
+export type ProgrammeCreateNestedOneWithoutAdminAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutAdminAssignmentsInput, Prisma.ProgrammeUncheckedCreateWithoutAdminAssignmentsInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutAdminAssignmentsInput
+  connect?: Prisma.ProgrammeWhereUniqueInput
+}
+
+export type ProgrammeUpdateOneRequiredWithoutAdminAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutAdminAssignmentsInput, Prisma.ProgrammeUncheckedCreateWithoutAdminAssignmentsInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutAdminAssignmentsInput
+  upsert?: Prisma.ProgrammeUpsertWithoutAdminAssignmentsInput
+  connect?: Prisma.ProgrammeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutAdminAssignmentsInput, Prisma.ProgrammeUpdateWithoutAdminAssignmentsInput>, Prisma.ProgrammeUncheckedUpdateWithoutAdminAssignmentsInput>
+}
+
+export type ProgrammeCreateNestedOneWithoutCommsChannelInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutCommsChannelInput, Prisma.ProgrammeUncheckedCreateWithoutCommsChannelInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutCommsChannelInput
+  connect?: Prisma.ProgrammeWhereUniqueInput
+}
+
+export type ProgrammeUpdateOneRequiredWithoutCommsChannelNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutCommsChannelInput, Prisma.ProgrammeUncheckedCreateWithoutCommsChannelInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutCommsChannelInput
+  upsert?: Prisma.ProgrammeUpsertWithoutCommsChannelInput
+  connect?: Prisma.ProgrammeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutCommsChannelInput, Prisma.ProgrammeUpdateWithoutCommsChannelInput>, Prisma.ProgrammeUncheckedUpdateWithoutCommsChannelInput>
+}
+
+export type ProgrammeCreateNestedOneWithoutTasksInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutTasksInput, Prisma.ProgrammeUncheckedCreateWithoutTasksInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutTasksInput
+  connect?: Prisma.ProgrammeWhereUniqueInput
+}
+
+export type ProgrammeUpdateOneWithoutTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutTasksInput, Prisma.ProgrammeUncheckedCreateWithoutTasksInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutTasksInput
+  upsert?: Prisma.ProgrammeUpsertWithoutTasksInput
+  disconnect?: Prisma.ProgrammeWhereInput | boolean
+  delete?: Prisma.ProgrammeWhereInput | boolean
+  connect?: Prisma.ProgrammeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutTasksInput, Prisma.ProgrammeUpdateWithoutTasksInput>, Prisma.ProgrammeUncheckedUpdateWithoutTasksInput>
+}
+
+export type ProgrammeCreateNestedOneWithoutResourcesInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutResourcesInput, Prisma.ProgrammeUncheckedCreateWithoutResourcesInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutResourcesInput
+  connect?: Prisma.ProgrammeWhereUniqueInput
+}
+
+export type ProgrammeUpdateOneRequiredWithoutResourcesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeCreateWithoutResourcesInput, Prisma.ProgrammeUncheckedCreateWithoutResourcesInput>
+  connectOrCreate?: Prisma.ProgrammeCreateOrConnectWithoutResourcesInput
+  upsert?: Prisma.ProgrammeUpsertWithoutResourcesInput
+  connect?: Prisma.ProgrammeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeUpdateToOneWithWhereWithoutResourcesInput, Prisma.ProgrammeUpdateWithoutResourcesInput>, Prisma.ProgrammeUncheckedUpdateWithoutResourcesInput>
+}
+
 export type ProgrammeCreateWithoutParticipantsInput = {
   id?: string
   name: string
@@ -545,6 +631,10 @@ export type ProgrammeCreateWithoutParticipantsInput = {
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeUncheckedCreateWithoutParticipantsInput = {
@@ -560,6 +650,10 @@ export type ProgrammeUncheckedCreateWithoutParticipantsInput = {
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeCreateOrConnectWithoutParticipantsInput = {
@@ -591,6 +685,10 @@ export type ProgrammeUpdateWithoutParticipantsInput = {
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeUncheckedUpdateWithoutParticipantsInput = {
@@ -606,6 +704,10 @@ export type ProgrammeUncheckedUpdateWithoutParticipantsInput = {
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeCreateWithoutEventFlowInput = {
@@ -621,6 +723,10 @@ export type ProgrammeCreateWithoutEventFlowInput = {
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeUncheckedCreateWithoutEventFlowInput = {
@@ -636,6 +742,10 @@ export type ProgrammeUncheckedCreateWithoutEventFlowInput = {
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeCreateOrConnectWithoutEventFlowInput = {
@@ -667,6 +777,10 @@ export type ProgrammeUpdateWithoutEventFlowInput = {
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeUncheckedUpdateWithoutEventFlowInput = {
@@ -682,6 +796,10 @@ export type ProgrammeUncheckedUpdateWithoutEventFlowInput = {
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeCreateWithoutEventsInput = {
@@ -697,6 +815,10 @@ export type ProgrammeCreateWithoutEventsInput = {
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeUncheckedCreateWithoutEventsInput = {
@@ -712,6 +834,10 @@ export type ProgrammeUncheckedCreateWithoutEventsInput = {
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeCreateOrConnectWithoutEventsInput = {
@@ -743,6 +869,10 @@ export type ProgrammeUpdateWithoutEventsInput = {
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeUncheckedUpdateWithoutEventsInput = {
@@ -758,6 +888,10 @@ export type ProgrammeUncheckedUpdateWithoutEventsInput = {
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeCreateWithoutFormsInput = {
@@ -773,6 +907,10 @@ export type ProgrammeCreateWithoutFormsInput = {
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeUncheckedCreateWithoutFormsInput = {
@@ -788,6 +926,10 @@ export type ProgrammeUncheckedCreateWithoutFormsInput = {
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeCreateOrConnectWithoutFormsInput = {
@@ -819,6 +961,10 @@ export type ProgrammeUpdateWithoutFormsInput = {
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeUncheckedUpdateWithoutFormsInput = {
@@ -834,6 +980,10 @@ export type ProgrammeUncheckedUpdateWithoutFormsInput = {
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeCreateWithoutFormTablesInput = {
@@ -849,6 +999,10 @@ export type ProgrammeCreateWithoutFormTablesInput = {
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeUncheckedCreateWithoutFormTablesInput = {
@@ -864,6 +1018,10 @@ export type ProgrammeUncheckedCreateWithoutFormTablesInput = {
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeCreateOrConnectWithoutFormTablesInput = {
@@ -895,6 +1053,10 @@ export type ProgrammeUpdateWithoutFormTablesInput = {
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeUncheckedUpdateWithoutFormTablesInput = {
@@ -910,6 +1072,10 @@ export type ProgrammeUncheckedUpdateWithoutFormTablesInput = {
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeCreateWithoutParticipantInvoicesInput = {
@@ -925,6 +1091,10 @@ export type ProgrammeCreateWithoutParticipantInvoicesInput = {
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeUncheckedCreateWithoutParticipantInvoicesInput = {
@@ -940,6 +1110,10 @@ export type ProgrammeUncheckedCreateWithoutParticipantInvoicesInput = {
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeCreateOrConnectWithoutParticipantInvoicesInput = {
@@ -971,6 +1145,10 @@ export type ProgrammeUpdateWithoutParticipantInvoicesInput = {
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput = {
@@ -986,6 +1164,10 @@ export type ProgrammeUncheckedUpdateWithoutParticipantInvoicesInput = {
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeCreateWithoutEmailTemplatesInput = {
@@ -1001,6 +1183,10 @@ export type ProgrammeCreateWithoutEmailTemplatesInput = {
   formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeUncheckedCreateWithoutEmailTemplatesInput = {
@@ -1016,6 +1202,10 @@ export type ProgrammeUncheckedCreateWithoutEmailTemplatesInput = {
   formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
   forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput
 }
 
 export type ProgrammeCreateOrConnectWithoutEmailTemplatesInput = {
@@ -1047,6 +1237,10 @@ export type ProgrammeUpdateWithoutEmailTemplatesInput = {
   formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUpdateManyWithoutProgrammeNestedInput
 }
 
 export type ProgrammeUncheckedUpdateWithoutEmailTemplatesInput = {
@@ -1062,6 +1256,378 @@ export type ProgrammeUncheckedUpdateWithoutEmailTemplatesInput = {
   formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
   forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
   participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput
+}
+
+export type ProgrammeCreateWithoutAdminAssignmentsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  costPerParticipant?: number | null
+  startDate: Date | string
+  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowCreateNestedOneWithoutProgrammeInput
+  participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
+  events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
+  formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
+  forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
+  participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceCreateNestedManyWithoutProgrammeInput
+}
+
+export type ProgrammeUncheckedCreateWithoutAdminAssignmentsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  costPerParticipant?: number | null
+  startDate: Date | string
+  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedCreateNestedOneWithoutProgrammeInput
+  participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
+  formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
+  forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput
+}
+
+export type ProgrammeCreateOrConnectWithoutAdminAssignmentsInput = {
+  where: Prisma.ProgrammeWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutAdminAssignmentsInput, Prisma.ProgrammeUncheckedCreateWithoutAdminAssignmentsInput>
+}
+
+export type ProgrammeUpsertWithoutAdminAssignmentsInput = {
+  update: Prisma.XOR<Prisma.ProgrammeUpdateWithoutAdminAssignmentsInput, Prisma.ProgrammeUncheckedUpdateWithoutAdminAssignmentsInput>
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutAdminAssignmentsInput, Prisma.ProgrammeUncheckedCreateWithoutAdminAssignmentsInput>
+  where?: Prisma.ProgrammeWhereInput
+}
+
+export type ProgrammeUpdateToOneWithWhereWithoutAdminAssignmentsInput = {
+  where?: Prisma.ProgrammeWhereInput
+  data: Prisma.XOR<Prisma.ProgrammeUpdateWithoutAdminAssignmentsInput, Prisma.ProgrammeUncheckedUpdateWithoutAdminAssignmentsInput>
+}
+
+export type ProgrammeUpdateWithoutAdminAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUpdateOneWithoutProgrammeNestedInput
+  participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
+  events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
+  formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
+  forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUpdateManyWithoutProgrammeNestedInput
+}
+
+export type ProgrammeUncheckedUpdateWithoutAdminAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput
+  participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
+  formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
+  forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput
+}
+
+export type ProgrammeCreateWithoutCommsChannelInput = {
+  id?: string
+  name: string
+  description?: string | null
+  costPerParticipant?: number | null
+  startDate: Date | string
+  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowCreateNestedOneWithoutProgrammeInput
+  participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
+  events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
+  formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
+  forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
+  participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutProgrammeInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceCreateNestedManyWithoutProgrammeInput
+}
+
+export type ProgrammeUncheckedCreateWithoutCommsChannelInput = {
+  id?: string
+  name: string
+  description?: string | null
+  costPerParticipant?: number | null
+  startDate: Date | string
+  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedCreateNestedOneWithoutProgrammeInput
+  participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
+  formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
+  forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutProgrammeInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput
+}
+
+export type ProgrammeCreateOrConnectWithoutCommsChannelInput = {
+  where: Prisma.ProgrammeWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutCommsChannelInput, Prisma.ProgrammeUncheckedCreateWithoutCommsChannelInput>
+}
+
+export type ProgrammeUpsertWithoutCommsChannelInput = {
+  update: Prisma.XOR<Prisma.ProgrammeUpdateWithoutCommsChannelInput, Prisma.ProgrammeUncheckedUpdateWithoutCommsChannelInput>
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutCommsChannelInput, Prisma.ProgrammeUncheckedCreateWithoutCommsChannelInput>
+  where?: Prisma.ProgrammeWhereInput
+}
+
+export type ProgrammeUpdateToOneWithWhereWithoutCommsChannelInput = {
+  where?: Prisma.ProgrammeWhereInput
+  data: Prisma.XOR<Prisma.ProgrammeUpdateWithoutCommsChannelInput, Prisma.ProgrammeUncheckedUpdateWithoutCommsChannelInput>
+}
+
+export type ProgrammeUpdateWithoutCommsChannelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUpdateOneWithoutProgrammeNestedInput
+  participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
+  events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
+  formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
+  forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUpdateManyWithoutProgrammeNestedInput
+}
+
+export type ProgrammeUncheckedUpdateWithoutCommsChannelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput
+  participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
+  formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
+  forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput
+}
+
+export type ProgrammeCreateWithoutTasksInput = {
+  id?: string
+  name: string
+  description?: string | null
+  costPerParticipant?: number | null
+  startDate: Date | string
+  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowCreateNestedOneWithoutProgrammeInput
+  participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
+  events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
+  formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
+  forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
+  participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelCreateNestedOneWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceCreateNestedManyWithoutProgrammeInput
+}
+
+export type ProgrammeUncheckedCreateWithoutTasksInput = {
+  id?: string
+  name: string
+  description?: string | null
+  costPerParticipant?: number | null
+  startDate: Date | string
+  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedCreateNestedOneWithoutProgrammeInput
+  participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
+  formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
+  forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedCreateNestedOneWithoutProgrammeInput
+  resources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutProgrammeInput
+}
+
+export type ProgrammeCreateOrConnectWithoutTasksInput = {
+  where: Prisma.ProgrammeWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutTasksInput, Prisma.ProgrammeUncheckedCreateWithoutTasksInput>
+}
+
+export type ProgrammeUpsertWithoutTasksInput = {
+  update: Prisma.XOR<Prisma.ProgrammeUpdateWithoutTasksInput, Prisma.ProgrammeUncheckedUpdateWithoutTasksInput>
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutTasksInput, Prisma.ProgrammeUncheckedCreateWithoutTasksInput>
+  where?: Prisma.ProgrammeWhereInput
+}
+
+export type ProgrammeUpdateToOneWithWhereWithoutTasksInput = {
+  where?: Prisma.ProgrammeWhereInput
+  data: Prisma.XOR<Prisma.ProgrammeUpdateWithoutTasksInput, Prisma.ProgrammeUncheckedUpdateWithoutTasksInput>
+}
+
+export type ProgrammeUpdateWithoutTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUpdateOneWithoutProgrammeNestedInput
+  participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
+  events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
+  formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
+  forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUpdateOneWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUpdateManyWithoutProgrammeNestedInput
+}
+
+export type ProgrammeUncheckedUpdateWithoutTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput
+  participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
+  formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
+  forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedUpdateOneWithoutProgrammeNestedInput
+  resources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutProgrammeNestedInput
+}
+
+export type ProgrammeCreateWithoutResourcesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  costPerParticipant?: number | null
+  startDate: Date | string
+  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowCreateNestedOneWithoutProgrammeInput
+  participants?: Prisma.ProgrammeParticipantCreateNestedManyWithoutProgrammeInput
+  events?: Prisma.EventCreateNestedManyWithoutProgrammeInput
+  formTables?: Prisma.FormTableCreateNestedManyWithoutProgrammeInput
+  forms?: Prisma.FormCreateNestedManyWithoutProgrammeInput
+  participantInvoices?: Prisma.ParticipantInvoiceCreateNestedManyWithoutProgrammeInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProgrammeInput
+}
+
+export type ProgrammeUncheckedCreateWithoutResourcesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  costPerParticipant?: number | null
+  startDate: Date | string
+  participantDefinition: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedCreateNestedOneWithoutProgrammeInput
+  participants?: Prisma.ProgrammeParticipantUncheckedCreateNestedManyWithoutProgrammeInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutProgrammeInput
+  formTables?: Prisma.FormTableUncheckedCreateNestedManyWithoutProgrammeInput
+  forms?: Prisma.FormUncheckedCreateNestedManyWithoutProgrammeInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedCreateNestedManyWithoutProgrammeInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutProgrammeInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutProgrammeInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedCreateNestedOneWithoutProgrammeInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProgrammeInput
+}
+
+export type ProgrammeCreateOrConnectWithoutResourcesInput = {
+  where: Prisma.ProgrammeWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutResourcesInput, Prisma.ProgrammeUncheckedCreateWithoutResourcesInput>
+}
+
+export type ProgrammeUpsertWithoutResourcesInput = {
+  update: Prisma.XOR<Prisma.ProgrammeUpdateWithoutResourcesInput, Prisma.ProgrammeUncheckedUpdateWithoutResourcesInput>
+  create: Prisma.XOR<Prisma.ProgrammeCreateWithoutResourcesInput, Prisma.ProgrammeUncheckedCreateWithoutResourcesInput>
+  where?: Prisma.ProgrammeWhereInput
+}
+
+export type ProgrammeUpdateToOneWithWhereWithoutResourcesInput = {
+  where?: Prisma.ProgrammeWhereInput
+  data: Prisma.XOR<Prisma.ProgrammeUpdateWithoutResourcesInput, Prisma.ProgrammeUncheckedUpdateWithoutResourcesInput>
+}
+
+export type ProgrammeUpdateWithoutResourcesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUpdateOneWithoutProgrammeNestedInput
+  participants?: Prisma.ProgrammeParticipantUpdateManyWithoutProgrammeNestedInput
+  events?: Prisma.EventUpdateManyWithoutProgrammeNestedInput
+  formTables?: Prisma.FormTableUpdateManyWithoutProgrammeNestedInput
+  forms?: Prisma.FormUpdateManyWithoutProgrammeNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUpdateManyWithoutProgrammeNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProgrammeNestedInput
+}
+
+export type ProgrammeUncheckedUpdateWithoutResourcesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costPerParticipant?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participantDefinition?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  eventFlow?: Prisma.EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput
+  participants?: Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutProgrammeNestedInput
+  formTables?: Prisma.FormTableUncheckedUpdateManyWithoutProgrammeNestedInput
+  forms?: Prisma.FormUncheckedUpdateManyWithoutProgrammeNestedInput
+  participantInvoices?: Prisma.ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutProgrammeNestedInput
+  adminAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutProgrammeNestedInput
+  commsChannel?: Prisma.ProgrammeCommsChannelUncheckedUpdateOneWithoutProgrammeNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProgrammeNestedInput
 }
 
 
@@ -1076,6 +1642,9 @@ export type ProgrammeCountOutputType = {
   forms: number
   participantInvoices: number
   emailTemplates: number
+  adminAssignments: number
+  tasks: number
+  resources: number
 }
 
 export type ProgrammeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1085,6 +1654,9 @@ export type ProgrammeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   forms?: boolean | ProgrammeCountOutputTypeCountFormsArgs
   participantInvoices?: boolean | ProgrammeCountOutputTypeCountParticipantInvoicesArgs
   emailTemplates?: boolean | ProgrammeCountOutputTypeCountEmailTemplatesArgs
+  adminAssignments?: boolean | ProgrammeCountOutputTypeCountAdminAssignmentsArgs
+  tasks?: boolean | ProgrammeCountOutputTypeCountTasksArgs
+  resources?: boolean | ProgrammeCountOutputTypeCountResourcesArgs
 }
 
 /**
@@ -1139,6 +1711,27 @@ export type ProgrammeCountOutputTypeCountEmailTemplatesArgs<ExtArgs extends runt
   where?: Prisma.EmailTemplateWhereInput
 }
 
+/**
+ * ProgrammeCountOutputType without action
+ */
+export type ProgrammeCountOutputTypeCountAdminAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdminProgrammeAssignmentWhereInput
+}
+
+/**
+ * ProgrammeCountOutputType without action
+ */
+export type ProgrammeCountOutputTypeCountTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskWhereInput
+}
+
+/**
+ * ProgrammeCountOutputType without action
+ */
+export type ProgrammeCountOutputTypeCountResourcesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgrammeResourceWhereInput
+}
+
 
 export type ProgrammeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1154,6 +1747,10 @@ export type ProgrammeSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   forms?: boolean | Prisma.Programme$formsArgs<ExtArgs>
   participantInvoices?: boolean | Prisma.Programme$participantInvoicesArgs<ExtArgs>
   emailTemplates?: boolean | Prisma.Programme$emailTemplatesArgs<ExtArgs>
+  adminAssignments?: boolean | Prisma.Programme$adminAssignmentsArgs<ExtArgs>
+  commsChannel?: boolean | Prisma.Programme$commsChannelArgs<ExtArgs>
+  tasks?: boolean | Prisma.Programme$tasksArgs<ExtArgs>
+  resources?: boolean | Prisma.Programme$resourcesArgs<ExtArgs>
   _count?: boolean | Prisma.ProgrammeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["programme"]>
 
@@ -1193,6 +1790,10 @@ export type ProgrammeInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   forms?: boolean | Prisma.Programme$formsArgs<ExtArgs>
   participantInvoices?: boolean | Prisma.Programme$participantInvoicesArgs<ExtArgs>
   emailTemplates?: boolean | Prisma.Programme$emailTemplatesArgs<ExtArgs>
+  adminAssignments?: boolean | Prisma.Programme$adminAssignmentsArgs<ExtArgs>
+  commsChannel?: boolean | Prisma.Programme$commsChannelArgs<ExtArgs>
+  tasks?: boolean | Prisma.Programme$tasksArgs<ExtArgs>
+  resources?: boolean | Prisma.Programme$resourcesArgs<ExtArgs>
   _count?: boolean | Prisma.ProgrammeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProgrammeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1208,6 +1809,10 @@ export type $ProgrammePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     forms: Prisma.$FormPayload<ExtArgs>[]
     participantInvoices: Prisma.$ParticipantInvoicePayload<ExtArgs>[]
     emailTemplates: Prisma.$EmailTemplatePayload<ExtArgs>[]
+    adminAssignments: Prisma.$AdminProgrammeAssignmentPayload<ExtArgs>[]
+    commsChannel: Prisma.$ProgrammeCommsChannelPayload<ExtArgs> | null
+    tasks: Prisma.$TaskPayload<ExtArgs>[]
+    resources: Prisma.$ProgrammeResourcePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1617,6 +2222,10 @@ export interface Prisma__ProgrammeClient<T, Null = never, ExtArgs extends runtim
   forms<T extends Prisma.Programme$formsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$formsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   participantInvoices<T extends Prisma.Programme$participantInvoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$participantInvoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipantInvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   emailTemplates<T extends Prisma.Programme$emailTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$emailTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  adminAssignments<T extends Prisma.Programme$adminAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$adminAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminProgrammeAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  commsChannel<T extends Prisma.Programme$commsChannelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$commsChannelArgs<ExtArgs>>): Prisma.Prisma__ProgrammeCommsChannelClient<runtime.Types.Result.GetResult<Prisma.$ProgrammeCommsChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  tasks<T extends Prisma.Programme$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  resources<T extends Prisma.Programme$resourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Programme$resourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgrammeResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2205,6 +2814,97 @@ export type Programme$emailTemplatesArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.EmailTemplateScalarFieldEnum | Prisma.EmailTemplateScalarFieldEnum[]
+}
+
+/**
+ * Programme.adminAssignments
+ */
+export type Programme$adminAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdminProgrammeAssignment
+   */
+  select?: Prisma.AdminProgrammeAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdminProgrammeAssignment
+   */
+  omit?: Prisma.AdminProgrammeAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdminProgrammeAssignmentInclude<ExtArgs> | null
+  where?: Prisma.AdminProgrammeAssignmentWhereInput
+  orderBy?: Prisma.AdminProgrammeAssignmentOrderByWithRelationInput | Prisma.AdminProgrammeAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.AdminProgrammeAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdminProgrammeAssignmentScalarFieldEnum | Prisma.AdminProgrammeAssignmentScalarFieldEnum[]
+}
+
+/**
+ * Programme.commsChannel
+ */
+export type Programme$commsChannelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProgrammeCommsChannel
+   */
+  select?: Prisma.ProgrammeCommsChannelSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProgrammeCommsChannel
+   */
+  omit?: Prisma.ProgrammeCommsChannelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProgrammeCommsChannelInclude<ExtArgs> | null
+  where?: Prisma.ProgrammeCommsChannelWhereInput
+}
+
+/**
+ * Programme.tasks
+ */
+export type Programme$tasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Task
+   */
+  select?: Prisma.TaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Task
+   */
+  omit?: Prisma.TaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskInclude<ExtArgs> | null
+  where?: Prisma.TaskWhereInput
+  orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[]
+  cursor?: Prisma.TaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
+}
+
+/**
+ * Programme.resources
+ */
+export type Programme$resourcesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProgrammeResource
+   */
+  select?: Prisma.ProgrammeResourceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProgrammeResource
+   */
+  omit?: Prisma.ProgrammeResourceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProgrammeResourceInclude<ExtArgs> | null
+  where?: Prisma.ProgrammeResourceWhereInput
+  orderBy?: Prisma.ProgrammeResourceOrderByWithRelationInput | Prisma.ProgrammeResourceOrderByWithRelationInput[]
+  cursor?: Prisma.ProgrammeResourceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProgrammeResourceScalarFieldEnum | Prisma.ProgrammeResourceScalarFieldEnum[]
 }
 
 /**
