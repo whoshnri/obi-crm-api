@@ -17,7 +17,7 @@
 
 import * as runtime from "@prisma/client/runtime/client"
 import type * as Prisma from "../models"
-import { type PrismaClient } from "./class"
+import { type PrismaClient } from "./class.js"
 
 export type * from '../models'
 
