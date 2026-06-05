@@ -1,7 +1,7 @@
-import { EventBaseType, EventStatus, Prisma, StepStatus } from "../generated/client";
-import { prisma } from "../lib/prisma";
-import { redis } from "../lib/redis";
-import { startMinuteScheduler } from "./scheduler";
+import { EventBaseType, EventStatus, Prisma, StepStatus } from "../generated/client.js";
+import { prisma } from "../lib/prisma.js";
+import { redis } from "../lib/redis.js";
+import { scheduleCronJob } from "./scheduler.js";
 import {
   EVENT_SCHEDULE_HASH,
   errorMessage,
@@ -11,7 +11,7 @@ import {
   parseEventConfig,
   sendAdminFeedback,
   sendEmail
-} from "./utils";
+} from "./utils.js";
 
 async function processEmailEvent(eventId: string) {
   const event = await prisma.event.findUnique({
@@ -153,7 +153,7 @@ export async function runSendEmailCronTick() {
 }
 
 export function startSendEmailCron() {
-  startMinuteScheduler(() => true, () => {
+  scheduleCronJob("obi-send-email", "* * * * *", () => {
     void runSendEmailCronTick();
   });
 }

@@ -8,7 +8,7 @@ import type {
   Programme,
   ProgrammeParticipant,
   RegistrationPage
-} from "../generated/client";
+} from "../generated/client.js";
 
 type JsonRecord = Record<string, unknown>;
 

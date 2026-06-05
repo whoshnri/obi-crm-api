@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { basename, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Hono } from "hono";
-import { handleRoute } from "../lib/http";
+import { handleRoute } from "../lib/http.js";
 
 const assetsRoot = normalize(fileURLToPath(new URL("../../../assets", import.meta.url)));
 

@@ -1,11 +1,11 @@
 import { Hono } from "hono";
-import { Prisma } from "../generated/client";
+import { Prisma } from "../generated/client.js";
 import { z } from "zod";
-import { handleRoute } from "../lib/http";
-import { prisma } from "../lib/prisma";
-import { serializeBaseParticipant, serializeCohort, serializeOrganisation } from "../lib/serializers";
-import { createOrganisationSchema, idParamSchema, updateOrganisationSchema } from "../lib/schemas";
-import { uniqueSlug } from "../lib/slug";
+import { handleRoute } from "../lib/http.js";
+import { prisma } from "../lib/prisma.js";
+import { serializeBaseParticipant, serializeCohort, serializeOrganisation } from "../lib/serializers.js";
+import { createOrganisationSchema, idParamSchema, updateOrganisationSchema } from "../lib/schemas.js";
+import { uniqueSlug } from "../lib/slug.js";
 
 const addOrganisationParticipantSchema = z.object({
   participantId: z.string().min(1),

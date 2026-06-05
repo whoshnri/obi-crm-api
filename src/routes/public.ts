@@ -1,10 +1,10 @@
 import { Hono } from "hono";
 import type { Context } from "hono";
-import { enrollParticipant } from "../lib/enrollment";
-import { prisma } from "../lib/prisma";
-import { handleRoute } from "../lib/http";
-import { serializeRegistrationPage } from "../lib/serializers";
-import { trackAnalyticsEvent } from "../lib/analytics";
+import { enrollParticipant } from "../lib/enrollment.js";
+import { prisma } from "../lib/prisma.js";
+import { handleRoute } from "../lib/http.js";
+import { serializeRegistrationPage } from "../lib/serializers.js";
+import { trackAnalyticsEvent } from "../lib/analytics.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);

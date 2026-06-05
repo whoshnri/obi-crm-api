@@ -1,8 +1,8 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { sha256 } from "../lib/auth";
-import { handleRoute } from "../lib/http";
-import { prisma } from "../lib/prisma";
+import { sha256 } from "../lib/auth.js";
+import { handleRoute } from "../lib/http.js";
+import { prisma } from "../lib/prisma.js";
 import {
   clearParticipantAccessCookie,
   clearParticipantRefreshCookie,
@@ -18,10 +18,10 @@ import {
   setParticipantRefreshCookie,
   signParticipantAccessToken,
   verifyParticipantAccessToken
-} from "../lib/participant-auth";
-import { sendEmail } from "../jobs/utils";
-import { trackAnalyticsEvent } from "../lib/analytics";
-import { serializeParticipantForumThread } from "../lib/serializers";
+} from "../lib/participant-auth.js";
+import { sendEmail } from "../jobs/utils.js";
+import { trackAnalyticsEvent } from "../lib/analytics.js";
+import { serializeParticipantForumThread } from "../lib/serializers.js";
 
 const requestLinkSchema = z.object({
   email: z.string().email()

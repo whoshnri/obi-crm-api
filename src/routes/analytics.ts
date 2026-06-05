@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { currentAnalyticsPeriod, runAnalyticsAggregation } from "../jobs/analyticsAggregation";
-import { handleRoute } from "../lib/http";
-import { prisma } from "../lib/prisma";
-import { idParamSchema } from "../lib/schemas";
+import { currentAnalyticsPeriod, runAnalyticsAggregation } from "../jobs/analyticsAggregation.js";
+import { handleRoute } from "../lib/http.js";
+import { prisma } from "../lib/prisma.js";
+import { idParamSchema } from "../lib/schemas.js";
 
 const periodQuerySchema = z.object({
   period: z.string().regex(/^\d{4}-\d{2}$/).optional()

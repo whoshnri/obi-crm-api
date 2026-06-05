@@ -1,5 +1,5 @@
-import type { Prisma } from "../generated/client";
-import { prisma } from "../lib/prisma";
+import type { Prisma } from "../generated/client.js";
+import { prisma } from "../lib/prisma.js";
 
 export function currentAnalyticsPeriod(date = new Date()) {
   return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;

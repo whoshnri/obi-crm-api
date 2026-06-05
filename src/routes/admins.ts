@@ -1,9 +1,9 @@
 import { Hono } from "hono";
-import { AdminRole } from "../generated/client";
-import { prisma } from "../lib/prisma";
-import { handleRoute } from "../lib/http";
-import { serializeAdmin } from "../lib/serializers";
-import { adminInputSchema, idParamSchema, updateAdminSchema } from "../lib/schemas";
+import { AdminRole } from "../generated/client.js";
+import { prisma } from "../lib/prisma.js";
+import { handleRoute } from "../lib/http.js";
+import { serializeAdmin } from "../lib/serializers.js";
+import { adminInputSchema, idParamSchema, updateAdminSchema } from "../lib/schemas.js";
 
 export const adminsRouter = new Hono()
   .get("/", (c) =>

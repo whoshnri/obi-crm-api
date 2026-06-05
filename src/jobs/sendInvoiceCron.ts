@@ -1,7 +1,7 @@
-import { EventBaseType, EventStatus, Prisma, StepStatus } from "../generated/client";
-import { prisma } from "../lib/prisma";
-import { redis } from "../lib/redis";
-import { startMinuteScheduler } from "./scheduler";
+import { EventBaseType, EventStatus, Prisma, StepStatus } from "../generated/client.js";
+import { prisma } from "../lib/prisma.js";
+import { redis } from "../lib/redis.js";
+import { scheduleCronJob } from "./scheduler.js";
 import {
   EVENT_SCHEDULE_HASH,
   errorMessage,
@@ -12,7 +12,7 @@ import {
   isWithinScheduleWindow,
   parseEventConfig,
   sendAdminFeedback
-} from "./utils";
+} from "./utils.js";
 
 type InvoiceLineItem = {
   description: string;
@@ -186,10 +186,7 @@ export async function runSendInvoiceEventNow(eventId: string) {
 }
 
 export function startSendInvoiceCron() {
-  startMinuteScheduler((date) => {
-    const minute = date.getMinutes();
-    return minute === 15 || minute === 45;
-  }, () => {
+  scheduleCronJob("obi-send-invoice", "0 15,45 * * * *", () => {
     void runSendInvoiceCronTick();
   });
 }

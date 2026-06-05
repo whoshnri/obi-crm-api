@@ -1,13 +1,13 @@
 import type { Hono } from "hono";
 import { z } from "zod";
-import { DeliverableStatus, ParticipantRequestStatus, Prisma, ResourceType } from "../generated/client";
-import { handleRoute } from "../lib/http";
-import { prisma } from "../lib/prisma";
+import { DeliverableStatus, ParticipantRequestStatus, Prisma, ResourceType } from "../generated/client.js";
+import { handleRoute } from "../lib/http.js";
+import { prisma } from "../lib/prisma.js";
 import {
   serializeDeliverable,
   serializeParticipantRequest,
   serializeProgrammeTimeline
-} from "../lib/serializers";
+} from "../lib/serializers.js";
 
 const milestoneSchema = z.object({
   title: z.string().min(1),

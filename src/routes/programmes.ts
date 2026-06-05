@@ -1,11 +1,11 @@
 import { Hono } from "hono";
-import { EventBaseType, EventStatus, Prisma } from "../generated/client";
-import { prisma } from "../lib/prisma";
-import { redis } from "../lib/redis";
-import { handleRoute } from "../lib/http";
-import { serializeFormSubmission, serializeProgramme } from "../lib/serializers";
-import { EVENT_SCHEDULE_HASH } from "../jobs/utils";
-import { addNotificationForAdmins } from "../lib/notifications";
+import { EventBaseType, EventStatus, Prisma } from "../generated/client.js";
+import { prisma } from "../lib/prisma.js";
+import { redis } from "../lib/redis.js";
+import { handleRoute } from "../lib/http.js";
+import { serializeFormSubmission, serializeProgramme } from "../lib/serializers.js";
+import { EVENT_SCHEDULE_HASH } from "../jobs/utils.js";
+import { addNotificationForAdmins } from "../lib/notifications.js";
 import {
   createProgrammeSchema,
   eventFlowSchema,
@@ -13,8 +13,8 @@ import {
   programmeSubmissionsQuerySchema,
   saveProgrammeEventFlowStateSchema,
   updateProgrammeSchema
-} from "../lib/schemas";
-import { registerProgrammeDeliveryRoutes } from "./programme-delivery";
+} from "../lib/schemas.js";
+import { registerProgrammeDeliveryRoutes } from "./programme-delivery.js";
 
 const programmesApp = new Hono()
   .get("/", (c) =>

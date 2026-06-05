@@ -1,6 +1,6 @@
-import { Prisma } from "../generated/client";
-import { prisma } from "./prisma";
-import { createStripeCustomerForParticipant } from "./stripe";
+import { Prisma } from "../generated/client.js";
+import { prisma } from "./prisma.js";
+import { createStripeCustomerForParticipant } from "./stripe.js";
 
 export async function enrollParticipant(params: {
   programmeId: string;

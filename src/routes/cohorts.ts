@@ -1,17 +1,17 @@
 import { Hono } from "hono";
-import { EventBaseType, EventStatus, Prisma } from "../generated/client";
-import { enrollParticipant } from "../lib/enrollment";
-import { handleRoute } from "../lib/http";
-import { prisma } from "../lib/prisma";
-import { redis } from "../lib/redis";
-import { EVENT_SCHEDULE_HASH } from "../jobs/utils";
-import { addNotificationForAdmins } from "../lib/notifications";
+import { EventBaseType, EventStatus, Prisma } from "../generated/client.js";
+import { enrollParticipant } from "../lib/enrollment.js";
+import { handleRoute } from "../lib/http.js";
+import { prisma } from "../lib/prisma.js";
+import { redis } from "../lib/redis.js";
+import { EVENT_SCHEDULE_HASH } from "../jobs/utils.js";
+import { addNotificationForAdmins } from "../lib/notifications.js";
 import {
   serializeBaseParticipant,
   serializeCohort,
   serializeCohortProgramme,
   serializeRegistrationPage
-} from "../lib/serializers";
+} from "../lib/serializers.js";
 import {
   addCohortParticipantSchema,
   cohortQuerySchema,
@@ -24,8 +24,8 @@ import {
   saveCohortEventFlowStateSchema,
   updateCohortSchema,
   updateRegistrationPageSchema
-} from "../lib/schemas";
-import { uniqueSlug } from "../lib/slug";
+} from "../lib/schemas.js";
+import { uniqueSlug } from "../lib/slug.js";
 
 const cohortDetailInclude = {
   organisation: true,

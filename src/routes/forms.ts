@@ -1,11 +1,11 @@
 import { Hono } from "hono";
-import type { Prisma } from "../generated/client";
-import { prisma } from "../lib/prisma";
-import { handleRoute } from "../lib/http";
-import { serializeForm, serializeFormSubmission } from "../lib/serializers";
-import { createFormSchema, createSubmissionSchema, updateFormSchema } from "../lib/form-contract";
-import { idParamSchema, programmeQuerySchema } from "../lib/schemas";
-import { trackAnalyticsEvent } from "../lib/analytics";
+import type { Prisma } from "../generated/client.js";
+import { prisma } from "../lib/prisma.js";
+import { handleRoute } from "../lib/http.js";
+import { serializeForm, serializeFormSubmission } from "../lib/serializers.js";
+import { createFormSchema, createSubmissionSchema, updateFormSchema } from "../lib/form-contract.js";
+import { idParamSchema, programmeQuerySchema } from "../lib/schemas.js";
+import { trackAnalyticsEvent } from "../lib/analytics.js";
 
 function isDuplicateFormSlugError(error: unknown) {
   if (typeof error !== "object" || error === null) return false;
@@ -179,7 +179,7 @@ export const formsRouter = new Hono()
 
       // notify admins of submission
       try {
-        const { addNotificationForAdmins } = await import("../lib/notifications");
+        const { addNotificationForAdmins } = await import("../lib/notifications.js");
         await addNotificationForAdmins({
           type: "form_submitted",
           title: "Form submitted",

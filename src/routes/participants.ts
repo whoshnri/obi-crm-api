@@ -1,10 +1,10 @@
 import { Hono } from "hono";
-import { PaymentStatus, Prisma } from "../generated/client";
-import { prisma } from "../lib/prisma";
-import { handleRoute } from "../lib/http";
-import { serializeProgramParticipant } from "../lib/serializers";
-import { createParticipantSchema, idParamSchema, programmeQuerySchema, updateParticipantSchema } from "../lib/schemas";
-import { createStripeCustomerForParticipant } from "../lib/stripe";
+import { PaymentStatus, Prisma } from "../generated/client.js";
+import { prisma } from "../lib/prisma.js";
+import { handleRoute } from "../lib/http.js";
+import { serializeProgramParticipant } from "../lib/serializers.js";
+import { createParticipantSchema, idParamSchema, programmeQuerySchema, updateParticipantSchema } from "../lib/schemas.js";
+import { createStripeCustomerForParticipant } from "../lib/stripe.js";
 
 export const participantsRouter = new Hono()
   .get("/", (c) =>
@@ -81,7 +81,7 @@ export const participantsRouter = new Hono()
 
       // notify admins
       try {
-        const { addNotificationForAdmins } = await import("../lib/notifications");
+        const { addNotificationForAdmins } = await import("../lib/notifications.js");
         await addNotificationForAdmins({
           type: "participant_enrolled",
           title: "New participant enrolled",

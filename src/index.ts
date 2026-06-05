@@ -4,26 +4,26 @@ import { fileURLToPath } from "node:url";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { authMiddleware } from "./lib/auth";
-import { logApiError } from "./lib/http";
-import { assetsRouter } from "./routes/assets";
-import { authRouter } from "./routes/auth";
-import { adminsRouter } from "./routes/admins";
-import { eventsRouter } from "./routes/events";
-import { formsRouter } from "./routes/forms";
-import { invoicesRouter } from "./routes/invoices";
-import { opportunitiesRouter } from "./routes/opportunities";
-import { participantsRouter } from "./routes/participants";
-import { programmesRouter } from "./routes/programmes";
-import { publicRouter } from "./routes/public";
-import { templatesRouter } from "./routes/templates";
-import { webhooksRouter } from "./routes/webhooks";
-import { notificationsRouter } from "./routes/notifications";
-import { orgRouter } from "./routes/org";
-import { organisationsRouter } from "./routes/organisations";
-import { cohortsRouter } from "./routes/cohorts";
-import { portalRouter } from "./routes/portal";
-import { analyticsRouter } from "./routes/analytics";
+import { authMiddleware } from "./lib/auth.js";
+import { logApiError } from "./lib/http.js";
+import { assetsRouter } from "./routes/assets.js";
+import { authRouter } from "./routes/auth.js";
+import { adminsRouter } from "./routes/admins.js";
+import { eventsRouter } from "./routes/events.js";
+import { formsRouter } from "./routes/forms.js";
+import { invoicesRouter } from "./routes/invoices.js";
+import { opportunitiesRouter } from "./routes/opportunities.js";
+import { participantsRouter } from "./routes/participants.js";
+import { programmesRouter } from "./routes/programmes.js";
+import { publicRouter } from "./routes/public.js";
+import { templatesRouter } from "./routes/templates.js";
+import { webhooksRouter } from "./routes/webhooks.js";
+import { notificationsRouter } from "./routes/notifications.js";
+import { orgRouter } from "./routes/org.js";
+import { organisationsRouter } from "./routes/organisations.js";
+import { cohortsRouter } from "./routes/cohorts.js";
+import { portalRouter } from "./routes/portal.js";
+import { analyticsRouter } from "./routes/analytics.js";
 
 const app = new Hono();
 
@@ -86,7 +86,7 @@ export default app;
 const isMainModule = process.argv[1] === fileURLToPath(import.meta.url);
 
 if (isMainModule && !process.env.VERCEL) {
-  await import("./jobs");
+  await import("./jobs/index.js");
 
   const port = Number(process.env.OBI_APP_PORT ?? 3001);
 

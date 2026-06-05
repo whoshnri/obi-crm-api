@@ -1,7 +1,7 @@
 import type { Context, MiddlewareHandler } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
-import { prisma } from "./prisma";
-import { createRefreshToken, sha256 } from "./auth";
+import { prisma } from "./prisma.js";
+import { createRefreshToken, sha256 } from "./auth.js";
 
 const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;
 const REFRESH_TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60;

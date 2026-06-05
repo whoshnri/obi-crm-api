@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import type { Context } from "hono";
 import { z } from "zod";
-import { NotificationType, Prisma, ResourceType, TaskPriority, TaskStatus } from "../generated/client";
-import { handleRoute } from "../lib/http";
-import { prisma } from "../lib/prisma";
+import { NotificationType, Prisma, ResourceType, TaskPriority, TaskStatus } from "../generated/client.js";
+import { handleRoute } from "../lib/http.js";
+import { prisma } from "../lib/prisma.js";
 
 const permissions = [
   "admin_create",

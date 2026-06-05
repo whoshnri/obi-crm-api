@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { PrismaClient, AdminRole } from "../src/generated/client";
+import { PrismaClient, AdminRole } from "../src/generated/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import { hash } from "argon2";

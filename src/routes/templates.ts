@@ -1,7 +1,7 @@
 import { Hono } from "hono";
-import { prisma } from "../lib/prisma";
-import { handleRoute } from "../lib/http";
-import { createEmailTemplateSchema, idParamSchema, programmeQuerySchema, updateEmailTemplateSchema } from "../lib/schemas";
+import { prisma } from "../lib/prisma.js";
+import { handleRoute } from "../lib/http.js";
+import { createEmailTemplateSchema, idParamSchema, programmeQuerySchema, updateEmailTemplateSchema } from "../lib/schemas.js";
 
 export const templatesRouter = new Hono()
   .get("/", (c) =>
