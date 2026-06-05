@@ -1,4 +1,3 @@
 {
-  "buildCommand": "prisma generate",
-  "startCommand": "tsx src/index.ts"
+  "buildCommand": "prisma generate"
 }
