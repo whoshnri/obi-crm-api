@@ -1,9 +1,4 @@
 {
   "buildCommand": "pnpm run build",
-  "outputDirectory": "dist",
-  "functions": {
-    "dist/src/index.js": {
-      "includeFiles": "dist/generated/**"
-    }
-  }
+  "startCommand": "pnpm run start"
 }
