@@ -1,7 +1,7 @@
-import { Bunqueue, type Job } from "bunqueue/client";
-import { EventBaseType, EventStatus, InvoiceStatus, PaymentStatus, Prisma, StepStatus } from "../generated/client";
+import { EventBaseType, EventStatus, Prisma, StepStatus } from "../generated/client";
 import { prisma } from "../lib/prisma";
 import { redis } from "../lib/redis";
+import { startMinuteScheduler } from "./scheduler";
 import {
   EVENT_SCHEDULE_HASH,
   errorMessage,
@@ -33,71 +33,7 @@ type InvoiceExecutionJob = {
   lineItems: InvoiceLineItem[];
 };
 
-type InvoiceDbRetryJob = {
-  stripeInvoiceId: string;
-  stripeInvoiceUrl?: string | null;
-  programmeId: string;
-  participantId: string;
-  programmeParticipantId?: string;
-  amount: number;
-  currency: string;
-  dueDate: string;
-  lineItems: InvoiceLineItem[];
-};
-
-type InvoiceJobResult = {
-  participantId: string;
-};
-
-const THIRTY_MINUTES_MS = 30 * 60 * 1000;
-
-async function writeParticipantInvoice(input: InvoiceDbRetryJob) {
-  return prisma.$transaction(async (tx) => {
-    const invoice = await tx.participantInvoice.upsert({
-      where: {
-        programmeId_participantId: {
-          programmeId: input.programmeId,
-          participantId: input.participantId
-        }
-      },
-      create: {
-        programmeId: input.programmeId,
-        participantId: input.participantId,
-        amount: input.amount,
-        currency: input.currency,
-        status: InvoiceStatus.sent,
-        dueDate: new Date(input.dueDate),
-        stripeInvoiceId: input.stripeInvoiceId,
-        stripeInvoiceUrl: input.stripeInvoiceUrl,
-        lineItems: input.lineItems as unknown as Prisma.InputJsonValue
-      },
-      update: {
-        amount: input.amount,
-        currency: input.currency,
-        status: InvoiceStatus.sent,
-        dueDate: new Date(input.dueDate),
-        stripeInvoiceId: input.stripeInvoiceId,
-        stripeInvoiceUrl: input.stripeInvoiceUrl,
-        lineItems: input.lineItems as unknown as Prisma.InputJsonValue
-      }
-    });
-
-    await tx.programmeParticipant.updateMany({
-      where: input.programmeParticipantId
-        ? { id: input.programmeParticipantId }
-        : { programmeId: input.programmeId, participantId: input.participantId },
-      data: {
-        invoiceId: invoice.id,
-        paymentStatus: PaymentStatus.invoiced
-      }
-    });
-
-    return invoice;
-  });
-}
-
-async function processInvoiceJob(job: Job<InvoiceExecutionJob>): Promise<InvoiceJobResult> {
-  const data = job.data;
+async function processInvoiceJob(data: InvoiceExecutionJob) {
   console.log("[invoice:job:stub]", JSON.stringify({
     eventId: data.eventId,
     programmeId: data.programmeId,
@@ -111,35 +47,6 @@ async function processInvoiceJob(job: Job<InvoiceExecutionJob>): Promise<Invoice
   }));
 
   return { participantId: data.participantId };
-}
-
-export const invoiceDbRetryQueue = new Bunqueue<InvoiceDbRetryJob, { invoiceId: string }>("invoice-db-retry", {
-  embedded: true,
-  concurrency: 2,
-  processor: async (job) => {
-    const invoice = await writeParticipantInvoice(job.data);
-    return { invoiceId: invoice.id };
-  }
-});
-
-export const invoiceExecutionQueue = new Bunqueue<InvoiceExecutionJob, InvoiceJobResult>("invoice-execution", {
-  embedded: true,
-  concurrency: 5,
-  processor: processInvoiceJob
-});
-
-async function waitForJob(job: Job<InvoiceExecutionJob>, timeoutMs = 5 * 60 * 1000) {
-  const startedAt = Date.now();
-  while (Date.now() - startedAt < timeoutMs) {
-    const state = await job.getState();
-    if (state === "completed") return { ok: true };
-    if (state === "failed") {
-      const freshJob = await invoiceExecutionQueue.getJob(job.id);
-      return { ok: false, error: freshJob?.failedReason ?? "Invoice job failed" };
-    }
-    await Bun.sleep(500);
-  }
-  return { ok: false, error: "Invoice job timed out" };
 }
 
 async function processInvoiceEvent(eventId: string) {
@@ -163,7 +70,7 @@ async function processInvoiceEvent(eventId: string) {
   await prisma.event.update({ where: { id: event.id }, data: { status: EventStatus.processing } });
 
   const recipients = await getEventRecipients(event);
-  const jobs = [];
+  const jobs: Array<Promise<unknown>> = [];
   for (const { participant, programmeParticipant } of recipients) {
     if (!participant.stripeCustomerId) {
       const message = "Participant is missing stripeCustomerId";
@@ -204,29 +111,25 @@ async function processInvoiceEvent(eventId: string) {
     }
 
     jobs.push(
-      await invoiceExecutionQueue.add(
-        "send-invoice",
-        {
-          eventId: event.id,
-          programmeId: event.programmeId,
-          programmeName: event.programme.name,
-          participantId: participant.id,
-          programmeParticipantId: programmeParticipant.id,
-          stripeCustomerId: participant.stripeCustomerId,
-          amount,
-          currency,
-          daysUntilDue,
-          lineItems: configuredLineItems.length
-            ? configuredLineItems.map((item) => ({ ...item, currency: item.currency ?? currency }))
-            : [{ description: event.programme.name, amount, currency }]
-        },
-        { durable: true, attempts: 1 }
-      )
+      processInvoiceJob({
+        eventId: event.id,
+        programmeId: event.programmeId,
+        programmeName: event.programme.name,
+        participantId: participant.id,
+        programmeParticipantId: programmeParticipant.id,
+        stripeCustomerId: participant.stripeCustomerId,
+        amount,
+        currency,
+        daysUntilDue,
+        lineItems: configuredLineItems.length
+          ? configuredLineItems.map((item) => ({ ...item, currency: item.currency ?? currency }))
+          : [{ description: event.programme.name, amount, currency }]
+      })
     );
   }
 
-  const results = await Promise.all(jobs.map(waitForJob));
-  const failureCount = results.filter((result) => !result.ok).length + (recipients.length - jobs.length);
+  const results = await Promise.allSettled(jobs);
+  const failureCount = results.filter((result) => result.status === "rejected").length + (recipients.length - jobs.length);
   const successCount = recipients.length - failureCount;
 
   await prisma.event.update({
@@ -283,7 +186,10 @@ export async function runSendInvoiceEventNow(eventId: string) {
 }
 
 export function startSendInvoiceCron() {
-  Bun.cron("15,45 * * * *", () => {
+  startMinuteScheduler((date) => {
+    const minute = date.getMinutes();
+    return minute === 15 || minute === 45;
+  }, () => {
     void runSendInvoiceCronTick();
   });
 }

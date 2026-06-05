@@ -115,7 +115,7 @@ export const portalRouter = new Hono()
         "This link expires in 30 minutes. If you did not request this, you can ignore this email."
       ].join("\n");
 
-      if (Bun.env.NODE_ENV === "production") {
+      if (process.env.NODE_ENV === "production") {
         await sendEmail(participant.email, subject, body);
       } else {
         console.log("[portal:magic-link]", verifyUrl);

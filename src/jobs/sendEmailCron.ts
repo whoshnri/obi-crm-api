@@ -1,6 +1,7 @@
 import { EventBaseType, EventStatus, Prisma, StepStatus } from "../generated/client";
 import { prisma } from "../lib/prisma";
 import { redis } from "../lib/redis";
+import { startMinuteScheduler } from "./scheduler";
 import {
   EVENT_SCHEDULE_HASH,
   errorMessage,
@@ -152,7 +153,7 @@ export async function runSendEmailCronTick() {
 }
 
 export function startSendEmailCron() {
-  Bun.cron("* * * * *", () => {
+  startMinuteScheduler(() => true, () => {
     void runSendEmailCronTick();
   });
 }

@@ -10,7 +10,7 @@ export const PARTICIPANT_ACCESS_COOKIE = "obi_participant_access_token";
 export const PARTICIPANT_REFRESH_COOKIE = "obi_participant_refresh_token";
 
 function isSecureCookieEnvironment() {
-  return Bun.env.NODE_ENV === "production" || Boolean(Bun.env.VERCEL);
+  return process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL);
 }
 
 function getCookieOptions(maxAge: number) {
@@ -33,7 +33,7 @@ type ParticipantJwtPayload = {
 };
 
 function getSecret() {
-  const secret = Bun.env.OBI_JWT_SECRET ?? Bun.env.JWT_SECRET;
+  const secret = process.env.OBI_JWT_SECRET ?? process.env.JWT_SECRET;
   if (!secret || secret.length < 32) {
     throw new Error("Missing OBI_JWT_SECRET/JWT_SECRET with at least 32 characters");
   }
@@ -158,7 +158,7 @@ export function getMagicLinkExpiry() {
 }
 
 export function getPortalOrigin() {
-  return Bun.env.OBI_PORTAL_ORIGIN ?? "http://localhost:3003";
+  return process.env.OBI_PORTAL_ORIGIN ?? "http://localhost:3003";
 }
 
 export function participantAuthMiddleware(): MiddlewareHandler {

@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import { verify } from "argon2";
 import type { Context, MiddlewareHandler } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { prisma } from "./prisma";
@@ -9,7 +10,7 @@ const ACCESS_COOKIE = "obi_access_token";
 const REFRESH_COOKIE = "obi_refresh_token";
 
 function isSecureCookieEnvironment() {
-  return Bun.env.NODE_ENV === "production" || Boolean(Bun.env.VERCEL);
+  return process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL);
 }
 
 function getCookieOptions(maxAge: number) {
@@ -32,7 +33,7 @@ type JwtPayload = {
 };
 
 function getSecret() {
-  const secret = Bun.env.OBI_JWT_SECRET ?? Bun.env.JWT_SECRET;
+  const secret = process.env.OBI_JWT_SECRET ?? process.env.JWT_SECRET;
   if (!secret || secret.length < 32) {
     throw new Error("Missing OBI_JWT_SECRET/JWT_SECRET with at least 32 characters");
   }

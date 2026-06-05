@@ -1,6 +1,6 @@
 /**
  * Backfill Organisation rows from Participant.organisation strings.
- * Run after migration: bun prisma/scripts/backfill-organisations.ts
+ * Run after migration: tsx prisma/scripts/backfill-organisations.ts
  */
 import "dotenv/config";
 import { PrismaClient } from "../../src/generated/client";

@@ -1,3 +1,4 @@
+import { verify } from "argon2";
 import { Hono } from "hono";
 import { z } from "zod";
 import {
@@ -23,7 +24,7 @@ const loginSchema = z.object({
 
 async function verifyPassword(input: string, stored: string) {
   if (stored.startsWith("$")) {
-    return Bun.password.verify(input, stored);
+    return verify(stored, input);
   }
   return input === stored;
 }

@@ -1,11 +1,28 @@
 import { prisma } from "./prisma";
 
+const MAX_TIMEOUT_MS = 2_147_483_647;
+const scheduledOpportunityJobs = new Map<string, ReturnType<typeof setTimeout>>();
+
 export function getOpportunityCronJobId(opportunityId: string, pipelineStepId: string) {
   return `obi-opportunity-${opportunityId}-${pipelineStepId}`;
 }
 
-function toCronExpression(date: Date) {
-  return `${date.getMinutes()} ${date.getHours()} ${date.getDate()} ${date.getMonth() + 1} *`;
+function scheduleTimeout(cronJobId: string, scheduledAt: Date, run: () => Promise<void>) {
+  const delay = scheduledAt.getTime() - Date.now();
+  const timeout = setTimeout(
+    () => {
+      if (delay > MAX_TIMEOUT_MS) {
+        scheduleTimeout(cronJobId, scheduledAt, run);
+        return;
+      }
+
+      scheduledOpportunityJobs.delete(cronJobId);
+      void run();
+    },
+    Math.max(0, Math.min(delay, MAX_TIMEOUT_MS))
+  );
+  timeout.unref?.();
+  scheduledOpportunityJobs.set(cronJobId, timeout);
 }
 
 export async function executeOpportunityEvent(eventId: string) {
@@ -35,32 +52,16 @@ export async function executeOpportunityEvent(eventId: string) {
 }
 
 export async function scheduleOpportunityCron(event: { id: string; cronJobId: string; scheduledAt: Date }) {
-  const cron = (Bun as any).cron;
-
-  if (!cron) {
-    console.warn("[opportunity:scheduler]", JSON.stringify({ eventId: event.id, cronJobId: event.cronJobId, skipped: true }));
-    return;
-  }
-
-  await cron(
-    event.cronJobId,
-    toCronExpression(event.scheduledAt),
-    async () => {
-      await executeOpportunityEvent(event.id);
-    }
-  );
+  await cancelOpportunityCron(event.cronJobId);
+  scheduleTimeout(event.cronJobId, event.scheduledAt, async () => {
+    await executeOpportunityEvent(event.id);
+  });
 }
 
 export async function cancelOpportunityCron(cronJobId: string) {
-  const cron = (Bun as any).cron;
-  if (!cron) return;
+  const timeout = scheduledOpportunityJobs.get(cronJobId);
+  if (!timeout) return;
 
-  if (typeof cron.remove === "function") {
-    await cron.remove(cronJobId);
-    return;
-  }
-
-  if (typeof cron.delete === "function") {
-    await cron.delete(cronJobId);
-  }
+  clearTimeout(timeout);
+  scheduledOpportunityJobs.delete(cronJobId);
 }

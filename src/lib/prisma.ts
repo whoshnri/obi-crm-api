@@ -5,12 +5,12 @@ import pg from "pg";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
-if (!Bun.env.DATABASE_URL) {
+if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is required");
 }
 
 const pool = new pg.Pool({
-  connectionString: Bun.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL,
   max: 4,
   idleTimeoutMillis: 40_000,
   connectionTimeoutMillis: 40_000,
@@ -38,8 +38,7 @@ export const prisma =
     adapter
   });
 
-if (Bun.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
-
 

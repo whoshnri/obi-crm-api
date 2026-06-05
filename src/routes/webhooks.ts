@@ -60,7 +60,7 @@ async function handleStripeEvent(event: Stripe.Event) {
 }
 
 export const webhooksRouter = new Hono().post("/stripe", async (c) => {
-  const webhookSecret = Bun.env.STRIPE_WEBHOOK_SECRET;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!webhookSecret) {
     return c.json({ error: "STRIPE_WEBHOOK_SECRET is required" }, 500);
   }

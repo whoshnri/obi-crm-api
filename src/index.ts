@@ -1,4 +1,6 @@
 import 'dotenv/config'
+import { serve } from "@hono/node-server";
+import { fileURLToPath } from "node:url";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
@@ -31,10 +33,10 @@ const allowedOrigins = new Set(
     "http://localhost:3001",
     "http://localhost:3002",
     "http://localhost:3003", // OBI_PORTAL_ORIGIN
-    Bun.env.OBI_CRM_ORIGIN,
-    Bun.env.OBI_FORMS_APP_ORIGIN,
-    Bun.env.OBI_PORTAL_ORIGIN,
-    ...(Bun.env.OBI_ALLOWED_ORIGINS ?? "")
+    process.env.OBI_CRM_ORIGIN,
+    process.env.OBI_FORMS_APP_ORIGIN,
+    process.env.OBI_PORTAL_ORIGIN,
+    ...(process.env.OBI_ALLOWED_ORIGINS ?? "")
       .split(",")
       .map((origin) => origin.trim())
       .filter(Boolean)
@@ -79,22 +81,20 @@ app.onError((error, c) => {
   return c.json({ error: "Unexpected API error" }, 500);
 });
 
+export default app;
 
-// export default app;
+const isMainModule = process.argv[1] === fileURLToPath(import.meta.url);
 
-if (import.meta.main && !process.env.VERCEL) {
+if (isMainModule && !process.env.VERCEL) {
   await import("./jobs");
 
-  const port = Number(Bun.env.OBI_APP_PORT ?? 3001);
+  const port = Number(process.env.OBI_APP_PORT ?? 3001);
 
   if (!Number.isInteger(port) || port <= 0) {
     throw new Error("OBI_APP_PORT must be a positive integer");
   }
 
-  Bun.serve({
-    port,
-    fetch: app.fetch
-  });
+  serve({ port, fetch: app.fetch });
 
   console.log(`OBI API listening on http://localhost:${port}`);
 }

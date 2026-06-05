@@ -1,9 +1,10 @@
-import { mkdir } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { basename, join, normalize } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Hono } from "hono";
 import { handleRoute } from "../lib/http";
 
-const assetsRoot = normalize(join(import.meta.dir, "../../../assets"));
+const assetsRoot = normalize(fileURLToPath(new URL("../../../assets", import.meta.url)));
 
 function safeSegment(value: string) {
   return value.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-");
@@ -35,7 +36,7 @@ export const assetsRouter = new Hono()
       const fileName = `${Date.now()}-${safeSegment(basename(file.name))}`;
       const storageKey = `forms/${safeSegment(formId)}/${fileName}`;
       const path = assertInsideAssets(join(assetsRoot, storageKey));
-      await Bun.write(path, file);
+      await writeFile(path, Buffer.from(await file.arrayBuffer()));
 
       return {
         fileName: file.name,
@@ -51,12 +52,20 @@ export const assetsRouter = new Hono()
     handleRoute(c, async () => {
       const key = c.req.path.replace(/^\/assets\//, "");
       const path = assertInsideAssets(join(assetsRoot, key));
-      const file = Bun.file(path);
+      let file: Buffer;
+      try {
+        file = await readFile(path);
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+          return c.json({ error: "Asset not found" }, 404);
+        }
+        throw error;
+      }
 
-      if (!(await file.exists())) {
+      if (!file) {
         return c.json({ error: "Asset not found" }, 404);
       }
 
-      return new Response(file);
+      return new Response(new Uint8Array(file));
     })
   );
