@@ -1,4 +1,3 @@
 {
-  "buildCommand": "pnpm run build",
-  "startCommand": "pnpm run start"
+  "buildCommand": "pnpm run build"
 }
