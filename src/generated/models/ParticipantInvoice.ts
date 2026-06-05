@@ -38,6 +38,7 @@ export type ParticipantInvoiceMinAggregateOutputType = {
   id: string | null
   programmeId: string | null
   participantId: string | null
+  cohortId: string | null
   amount: number | null
   currency: string | null
   status: $Enums.InvoiceStatus | null
@@ -53,6 +54,7 @@ export type ParticipantInvoiceMaxAggregateOutputType = {
   id: string | null
   programmeId: string | null
   participantId: string | null
+  cohortId: string | null
   amount: number | null
   currency: string | null
   status: $Enums.InvoiceStatus | null
@@ -68,6 +70,7 @@ export type ParticipantInvoiceCountAggregateOutputType = {
   id: number
   programmeId: number
   participantId: number
+  cohortId: number
   amount: number
   currency: number
   status: number
@@ -96,6 +99,7 @@ export type ParticipantInvoiceMinAggregateInputType = {
   id?: true
   programmeId?: true
   participantId?: true
+  cohortId?: true
   amount?: true
   currency?: true
   status?: true
@@ -111,6 +115,7 @@ export type ParticipantInvoiceMaxAggregateInputType = {
   id?: true
   programmeId?: true
   participantId?: true
+  cohortId?: true
   amount?: true
   currency?: true
   status?: true
@@ -126,6 +131,7 @@ export type ParticipantInvoiceCountAggregateInputType = {
   id?: true
   programmeId?: true
   participantId?: true
+  cohortId?: true
   amount?: true
   currency?: true
   status?: true
@@ -231,6 +237,7 @@ export type ParticipantInvoiceGroupByOutputType = {
   id: string
   programmeId: string
   participantId: string
+  cohortId: string | null
   amount: number
   currency: string
   status: $Enums.InvoiceStatus
@@ -272,6 +279,7 @@ export type ParticipantInvoiceWhereInput = {
   id?: Prisma.StringFilter<"ParticipantInvoice"> | string
   programmeId?: Prisma.StringFilter<"ParticipantInvoice"> | string
   participantId?: Prisma.StringFilter<"ParticipantInvoice"> | string
+  cohortId?: Prisma.StringNullableFilter<"ParticipantInvoice"> | string | null
   amount?: Prisma.FloatFilter<"ParticipantInvoice"> | number
   currency?: Prisma.StringFilter<"ParticipantInvoice"> | string
   status?: Prisma.EnumInvoiceStatusFilter<"ParticipantInvoice"> | $Enums.InvoiceStatus
@@ -293,6 +301,7 @@ export type ParticipantInvoiceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   programmeId?: Prisma.SortOrder
   participantId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -319,6 +328,7 @@ export type ParticipantInvoiceWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ParticipantInvoiceWhereInput | Prisma.ParticipantInvoiceWhereInput[]
   programmeId?: Prisma.StringFilter<"ParticipantInvoice"> | string
   participantId?: Prisma.StringFilter<"ParticipantInvoice"> | string
+  cohortId?: Prisma.StringNullableFilter<"ParticipantInvoice"> | string | null
   amount?: Prisma.FloatFilter<"ParticipantInvoice"> | number
   currency?: Prisma.StringFilter<"ParticipantInvoice"> | string
   status?: Prisma.EnumInvoiceStatusFilter<"ParticipantInvoice"> | $Enums.InvoiceStatus
@@ -339,6 +349,7 @@ export type ParticipantInvoiceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   programmeId?: Prisma.SortOrder
   participantId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -365,6 +376,7 @@ export type ParticipantInvoiceScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"ParticipantInvoice"> | string
   programmeId?: Prisma.StringWithAggregatesFilter<"ParticipantInvoice"> | string
   participantId?: Prisma.StringWithAggregatesFilter<"ParticipantInvoice"> | string
+  cohortId?: Prisma.StringNullableWithAggregatesFilter<"ParticipantInvoice"> | string | null
   amount?: Prisma.FloatWithAggregatesFilter<"ParticipantInvoice"> | number
   currency?: Prisma.StringWithAggregatesFilter<"ParticipantInvoice"> | string
   status?: Prisma.EnumInvoiceStatusWithAggregatesFilter<"ParticipantInvoice"> | $Enums.InvoiceStatus
@@ -381,6 +393,7 @@ export type ParticipantInvoiceScalarWhereWithAggregatesInput = {
 
 export type ParticipantInvoiceCreateInput = {
   id?: string
+  cohortId?: string | null
   amount: number
   currency?: string
   status?: $Enums.InvoiceStatus
@@ -402,6 +415,7 @@ export type ParticipantInvoiceUncheckedCreateInput = {
   id?: string
   programmeId: string
   participantId: string
+  cohortId?: string | null
   amount: number
   currency?: string
   status?: $Enums.InvoiceStatus
@@ -419,6 +433,7 @@ export type ParticipantInvoiceUncheckedCreateInput = {
 
 export type ParticipantInvoiceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -440,6 +455,7 @@ export type ParticipantInvoiceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   programmeId?: Prisma.StringFieldUpdateOperationsInput | string
   participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -459,6 +475,7 @@ export type ParticipantInvoiceCreateManyInput = {
   id?: string
   programmeId: string
   participantId: string
+  cohortId?: string | null
   amount: number
   currency?: string
   status?: $Enums.InvoiceStatus
@@ -475,6 +492,7 @@ export type ParticipantInvoiceCreateManyInput = {
 
 export type ParticipantInvoiceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -493,6 +511,7 @@ export type ParticipantInvoiceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   programmeId?: Prisma.StringFieldUpdateOperationsInput | string
   participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -531,6 +550,7 @@ export type ParticipantInvoiceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   programmeId?: Prisma.SortOrder
   participantId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -553,6 +573,7 @@ export type ParticipantInvoiceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   programmeId?: Prisma.SortOrder
   participantId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -568,6 +589,7 @@ export type ParticipantInvoiceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   programmeId?: Prisma.SortOrder
   participantId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -687,14 +709,6 @@ export type ParticipantInvoiceCreatestripeInvoiceItemIdsInput = {
   set: string[]
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type EnumInvoiceStatusFieldUpdateOperationsInput = {
   set?: $Enums.InvoiceStatus
 }
@@ -706,6 +720,7 @@ export type ParticipantInvoiceUpdatestripeInvoiceItemIdsInput = {
 
 export type ParticipantInvoiceCreateWithoutParticipantInput = {
   id?: string
+  cohortId?: string | null
   amount: number
   currency?: string
   status?: $Enums.InvoiceStatus
@@ -725,6 +740,7 @@ export type ParticipantInvoiceCreateWithoutParticipantInput = {
 export type ParticipantInvoiceUncheckedCreateWithoutParticipantInput = {
   id?: string
   programmeId: string
+  cohortId?: string | null
   amount: number
   currency?: string
   status?: $Enums.InvoiceStatus
@@ -773,6 +789,7 @@ export type ParticipantInvoiceScalarWhereInput = {
   id?: Prisma.StringFilter<"ParticipantInvoice"> | string
   programmeId?: Prisma.StringFilter<"ParticipantInvoice"> | string
   participantId?: Prisma.StringFilter<"ParticipantInvoice"> | string
+  cohortId?: Prisma.StringNullableFilter<"ParticipantInvoice"> | string | null
   amount?: Prisma.FloatFilter<"ParticipantInvoice"> | number
   currency?: Prisma.StringFilter<"ParticipantInvoice"> | string
   status?: Prisma.EnumInvoiceStatusFilter<"ParticipantInvoice"> | $Enums.InvoiceStatus
@@ -789,6 +806,7 @@ export type ParticipantInvoiceScalarWhereInput = {
 
 export type ParticipantInvoiceCreateWithoutProgrammeParticipantInput = {
   id?: string
+  cohortId?: string | null
   amount: number
   currency?: string
   status?: $Enums.InvoiceStatus
@@ -809,6 +827,7 @@ export type ParticipantInvoiceUncheckedCreateWithoutProgrammeParticipantInput = 
   id?: string
   programmeId: string
   participantId: string
+  cohortId?: string | null
   amount: number
   currency?: string
   status?: $Enums.InvoiceStatus
@@ -841,6 +860,7 @@ export type ParticipantInvoiceUpdateToOneWithWhereWithoutProgrammeParticipantInp
 
 export type ParticipantInvoiceUpdateWithoutProgrammeParticipantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -861,6 +881,7 @@ export type ParticipantInvoiceUncheckedUpdateWithoutProgrammeParticipantInput = 
   id?: Prisma.StringFieldUpdateOperationsInput | string
   programmeId?: Prisma.StringFieldUpdateOperationsInput | string
   participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -877,6 +898,7 @@ export type ParticipantInvoiceUncheckedUpdateWithoutProgrammeParticipantInput = 
 
 export type ParticipantInvoiceCreateWithoutProgrammeInput = {
   id?: string
+  cohortId?: string | null
   amount: number
   currency?: string
   status?: $Enums.InvoiceStatus
@@ -896,6 +918,7 @@ export type ParticipantInvoiceCreateWithoutProgrammeInput = {
 export type ParticipantInvoiceUncheckedCreateWithoutProgrammeInput = {
   id?: string
   participantId: string
+  cohortId?: string | null
   amount: number
   currency?: string
   status?: $Enums.InvoiceStatus
@@ -940,6 +963,7 @@ export type ParticipantInvoiceUpdateManyWithWhereWithoutProgrammeInput = {
 export type ParticipantInvoiceCreateManyParticipantInput = {
   id?: string
   programmeId: string
+  cohortId?: string | null
   amount: number
   currency?: string
   status?: $Enums.InvoiceStatus
@@ -956,6 +980,7 @@ export type ParticipantInvoiceCreateManyParticipantInput = {
 
 export type ParticipantInvoiceUpdateWithoutParticipantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -975,6 +1000,7 @@ export type ParticipantInvoiceUpdateWithoutParticipantInput = {
 export type ParticipantInvoiceUncheckedUpdateWithoutParticipantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   programmeId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -993,6 +1019,7 @@ export type ParticipantInvoiceUncheckedUpdateWithoutParticipantInput = {
 export type ParticipantInvoiceUncheckedUpdateManyWithoutParticipantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   programmeId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -1010,6 +1037,7 @@ export type ParticipantInvoiceUncheckedUpdateManyWithoutParticipantInput = {
 export type ParticipantInvoiceCreateManyProgrammeInput = {
   id?: string
   participantId: string
+  cohortId?: string | null
   amount: number
   currency?: string
   status?: $Enums.InvoiceStatus
@@ -1026,6 +1054,7 @@ export type ParticipantInvoiceCreateManyProgrammeInput = {
 
 export type ParticipantInvoiceUpdateWithoutProgrammeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -1045,6 +1074,7 @@ export type ParticipantInvoiceUpdateWithoutProgrammeInput = {
 export type ParticipantInvoiceUncheckedUpdateWithoutProgrammeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -1063,6 +1093,7 @@ export type ParticipantInvoiceUncheckedUpdateWithoutProgrammeInput = {
 export type ParticipantInvoiceUncheckedUpdateManyWithoutProgrammeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -1083,6 +1114,7 @@ export type ParticipantInvoiceSelect<ExtArgs extends runtime.Types.Extensions.In
   id?: boolean
   programmeId?: boolean
   participantId?: boolean
+  cohortId?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
@@ -1104,6 +1136,7 @@ export type ParticipantInvoiceSelectCreateManyAndReturn<ExtArgs extends runtime.
   id?: boolean
   programmeId?: boolean
   participantId?: boolean
+  cohortId?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
@@ -1124,6 +1157,7 @@ export type ParticipantInvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.
   id?: boolean
   programmeId?: boolean
   participantId?: boolean
+  cohortId?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
@@ -1144,6 +1178,7 @@ export type ParticipantInvoiceSelectScalar = {
   id?: boolean
   programmeId?: boolean
   participantId?: boolean
+  cohortId?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
@@ -1158,7 +1193,7 @@ export type ParticipantInvoiceSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ParticipantInvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "programmeId" | "participantId" | "amount" | "currency" | "status" | "dueDate" | "paidAt" | "stripeInvoiceId" | "stripeInvoiceUrl" | "stripeInvoiceItemIds" | "lineItems" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["participantInvoice"]>
+export type ParticipantInvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "programmeId" | "participantId" | "cohortId" | "amount" | "currency" | "status" | "dueDate" | "paidAt" | "stripeInvoiceId" | "stripeInvoiceUrl" | "stripeInvoiceItemIds" | "lineItems" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["participantInvoice"]>
 export type ParticipantInvoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   participant?: boolean | Prisma.ParticipantDefaultArgs<ExtArgs>
   programme?: boolean | Prisma.ProgrammeDefaultArgs<ExtArgs>
@@ -1184,6 +1219,7 @@ export type $ParticipantInvoicePayload<ExtArgs extends runtime.Types.Extensions.
     id: string
     programmeId: string
     participantId: string
+    cohortId: string | null
     amount: number
     currency: string
     status: $Enums.InvoiceStatus
@@ -1625,6 +1661,7 @@ export interface ParticipantInvoiceFieldRefs {
   readonly id: Prisma.FieldRef<"ParticipantInvoice", 'String'>
   readonly programmeId: Prisma.FieldRef<"ParticipantInvoice", 'String'>
   readonly participantId: Prisma.FieldRef<"ParticipantInvoice", 'String'>
+  readonly cohortId: Prisma.FieldRef<"ParticipantInvoice", 'String'>
   readonly amount: Prisma.FieldRef<"ParticipantInvoice", 'Float'>
   readonly currency: Prisma.FieldRef<"ParticipantInvoice", 'String'>
   readonly status: Prisma.FieldRef<"ParticipantInvoice", 'InvoiceStatus'>

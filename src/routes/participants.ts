@@ -12,11 +12,28 @@ export const participantsRouter = new Hono()
       const { programmeId } = programmeQuerySchema.parse(c.req.query());
       const participants = await prisma.programmeParticipant.findMany({
         where: { programmeId },
-        include: { programme: true, participant: true },
+        include: {
+          programme: true,
+          participant: {
+            include: {
+              progress: {
+                where: { programmeId },
+                orderBy: { updatedAt: "desc" },
+                take: 1,
+                select: { completionPct: true }
+              }
+            }
+          }
+        },
         orderBy: { createdAt: "desc" }
       });
 
-      return participants.map(serializeProgramParticipant);
+      return participants.map((entry) =>
+        serializeProgramParticipant({
+          ...entry,
+          progress: entry.participant.progress
+        })
+      );
     })
   )
   

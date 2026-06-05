@@ -236,6 +236,7 @@ export type AdminWhereInput = {
   createdTasks?: Prisma.TaskListRelationFilter
   assignedTaskItems?: Prisma.TaskItemListRelationFilter
   programmeResources?: Prisma.ProgrammeResourceListRelationFilter
+  cohortResources?: Prisma.CohortResourceListRelationFilter
 }
 
 export type AdminOrderByWithRelationInput = {
@@ -263,6 +264,7 @@ export type AdminOrderByWithRelationInput = {
   createdTasks?: Prisma.TaskOrderByRelationAggregateInput
   assignedTaskItems?: Prisma.TaskItemOrderByRelationAggregateInput
   programmeResources?: Prisma.ProgrammeResourceOrderByRelationAggregateInput
+  cohortResources?: Prisma.CohortResourceOrderByRelationAggregateInput
 }
 
 export type AdminWhereUniqueInput = Prisma.AtLeast<{
@@ -293,6 +295,7 @@ export type AdminWhereUniqueInput = Prisma.AtLeast<{
   createdTasks?: Prisma.TaskListRelationFilter
   assignedTaskItems?: Prisma.TaskItemListRelationFilter
   programmeResources?: Prisma.ProgrammeResourceListRelationFilter
+  cohortResources?: Prisma.CohortResourceListRelationFilter
 }, "id" | "email">
 
 export type AdminOrderByWithAggregationInput = {
@@ -351,6 +354,7 @@ export type AdminCreateInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateInput = {
@@ -377,6 +381,7 @@ export type AdminUncheckedCreateInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUpdateInput = {
@@ -403,6 +408,7 @@ export type AdminUpdateInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateInput = {
@@ -429,6 +435,7 @@ export type AdminUncheckedUpdateInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateManyInput = {
@@ -467,6 +474,11 @@ export type AdminUncheckedUpdateManyInput = {
   photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AdminNullableScalarRelationFilter = {
+  is?: Prisma.AdminWhereInput | null
+  isNot?: Prisma.AdminWhereInput | null
 }
 
 export type AdminListRelationFilter = {
@@ -523,9 +535,20 @@ export type AdminScalarRelationFilter = {
   isNot?: Prisma.AdminWhereInput
 }
 
-export type AdminNullableScalarRelationFilter = {
-  is?: Prisma.AdminWhereInput | null
-  isNot?: Prisma.AdminWhereInput | null
+export type AdminCreateNestedOneWithoutCohortResourcesInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutCohortResourcesInput, Prisma.AdminUncheckedCreateWithoutCohortResourcesInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutCohortResourcesInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneWithoutCohortResourcesNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutCohortResourcesInput, Prisma.AdminUncheckedCreateWithoutCohortResourcesInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutCohortResourcesInput
+  upsert?: Prisma.AdminUpsertWithoutCohortResourcesInput
+  disconnect?: Prisma.AdminWhereInput | boolean
+  delete?: Prisma.AdminWhereInput | boolean
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutCohortResourcesInput, Prisma.AdminUpdateWithoutCohortResourcesInput>, Prisma.AdminUncheckedUpdateWithoutCohortResourcesInput>
 }
 
 export type AdminCreateNestedManyWithoutRoleModelInput = {
@@ -762,6 +785,126 @@ export type AdminUpdateOneWithoutProgrammeResourcesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutProgrammeResourcesInput, Prisma.AdminUpdateWithoutProgrammeResourcesInput>, Prisma.AdminUncheckedUpdateWithoutProgrammeResourcesInput>
 }
 
+export type AdminCreateWithoutCohortResourcesInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  roleModel?: Prisma.RoleCreateNestedOneWithoutAdminsInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminUncheckedCreateWithoutCohortResourcesInput = {
+  id?: string
+  name: string
+  email: string
+  role?: $Enums.AdminRole
+  roleId?: string | null
+  password: string
+  notificationsEnabled?: boolean
+  photoId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedCreateNestedManyWithoutAdminInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedCreateNestedManyWithoutAuthorInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedCreateNestedManyWithoutAdminInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+}
+
+export type AdminCreateOrConnectWithoutCohortResourcesInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutCohortResourcesInput, Prisma.AdminUncheckedCreateWithoutCohortResourcesInput>
+}
+
+export type AdminUpsertWithoutCohortResourcesInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutCohortResourcesInput, Prisma.AdminUncheckedUpdateWithoutCohortResourcesInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutCohortResourcesInput, Prisma.AdminUncheckedCreateWithoutCohortResourcesInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutCohortResourcesInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutCohortResourcesInput, Prisma.AdminUncheckedUpdateWithoutCohortResourcesInput>
+}
+
+export type AdminUpdateWithoutCohortResourcesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  roleModel?: Prisma.RoleUpdateOneWithoutAdminsNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutCohortResourcesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  notificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  programmeAssignments?: Prisma.AdminProgrammeAssignmentUncheckedUpdateManyWithoutAdminNestedInput
+  orgCommsThreads?: Prisma.OrgCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsReplies?: Prisma.OrgCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  orgCommsTags?: Prisma.OrgCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  programmeCommsThreads?: Prisma.ProgrammeCommsThreadUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsReplies?: Prisma.ProgrammeCommsReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  programmeCommsTags?: Prisma.ProgrammeCommsTagUncheckedUpdateManyWithoutAdminNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+}
+
 export type AdminCreateWithoutRoleModelInput = {
   id?: string
   name: string
@@ -785,6 +928,7 @@ export type AdminCreateWithoutRoleModelInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutRoleModelInput = {
@@ -810,6 +954,7 @@ export type AdminUncheckedCreateWithoutRoleModelInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutRoleModelInput = {
@@ -877,6 +1022,7 @@ export type AdminCreateWithoutSessionsInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutSessionsInput = {
@@ -902,6 +1048,7 @@ export type AdminUncheckedCreateWithoutSessionsInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutSessionsInput = {
@@ -943,6 +1090,7 @@ export type AdminUpdateWithoutSessionsInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutSessionsInput = {
@@ -968,6 +1116,7 @@ export type AdminUncheckedUpdateWithoutSessionsInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateWithoutProgrammeAssignmentsInput = {
@@ -993,6 +1142,7 @@ export type AdminCreateWithoutProgrammeAssignmentsInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutProgrammeAssignmentsInput = {
@@ -1018,6 +1168,7 @@ export type AdminUncheckedCreateWithoutProgrammeAssignmentsInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutProgrammeAssignmentsInput = {
@@ -1059,6 +1210,7 @@ export type AdminUpdateWithoutProgrammeAssignmentsInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutProgrammeAssignmentsInput = {
@@ -1084,6 +1236,7 @@ export type AdminUncheckedUpdateWithoutProgrammeAssignmentsInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateWithoutOrgCommsThreadsInput = {
@@ -1109,6 +1262,7 @@ export type AdminCreateWithoutOrgCommsThreadsInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutOrgCommsThreadsInput = {
@@ -1134,6 +1288,7 @@ export type AdminUncheckedCreateWithoutOrgCommsThreadsInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutOrgCommsThreadsInput = {
@@ -1175,6 +1330,7 @@ export type AdminUpdateWithoutOrgCommsThreadsInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutOrgCommsThreadsInput = {
@@ -1200,6 +1356,7 @@ export type AdminUncheckedUpdateWithoutOrgCommsThreadsInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateWithoutOrgCommsRepliesInput = {
@@ -1225,6 +1382,7 @@ export type AdminCreateWithoutOrgCommsRepliesInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutOrgCommsRepliesInput = {
@@ -1250,6 +1408,7 @@ export type AdminUncheckedCreateWithoutOrgCommsRepliesInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutOrgCommsRepliesInput = {
@@ -1291,6 +1450,7 @@ export type AdminUpdateWithoutOrgCommsRepliesInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutOrgCommsRepliesInput = {
@@ -1316,6 +1476,7 @@ export type AdminUncheckedUpdateWithoutOrgCommsRepliesInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateWithoutOrgCommsTagsInput = {
@@ -1341,6 +1502,7 @@ export type AdminCreateWithoutOrgCommsTagsInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutOrgCommsTagsInput = {
@@ -1366,6 +1528,7 @@ export type AdminUncheckedCreateWithoutOrgCommsTagsInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutOrgCommsTagsInput = {
@@ -1407,6 +1570,7 @@ export type AdminUpdateWithoutOrgCommsTagsInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutOrgCommsTagsInput = {
@@ -1432,6 +1596,7 @@ export type AdminUncheckedUpdateWithoutOrgCommsTagsInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateWithoutProgrammeCommsThreadsInput = {
@@ -1457,6 +1622,7 @@ export type AdminCreateWithoutProgrammeCommsThreadsInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutProgrammeCommsThreadsInput = {
@@ -1482,6 +1648,7 @@ export type AdminUncheckedCreateWithoutProgrammeCommsThreadsInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutProgrammeCommsThreadsInput = {
@@ -1523,6 +1690,7 @@ export type AdminUpdateWithoutProgrammeCommsThreadsInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutProgrammeCommsThreadsInput = {
@@ -1548,6 +1716,7 @@ export type AdminUncheckedUpdateWithoutProgrammeCommsThreadsInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateWithoutProgrammeCommsRepliesInput = {
@@ -1573,6 +1742,7 @@ export type AdminCreateWithoutProgrammeCommsRepliesInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutProgrammeCommsRepliesInput = {
@@ -1598,6 +1768,7 @@ export type AdminUncheckedCreateWithoutProgrammeCommsRepliesInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutProgrammeCommsRepliesInput = {
@@ -1639,6 +1810,7 @@ export type AdminUpdateWithoutProgrammeCommsRepliesInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutProgrammeCommsRepliesInput = {
@@ -1664,6 +1836,7 @@ export type AdminUncheckedUpdateWithoutProgrammeCommsRepliesInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateWithoutProgrammeCommsTagsInput = {
@@ -1689,6 +1862,7 @@ export type AdminCreateWithoutProgrammeCommsTagsInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutProgrammeCommsTagsInput = {
@@ -1714,6 +1888,7 @@ export type AdminUncheckedCreateWithoutProgrammeCommsTagsInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutProgrammeCommsTagsInput = {
@@ -1755,6 +1930,7 @@ export type AdminUpdateWithoutProgrammeCommsTagsInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutProgrammeCommsTagsInput = {
@@ -1780,6 +1956,7 @@ export type AdminUncheckedUpdateWithoutProgrammeCommsTagsInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateWithoutNotificationsInput = {
@@ -1805,6 +1982,7 @@ export type AdminCreateWithoutNotificationsInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutNotificationsInput = {
@@ -1830,6 +2008,7 @@ export type AdminUncheckedCreateWithoutNotificationsInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutNotificationsInput = {
@@ -1871,6 +2050,7 @@ export type AdminUpdateWithoutNotificationsInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutNotificationsInput = {
@@ -1896,6 +2076,7 @@ export type AdminUncheckedUpdateWithoutNotificationsInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateWithoutAssignedTasksInput = {
@@ -1921,6 +2102,7 @@ export type AdminCreateWithoutAssignedTasksInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutAssignedTasksInput = {
@@ -1946,6 +2128,7 @@ export type AdminUncheckedCreateWithoutAssignedTasksInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutAssignedTasksInput = {
@@ -1976,6 +2159,7 @@ export type AdminCreateWithoutCreatedTasksInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutCreatedTasksInput = {
@@ -2001,6 +2185,7 @@ export type AdminUncheckedCreateWithoutCreatedTasksInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutCreatedTasksInput = {
@@ -2042,6 +2227,7 @@ export type AdminUpdateWithoutAssignedTasksInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutAssignedTasksInput = {
@@ -2067,6 +2253,7 @@ export type AdminUncheckedUpdateWithoutAssignedTasksInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUpsertWithoutCreatedTasksInput = {
@@ -2103,6 +2290,7 @@ export type AdminUpdateWithoutCreatedTasksInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutCreatedTasksInput = {
@@ -2128,6 +2316,7 @@ export type AdminUncheckedUpdateWithoutCreatedTasksInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateWithoutAssignedTaskItemsInput = {
@@ -2153,6 +2342,7 @@ export type AdminCreateWithoutAssignedTaskItemsInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   programmeResources?: Prisma.ProgrammeResourceCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutAssignedTaskItemsInput = {
@@ -2178,6 +2368,7 @@ export type AdminUncheckedCreateWithoutAssignedTaskItemsInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedCreateNestedManyWithoutAddedByInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutAssignedTaskItemsInput = {
@@ -2219,6 +2410,7 @@ export type AdminUpdateWithoutAssignedTaskItemsInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutAssignedTaskItemsInput = {
@@ -2244,6 +2436,7 @@ export type AdminUncheckedUpdateWithoutAssignedTaskItemsInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateWithoutProgrammeResourcesInput = {
@@ -2269,6 +2462,7 @@ export type AdminCreateWithoutProgrammeResourcesInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemCreateNestedManyWithoutAssigneeInput
+  cohortResources?: Prisma.CohortResourceCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminUncheckedCreateWithoutProgrammeResourcesInput = {
@@ -2294,6 +2488,7 @@ export type AdminUncheckedCreateWithoutProgrammeResourcesInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTaskItems?: Prisma.TaskItemUncheckedCreateNestedManyWithoutAssigneeInput
+  cohortResources?: Prisma.CohortResourceUncheckedCreateNestedManyWithoutAddedByInput
 }
 
 export type AdminCreateOrConnectWithoutProgrammeResourcesInput = {
@@ -2335,6 +2530,7 @@ export type AdminUpdateWithoutProgrammeResourcesInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutProgrammeResourcesInput = {
@@ -2360,6 +2556,7 @@ export type AdminUncheckedUpdateWithoutProgrammeResourcesInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminCreateManyRoleModelInput = {
@@ -2397,6 +2594,7 @@ export type AdminUpdateWithoutRoleModelInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutRoleModelInput = {
@@ -2422,6 +2620,7 @@ export type AdminUncheckedUpdateWithoutRoleModelInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTaskItems?: Prisma.TaskItemUncheckedUpdateManyWithoutAssigneeNestedInput
   programmeResources?: Prisma.ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput
+  cohortResources?: Prisma.CohortResourceUncheckedUpdateManyWithoutAddedByNestedInput
 }
 
 export type AdminUncheckedUpdateManyWithoutRoleModelInput = {
@@ -2455,6 +2654,7 @@ export type AdminCountOutputType = {
   createdTasks: number
   assignedTaskItems: number
   programmeResources: number
+  cohortResources: number
 }
 
 export type AdminCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2471,6 +2671,7 @@ export type AdminCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   createdTasks?: boolean | AdminCountOutputTypeCountCreatedTasksArgs
   assignedTaskItems?: boolean | AdminCountOutputTypeCountAssignedTaskItemsArgs
   programmeResources?: boolean | AdminCountOutputTypeCountProgrammeResourcesArgs
+  cohortResources?: boolean | AdminCountOutputTypeCountCohortResourcesArgs
 }
 
 /**
@@ -2574,6 +2775,13 @@ export type AdminCountOutputTypeCountProgrammeResourcesArgs<ExtArgs extends runt
   where?: Prisma.ProgrammeResourceWhereInput
 }
 
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountCohortResourcesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CohortResourceWhereInput
+}
+
 
 export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2600,6 +2808,7 @@ export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdTasks?: boolean | Prisma.Admin$createdTasksArgs<ExtArgs>
   assignedTaskItems?: boolean | Prisma.Admin$assignedTaskItemsArgs<ExtArgs>
   programmeResources?: boolean | Prisma.Admin$programmeResourcesArgs<ExtArgs>
+  cohortResources?: boolean | Prisma.Admin$cohortResourcesArgs<ExtArgs>
   _count?: boolean | Prisma.AdminCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["admin"]>
 
@@ -2660,6 +2869,7 @@ export type AdminInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdTasks?: boolean | Prisma.Admin$createdTasksArgs<ExtArgs>
   assignedTaskItems?: boolean | Prisma.Admin$assignedTaskItemsArgs<ExtArgs>
   programmeResources?: boolean | Prisma.Admin$programmeResourcesArgs<ExtArgs>
+  cohortResources?: boolean | Prisma.Admin$cohortResourcesArgs<ExtArgs>
   _count?: boolean | Prisma.AdminCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AdminIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2686,6 +2896,7 @@ export type $AdminPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     createdTasks: Prisma.$TaskPayload<ExtArgs>[]
     assignedTaskItems: Prisma.$TaskItemPayload<ExtArgs>[]
     programmeResources: Prisma.$ProgrammeResourcePayload<ExtArgs>[]
+    cohortResources: Prisma.$CohortResourcePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3106,6 +3317,7 @@ export interface Prisma__AdminClient<T, Null = never, ExtArgs extends runtime.Ty
   createdTasks<T extends Prisma.Admin$createdTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$createdTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedTaskItems<T extends Prisma.Admin$assignedTaskItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$assignedTaskItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   programmeResources<T extends Prisma.Admin$programmeResourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$programmeResourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgrammeResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cohortResources<T extends Prisma.Admin$cohortResourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$cohortResourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CohortResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3874,6 +4086,30 @@ export type Admin$programmeResourcesArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.ProgrammeResourceScalarFieldEnum | Prisma.ProgrammeResourceScalarFieldEnum[]
+}
+
+/**
+ * Admin.cohortResources
+ */
+export type Admin$cohortResourcesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CohortResource
+   */
+  select?: Prisma.CohortResourceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CohortResource
+   */
+  omit?: Prisma.CohortResourceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CohortResourceInclude<ExtArgs> | null
+  where?: Prisma.CohortResourceWhereInput
+  orderBy?: Prisma.CohortResourceOrderByWithRelationInput | Prisma.CohortResourceOrderByWithRelationInput[]
+  cursor?: Prisma.CohortResourceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CohortResourceScalarFieldEnum | Prisma.CohortResourceScalarFieldEnum[]
 }
 
 /**

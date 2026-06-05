@@ -80,3 +80,36 @@ export async function sendAdminFeedback(input: {
 export function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : String(error);
 }
+
+export async function getEventRecipients(event: Pick<Event, "programmeId" | "cohortId">) {
+  if (event.cohortId) {
+    const cohortParticipants = await prisma.cohortParticipant.findMany({
+      where: { cohortId: event.cohortId },
+      include: { participant: true }
+    });
+    const programmeParticipants = await prisma.programmeParticipant.findMany({
+      where: {
+        programmeId: event.programmeId,
+        participantId: { in: cohortParticipants.map((entry) => entry.participantId) }
+      }
+    });
+    const programmeParticipantByParticipantId = new Map(
+      programmeParticipants.map((entry) => [entry.participantId, entry])
+    );
+
+    return cohortParticipants.map((entry) => ({
+      participant: entry.participant,
+      programmeParticipant: programmeParticipantByParticipantId.get(entry.participantId) ?? null
+    }));
+  }
+
+  const programmeParticipants = await prisma.programmeParticipant.findMany({
+    where: { programmeId: event.programmeId },
+    include: { participant: true }
+  });
+
+  return programmeParticipants.map((entry) => ({
+    participant: entry.participant,
+    programmeParticipant: entry
+  }));
+}

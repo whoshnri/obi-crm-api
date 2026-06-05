@@ -8,14 +8,17 @@ import { EVENT_SCHEDULE_HASH } from "../jobs/utils";
 import { runSendEmailEventNow } from "../jobs/sendEmailCron";
 import { runSendInvoiceEventNow } from "../jobs/sendInvoiceCron";
 import { addNotificationForAdmins } from "../lib/notifications";
-import { createEventSchema, idParamSchema, programmeQuerySchema, updateEventSchema } from "../lib/schemas";
+import { createEventSchema, eventsQuerySchema, idParamSchema, updateEventSchema } from "../lib/schemas";
 
 export const eventsRouter = new Hono()
   .get("/", (c) =>
     handleRoute(c, async () => {
-      const { programmeId } = programmeQuerySchema.parse(c.req.query());
+      const { programmeId, cohortId } = eventsQuerySchema.parse(c.req.query());
       const events = await prisma.event.findMany({
-        where: programmeId ? { programmeId } : undefined,
+        where: {
+          ...(programmeId ? { programmeId } : {}),
+          ...(cohortId ? { cohortId } : {})
+        },
         orderBy: { scheduledAt: "asc" }
       });
       return events.map(serializeEvent);
@@ -24,16 +27,37 @@ export const eventsRouter = new Hono()
   .post("/", (c) =>
     handleRoute(c, async () => {
       const input = createEventSchema.parse(await c.req.json());
-      const eventFlow =
-        (await prisma.eventFlow.findUnique({ where: { programmeId: input.programmeId } })) ??
-        (await prisma.eventFlow.create({
-          data: { programmeId: input.programmeId, flow: {}, deployedAt: null }
-        }));
+
+      let eventFlowId: string | null = null;
+      let cohortEventFlowId: string | null = input.cohortEventFlowId ?? null;
+      let cohortId: string | null = input.cohortId ?? null;
+
+      if (cohortId) {
+        const cohortEventFlow =
+          (cohortEventFlowId
+            ? await prisma.cohortEventFlow.findUnique({ where: { id: cohortEventFlowId } })
+            : null) ??
+          (await prisma.cohortEventFlow.findUnique({ where: { cohortId } })) ??
+          (await prisma.cohortEventFlow.create({
+            data: { cohortId, flow: {}, deployedAt: null }
+          }));
+        cohortEventFlowId = cohortEventFlow.id;
+      } else {
+        const eventFlow =
+          (await prisma.eventFlow.findUnique({ where: { programmeId: input.programmeId } })) ??
+          (await prisma.eventFlow.create({
+            data: { programmeId: input.programmeId, flow: {}, deployedAt: null }
+          }));
+        eventFlowId = eventFlow.id;
+      }
+
       const event = await prisma.event.create({
         data: {
           name: input.name,
           programmeId: input.programmeId,
-          eventFlowId: eventFlow.id,
+          eventFlowId,
+          cohortEventFlowId,
+          cohortId,
           baseType: input.baseType as EventBaseType,
           scheduledAt: new Date(input.scheduledAt),
           status: (input.status ?? "pending") as EventStatus,

@@ -1,4 +1,14 @@
-import type { Participant, ParticipantInvoice, Prisma, Programme, ProgrammeParticipant } from "../generated/client";
+import type {
+  Cohort,
+  CohortProgramme,
+  Organisation,
+  Participant,
+  ParticipantInvoice,
+  Prisma,
+  Programme,
+  ProgrammeParticipant,
+  RegistrationPage
+} from "../generated/client";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -16,6 +26,8 @@ export function serializeEvent(event: {
   createdAt: Date;
   config: Prisma.JsonValue;
   eventFlowId?: string | null;
+  cohortEventFlowId?: string | null;
+  cohortId?: string | null;
 }) {
   return {
     id: event.id,
@@ -26,7 +38,9 @@ export function serializeEvent(event: {
     scheduledAt: event.scheduledAt.toISOString(),
     createdAt: event.createdAt.toISOString(),
     config: isRecord(event.config) ? event.config : {},
-    eventFlowId: event.eventFlowId ?? undefined
+    eventFlowId: event.eventFlowId ?? undefined,
+    cohortEventFlowId: event.cohortEventFlowId ?? undefined,
+    cohortId: event.cohortId ?? undefined
   };
 }
 
@@ -52,20 +66,25 @@ export function serializeProgramParticipant(programParticipant: ProgrammePartici
   participant: Participant;
   programme: Programme;
   invoice?: ParticipantInvoice | null;
+  progress?: Array<{ completionPct: number }>;
 }) {
   const baseParticipant = serializeBaseParticipant(programParticipant.participant);
+  const progressRecord = programParticipant.progress?.[0];
 
   return {
     ...baseParticipant,
     id: programParticipant.id,
     participantId: programParticipant.participantId,
     programmeId: programParticipant.programmeId,
+    cohortId: programParticipant.cohortId ?? undefined,
     programmeIds: [programParticipant.programmeId],
     paymentStatus: programParticipant.paymentStatus,
     invoiceId: programParticipant.invoiceId ?? undefined,
     enrolledAt: programParticipant.createdAt.toISOString(),
     createdAt: programParticipant.createdAt.toISOString(),
     updatedAt: programParticipant.updatedAt.toISOString(),
+    completionPct: progressRecord?.completionPct,
+    progressPct: progressRecord?.completionPct,
     metadata: isRecord(programParticipant.metadata) ? programParticipant.metadata : {},
     participant: baseParticipant,
     programme: serializeProgramme(programParticipant.programme),
@@ -208,14 +227,137 @@ export function serializeForm(form: {
   };
 }
 
+export function serializeOrganisationSummary(organisation: Organisation) {
+  return {
+    id: organisation.id,
+    name: organisation.name,
+    slug: organisation.slug,
+    logoUrl: organisation.logoUrl ?? undefined,
+    website: organisation.website ?? undefined,
+    size: organisation.size ?? undefined,
+    industry: organisation.industry ?? undefined,
+    address: organisation.address ?? undefined,
+    contactName: organisation.contactName ?? undefined,
+    contactEmail: organisation.contactEmail ?? undefined,
+    contactPhone: organisation.contactPhone ?? undefined,
+    parentOrganisationId: organisation.parentOrganisationId ?? undefined,
+    metadata: isRecord(organisation.metadata) ? organisation.metadata : {},
+    createdAt: organisation.createdAt.toISOString(),
+    updatedAt: organisation.updatedAt.toISOString()
+  };
+}
+
+export function serializeOrganisation(
+  organisation: Organisation & {
+    _count?: { cohorts: number; participants: number };
+    cohorts?: Cohort[];
+  }
+) {
+  return {
+    ...serializeOrganisationSummary(organisation),
+    _count: organisation._count,
+    cohorts: organisation.cohorts?.map((cohort) => serializeCohort(cohort)) ?? undefined
+  };
+}
+
+export function serializeCohort(
+  cohort: Cohort & {
+    _count?: { participants: number; programmes: number; registrationPages: number };
+    programmes?: Array<CohortProgramme & { programme?: Programme }>;
+    participants?: Array<{ id: string; participantId: string; joinedAt: Date; participant?: Participant }>;
+    registrationPages?: RegistrationPage[];
+    eventFlows?: Array<{
+      id: string;
+      flow: Prisma.JsonValue;
+      deployedAt: Date | null;
+      createdAt: Date;
+      updatedAt: Date;
+      events?: Array<Parameters<typeof serializeEvent>[0]>;
+    }>;
+    organisation?: Organisation | null;
+  }
+) {
+  return {
+    id: cohort.id,
+    name: cohort.name,
+    slug: cohort.slug,
+    type: cohort.type,
+    status: cohort.status,
+    organisationId: cohort.organisationId ?? undefined,
+    logoUrl: cohort.logoUrl ?? undefined,
+    description: cohort.description ?? undefined,
+    maxSize: cohort.maxSize ?? undefined,
+    startDate: cohort.startDate?.toISOString() ?? undefined,
+    endDate: cohort.endDate?.toISOString() ?? undefined,
+    metadata: isRecord(cohort.metadata) ? cohort.metadata : {},
+    createdAt: cohort.createdAt.toISOString(),
+    updatedAt: cohort.updatedAt.toISOString(),
+    _count: cohort._count,
+    organisation: cohort.organisation ? serializeOrganisationSummary(cohort.organisation) : undefined,
+    programmes: cohort.programmes?.map((link) => serializeCohortProgramme(link)) ?? undefined,
+    participants:
+      cohort.participants?.map((entry) => ({
+        id: entry.id,
+        participantId: entry.participantId,
+        joinedAt: entry.joinedAt.toISOString(),
+        participant: entry.participant ? serializeBaseParticipant(entry.participant) : undefined
+      })) ?? undefined,
+    registrationPages: cohort.registrationPages?.map((page) => serializeRegistrationPage(page)) ?? undefined,
+    eventFlow: cohort.eventFlows?.[0]
+      ? {
+          id: cohort.eventFlows[0].id,
+          flow: isRecord(cohort.eventFlows[0].flow) ? cohort.eventFlows[0].flow : {},
+          deployedAt: cohort.eventFlows[0].deployedAt?.toISOString() ?? null,
+          createdAt: cohort.eventFlows[0].createdAt.toISOString(),
+          updatedAt: cohort.eventFlows[0].updatedAt.toISOString(),
+          events: cohort.eventFlows[0].events?.map(serializeEvent) ?? []
+        }
+      : undefined
+  };
+}
+
+export function serializeCohortProgramme(
+  link: CohortProgramme & {
+    programme?: Programme;
+  }
+) {
+  return {
+    id: link.id,
+    cohortId: link.cohortId,
+    programmeId: link.programmeId,
+    enrolledAt: link.enrolledAt.toISOString(),
+    programme: link.programme ? serializeProgramme(link.programme) : undefined
+  };
+}
+
+export function serializeRegistrationPage(page: RegistrationPage) {
+  return {
+    id: page.id,
+    cohortId: page.cohortId,
+    slug: page.slug,
+    title: page.title ?? undefined,
+    logoUrl: page.logoUrl ?? undefined,
+    steps: Array.isArray(page.steps) ? page.steps : [],
+    isPublished: page.isPublished,
+    expiresAt: page.expiresAt?.toISOString() ?? undefined,
+    metadata: isRecord(page.metadata) ? page.metadata : {},
+    createdAt: page.createdAt.toISOString(),
+    updatedAt: page.updatedAt.toISOString()
+  };
+}
+
 export function serializeFormSubmission(submission: {
   id: string;
   formId: string;
   respondentId: string | null;
+  cohortId?: string | null;
   participant?: {
     id: string;
     name: string;
     email: string;
+  } | null;
+  form?: {
+    name: string;
   } | null;
   answers: Prisma.JsonValue;
   metadata: Prisma.JsonValue;
@@ -224,7 +366,9 @@ export function serializeFormSubmission(submission: {
   return {
     id: submission.id,
     formId: submission.formId,
+    formName: submission.form?.name,
     respondentId: submission.respondentId ?? undefined,
+    cohortId: submission.cohortId ?? undefined,
     respondent: submission.participant
       ? {
           id: submission.participant.id,
@@ -235,5 +379,161 @@ export function serializeFormSubmission(submission: {
     answers: isRecord(submission.answers) ? submission.answers : {},
     metadata: isRecord(submission.metadata) ? submission.metadata : {},
     createdAt: submission.createdAt.toISOString()
+  };
+}
+
+export function serializeProgrammeTimeline(
+  timeline: {
+    id: string;
+    programmeId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    milestones: Array<{
+      id: string;
+      title: string;
+      description: string | null;
+      scheduledAt: Date;
+      completedAt: Date | null;
+      order: number;
+      metadata: Prisma.JsonValue;
+    }>;
+  }
+) {
+  return {
+    id: timeline.id,
+    programmeId: timeline.programmeId,
+    createdAt: timeline.createdAt.toISOString(),
+    updatedAt: timeline.updatedAt.toISOString(),
+    milestones: timeline.milestones.map((milestone) => ({
+      id: milestone.id,
+      title: milestone.title,
+      description: milestone.description ?? undefined,
+      scheduledAt: milestone.scheduledAt.toISOString(),
+      completedAt: milestone.completedAt?.toISOString() ?? undefined,
+      order: milestone.order,
+      metadata: isRecord(milestone.metadata) ? milestone.metadata : {}
+    }))
+  };
+}
+
+export function serializeParticipantRequest(
+  request: {
+    id: string;
+    programmeId: string | null;
+    cohortId: string | null;
+    participantId: string;
+    title: string;
+    description: string | null;
+    dueDate: Date | null;
+    status: string;
+    formId: string | null;
+    metadata: Prisma.JsonValue;
+    createdAt: Date;
+    updatedAt: Date;
+    participant?: { id: string; name: string; email: string };
+    form?: { id: string; name: string; slug: string } | null;
+    response?: { id: string; content: Prisma.JsonValue; submittedAt: Date } | null;
+  }
+) {
+  return {
+    id: request.id,
+    programmeId: request.programmeId ?? undefined,
+    cohortId: request.cohortId ?? undefined,
+    participantId: request.participantId,
+    title: request.title,
+    description: request.description ?? undefined,
+    dueDate: request.dueDate?.toISOString() ?? undefined,
+    status: request.status,
+    formId: request.formId ?? undefined,
+    metadata: isRecord(request.metadata) ? request.metadata : {},
+    createdAt: request.createdAt.toISOString(),
+    updatedAt: request.updatedAt.toISOString(),
+    participant: request.participant,
+    form: request.form ?? undefined,
+    response: request.response
+      ? {
+          id: request.response.id,
+          content: isRecord(request.response.content) ? request.response.content : {},
+          submittedAt: request.response.submittedAt.toISOString()
+        }
+      : undefined
+  };
+}
+
+export function serializeDeliverable(
+  deliverable: {
+    id: string;
+    programmeId: string | null;
+    cohortId: string | null;
+    participantId: string | null;
+    title: string;
+    description: string | null;
+    resourceType: string;
+    url: string | null;
+    status: string;
+    scheduledAt: Date | null;
+    deliveredAt: Date | null;
+    acknowledgedAt: Date | null;
+    metadata: Prisma.JsonValue;
+    createdAt: Date;
+    updatedAt: Date;
+    participant?: { id: string; name: string; email: string } | null;
+  }
+) {
+  return {
+    id: deliverable.id,
+    programmeId: deliverable.programmeId ?? undefined,
+    cohortId: deliverable.cohortId ?? undefined,
+    participantId: deliverable.participantId ?? undefined,
+    title: deliverable.title,
+    description: deliverable.description ?? undefined,
+    resourceType: deliverable.resourceType,
+    url: deliverable.url ?? undefined,
+    status: deliverable.status,
+    scheduledAt: deliverable.scheduledAt?.toISOString() ?? undefined,
+    deliveredAt: deliverable.deliveredAt?.toISOString() ?? undefined,
+    acknowledgedAt: deliverable.acknowledgedAt?.toISOString() ?? undefined,
+    metadata: isRecord(deliverable.metadata) ? deliverable.metadata : {},
+    createdAt: deliverable.createdAt.toISOString(),
+    updatedAt: deliverable.updatedAt.toISOString(),
+    participant: deliverable.participant ?? undefined
+  };
+}
+
+export function serializeParticipantForumThread(
+  thread: {
+    id: string;
+    title: string;
+    body: string;
+    isPinned: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    author: { id: string; name: string; email: string };
+    replies: Array<{
+      id: string;
+      body: string;
+      parentId: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+      author: { id: string; name: string; email: string };
+    }>;
+  }
+) {
+  return {
+    id: thread.id,
+    title: thread.title,
+    body: thread.body,
+    isPinned: thread.isPinned,
+    createdAt: thread.createdAt.toISOString(),
+    updatedAt: thread.updatedAt.toISOString(),
+    author: thread.author,
+    replies: thread.replies.map((reply) => ({
+      id: reply.id,
+      body: reply.body,
+      parentId: reply.parentId ?? undefined,
+      createdAt: reply.createdAt.toISOString(),
+      updatedAt: reply.updatedAt.toISOString(),
+      author: reply.author
+    }))
   };
 }

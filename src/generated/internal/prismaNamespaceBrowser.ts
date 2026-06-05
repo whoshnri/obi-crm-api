@@ -51,6 +51,32 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Organisation: 'Organisation',
+  OrganisationParticipant: 'OrganisationParticipant',
+  Cohort: 'Cohort',
+  CohortProgramme: 'CohortProgramme',
+  CohortParticipant: 'CohortParticipant',
+  CohortEventFlow: 'CohortEventFlow',
+  ParticipantSession: 'ParticipantSession',
+  ParticipantMagicLink: 'ParticipantMagicLink',
+  ProgrammeTimeline: 'ProgrammeTimeline',
+  TimelineMilestone: 'TimelineMilestone',
+  ParticipantRequest: 'ParticipantRequest',
+  ParticipantRequestResponse: 'ParticipantRequestResponse',
+  Deliverable: 'Deliverable',
+  CohortCommsChannel: 'CohortCommsChannel',
+  CohortCommsThread: 'CohortCommsThread',
+  CohortCommsReply: 'CohortCommsReply',
+  ProgrammeParticipantCommsChannel: 'ProgrammeParticipantCommsChannel',
+  ProgrammeParticipantCommsThread: 'ProgrammeParticipantCommsThread',
+  ProgrammeParticipantCommsReply: 'ProgrammeParticipantCommsReply',
+  RegistrationPage: 'RegistrationPage',
+  RegistrationSubmission: 'RegistrationSubmission',
+  AnalyticsEvent: 'AnalyticsEvent',
+  OrganisationAnalytics: 'OrganisationAnalytics',
+  CohortAnalytics: 'CohortAnalytics',
+  ParticipantProgress: 'ParticipantProgress',
+  CohortResource: 'CohortResource',
   Role: 'Role',
   Participant: 'Participant',
   ProgrammeParticipant: 'ProgrammeParticipant',
@@ -99,6 +125,359 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const OrganisationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  logoUrl: 'logoUrl',
+  website: 'website',
+  size: 'size',
+  industry: 'industry',
+  address: 'address',
+  contactName: 'contactName',
+  contactEmail: 'contactEmail',
+  contactPhone: 'contactPhone',
+  parentOrganisationId: 'parentOrganisationId',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrganisationScalarFieldEnum = (typeof OrganisationScalarFieldEnum)[keyof typeof OrganisationScalarFieldEnum]
+
+
+export const OrganisationParticipantScalarFieldEnum = {
+  id: 'id',
+  organisationId: 'organisationId',
+  participantId: 'participantId',
+  role: 'role',
+  isPrimary: 'isPrimary',
+  joinedAt: 'joinedAt'
+} as const
+
+export type OrganisationParticipantScalarFieldEnum = (typeof OrganisationParticipantScalarFieldEnum)[keyof typeof OrganisationParticipantScalarFieldEnum]
+
+
+export const CohortScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  type: 'type',
+  status: 'status',
+  organisationId: 'organisationId',
+  logoUrl: 'logoUrl',
+  description: 'description',
+  maxSize: 'maxSize',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CohortScalarFieldEnum = (typeof CohortScalarFieldEnum)[keyof typeof CohortScalarFieldEnum]
+
+
+export const CohortProgrammeScalarFieldEnum = {
+  id: 'id',
+  cohortId: 'cohortId',
+  programmeId: 'programmeId',
+  enrolledAt: 'enrolledAt'
+} as const
+
+export type CohortProgrammeScalarFieldEnum = (typeof CohortProgrammeScalarFieldEnum)[keyof typeof CohortProgrammeScalarFieldEnum]
+
+
+export const CohortParticipantScalarFieldEnum = {
+  id: 'id',
+  cohortId: 'cohortId',
+  participantId: 'participantId',
+  joinedAt: 'joinedAt',
+  metadata: 'metadata'
+} as const
+
+export type CohortParticipantScalarFieldEnum = (typeof CohortParticipantScalarFieldEnum)[keyof typeof CohortParticipantScalarFieldEnum]
+
+
+export const CohortEventFlowScalarFieldEnum = {
+  id: 'id',
+  cohortId: 'cohortId',
+  flow: 'flow',
+  deployedAt: 'deployedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CohortEventFlowScalarFieldEnum = (typeof CohortEventFlowScalarFieldEnum)[keyof typeof CohortEventFlowScalarFieldEnum]
+
+
+export const ParticipantSessionScalarFieldEnum = {
+  id: 'id',
+  participantId: 'participantId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt',
+  lastUsedAt: 'lastUsedAt'
+} as const
+
+export type ParticipantSessionScalarFieldEnum = (typeof ParticipantSessionScalarFieldEnum)[keyof typeof ParticipantSessionScalarFieldEnum]
+
+
+export const ParticipantMagicLinkScalarFieldEnum = {
+  id: 'id',
+  participantId: 'participantId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ParticipantMagicLinkScalarFieldEnum = (typeof ParticipantMagicLinkScalarFieldEnum)[keyof typeof ParticipantMagicLinkScalarFieldEnum]
+
+
+export const ProgrammeTimelineScalarFieldEnum = {
+  id: 'id',
+  programmeId: 'programmeId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProgrammeTimelineScalarFieldEnum = (typeof ProgrammeTimelineScalarFieldEnum)[keyof typeof ProgrammeTimelineScalarFieldEnum]
+
+
+export const TimelineMilestoneScalarFieldEnum = {
+  id: 'id',
+  timelineId: 'timelineId',
+  title: 'title',
+  description: 'description',
+  scheduledAt: 'scheduledAt',
+  completedAt: 'completedAt',
+  order: 'order',
+  metadata: 'metadata'
+} as const
+
+export type TimelineMilestoneScalarFieldEnum = (typeof TimelineMilestoneScalarFieldEnum)[keyof typeof TimelineMilestoneScalarFieldEnum]
+
+
+export const ParticipantRequestScalarFieldEnum = {
+  id: 'id',
+  programmeId: 'programmeId',
+  cohortId: 'cohortId',
+  participantId: 'participantId',
+  title: 'title',
+  description: 'description',
+  dueDate: 'dueDate',
+  status: 'status',
+  formId: 'formId',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ParticipantRequestScalarFieldEnum = (typeof ParticipantRequestScalarFieldEnum)[keyof typeof ParticipantRequestScalarFieldEnum]
+
+
+export const ParticipantRequestResponseScalarFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  content: 'content',
+  submittedAt: 'submittedAt'
+} as const
+
+export type ParticipantRequestResponseScalarFieldEnum = (typeof ParticipantRequestResponseScalarFieldEnum)[keyof typeof ParticipantRequestResponseScalarFieldEnum]
+
+
+export const DeliverableScalarFieldEnum = {
+  id: 'id',
+  programmeId: 'programmeId',
+  cohortId: 'cohortId',
+  participantId: 'participantId',
+  title: 'title',
+  description: 'description',
+  resourceType: 'resourceType',
+  url: 'url',
+  status: 'status',
+  scheduledAt: 'scheduledAt',
+  deliveredAt: 'deliveredAt',
+  acknowledgedAt: 'acknowledgedAt',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DeliverableScalarFieldEnum = (typeof DeliverableScalarFieldEnum)[keyof typeof DeliverableScalarFieldEnum]
+
+
+export const CohortCommsChannelScalarFieldEnum = {
+  id: 'id',
+  cohortId: 'cohortId',
+  createdAt: 'createdAt'
+} as const
+
+export type CohortCommsChannelScalarFieldEnum = (typeof CohortCommsChannelScalarFieldEnum)[keyof typeof CohortCommsChannelScalarFieldEnum]
+
+
+export const CohortCommsThreadScalarFieldEnum = {
+  id: 'id',
+  channelId: 'channelId',
+  authorId: 'authorId',
+  title: 'title',
+  body: 'body',
+  isPinned: 'isPinned',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CohortCommsThreadScalarFieldEnum = (typeof CohortCommsThreadScalarFieldEnum)[keyof typeof CohortCommsThreadScalarFieldEnum]
+
+
+export const CohortCommsReplyScalarFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  authorId: 'authorId',
+  body: 'body',
+  parentId: 'parentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CohortCommsReplyScalarFieldEnum = (typeof CohortCommsReplyScalarFieldEnum)[keyof typeof CohortCommsReplyScalarFieldEnum]
+
+
+export const ProgrammeParticipantCommsChannelScalarFieldEnum = {
+  id: 'id',
+  programmeId: 'programmeId',
+  createdAt: 'createdAt'
+} as const
+
+export type ProgrammeParticipantCommsChannelScalarFieldEnum = (typeof ProgrammeParticipantCommsChannelScalarFieldEnum)[keyof typeof ProgrammeParticipantCommsChannelScalarFieldEnum]
+
+
+export const ProgrammeParticipantCommsThreadScalarFieldEnum = {
+  id: 'id',
+  channelId: 'channelId',
+  authorId: 'authorId',
+  title: 'title',
+  body: 'body',
+  isPinned: 'isPinned',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProgrammeParticipantCommsThreadScalarFieldEnum = (typeof ProgrammeParticipantCommsThreadScalarFieldEnum)[keyof typeof ProgrammeParticipantCommsThreadScalarFieldEnum]
+
+
+export const ProgrammeParticipantCommsReplyScalarFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  authorId: 'authorId',
+  body: 'body',
+  parentId: 'parentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProgrammeParticipantCommsReplyScalarFieldEnum = (typeof ProgrammeParticipantCommsReplyScalarFieldEnum)[keyof typeof ProgrammeParticipantCommsReplyScalarFieldEnum]
+
+
+export const RegistrationPageScalarFieldEnum = {
+  id: 'id',
+  cohortId: 'cohortId',
+  slug: 'slug',
+  title: 'title',
+  logoUrl: 'logoUrl',
+  steps: 'steps',
+  isPublished: 'isPublished',
+  expiresAt: 'expiresAt',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RegistrationPageScalarFieldEnum = (typeof RegistrationPageScalarFieldEnum)[keyof typeof RegistrationPageScalarFieldEnum]
+
+
+export const RegistrationSubmissionScalarFieldEnum = {
+  id: 'id',
+  registrationPageId: 'registrationPageId',
+  participantId: 'participantId',
+  answers: 'answers',
+  metadata: 'metadata',
+  submittedAt: 'submittedAt'
+} as const
+
+export type RegistrationSubmissionScalarFieldEnum = (typeof RegistrationSubmissionScalarFieldEnum)[keyof typeof RegistrationSubmissionScalarFieldEnum]
+
+
+export const AnalyticsEventScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  participantId: 'participantId',
+  cohortId: 'cohortId',
+  programmeId: 'programmeId',
+  organisationId: 'organisationId',
+  payload: 'payload',
+  occurredAt: 'occurredAt'
+} as const
+
+export type AnalyticsEventScalarFieldEnum = (typeof AnalyticsEventScalarFieldEnum)[keyof typeof AnalyticsEventScalarFieldEnum]
+
+
+export const OrganisationAnalyticsScalarFieldEnum = {
+  id: 'id',
+  organisationId: 'organisationId',
+  period: 'period',
+  metrics: 'metrics',
+  generatedAt: 'generatedAt'
+} as const
+
+export type OrganisationAnalyticsScalarFieldEnum = (typeof OrganisationAnalyticsScalarFieldEnum)[keyof typeof OrganisationAnalyticsScalarFieldEnum]
+
+
+export const CohortAnalyticsScalarFieldEnum = {
+  id: 'id',
+  cohortId: 'cohortId',
+  period: 'period',
+  metrics: 'metrics',
+  generatedAt: 'generatedAt'
+} as const
+
+export type CohortAnalyticsScalarFieldEnum = (typeof CohortAnalyticsScalarFieldEnum)[keyof typeof CohortAnalyticsScalarFieldEnum]
+
+
+export const ParticipantProgressScalarFieldEnum = {
+  id: 'id',
+  participantId: 'participantId',
+  programmeId: 'programmeId',
+  cohortId: 'cohortId',
+  completionPct: 'completionPct',
+  milestonesHit: 'milestonesHit',
+  formsSubmitted: 'formsSubmitted',
+  requestsDone: 'requestsDone',
+  lastActiveAt: 'lastActiveAt',
+  metadata: 'metadata',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ParticipantProgressScalarFieldEnum = (typeof ParticipantProgressScalarFieldEnum)[keyof typeof ParticipantProgressScalarFieldEnum]
+
+
+export const CohortResourceScalarFieldEnum = {
+  id: 'id',
+  cohortId: 'cohortId',
+  label: 'label',
+  url: 'url',
+  type: 'type',
+  description: 'description',
+  addedById: 'addedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CohortResourceScalarFieldEnum = (typeof CohortResourceScalarFieldEnum)[keyof typeof CohortResourceScalarFieldEnum]
+
+
 export const RoleScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -135,6 +514,7 @@ export const ProgrammeParticipantScalarFieldEnum = {
   id: 'id',
   programmeId: 'programmeId',
   participantId: 'participantId',
+  cohortId: 'cohortId',
   invoiceId: 'invoiceId',
   paymentStatus: 'paymentStatus',
   metadata: 'metadata',
@@ -175,6 +555,8 @@ export const EventScalarFieldEnum = {
   name: 'name',
   programmeId: 'programmeId',
   eventFlowId: 'eventFlowId',
+  cohortEventFlowId: 'cohortEventFlowId',
+  cohortId: 'cohortId',
   baseType: 'baseType',
   scheduledAt: 'scheduledAt',
   status: 'status',
@@ -201,6 +583,7 @@ export type EventParticipantStatusScalarFieldEnum = (typeof EventParticipantStat
 export const FormScalarFieldEnum = {
   id: 'id',
   programmeId: 'programmeId',
+  cohortId: 'cohortId',
   eventId: 'eventId',
   slug: 'slug',
   name: 'name',
@@ -218,6 +601,7 @@ export const FormSubmissionScalarFieldEnum = {
   id: 'id',
   formId: 'formId',
   respondentId: 'respondentId',
+  cohortId: 'cohortId',
   answers: 'answers',
   metadata: 'metadata',
   createdAt: 'createdAt'
@@ -242,6 +626,7 @@ export const ParticipantInvoiceScalarFieldEnum = {
   id: 'id',
   programmeId: 'programmeId',
   participantId: 'participantId',
+  cohortId: 'cohortId',
   amount: 'amount',
   currency: 'currency',
   status: 'status',
@@ -304,6 +689,7 @@ export const OpportunityScalarFieldEnum = {
   name: 'name',
   email: 'email',
   organisation: 'organisation',
+  organisationId: 'organisationId',
   importanceScore: 'importanceScore',
   status: 'status',
   notes: 'notes',
@@ -472,6 +858,7 @@ export const TaskScalarFieldEnum = {
   title: 'title',
   description: 'description',
   programmeId: 'programmeId',
+  cohortId: 'cohortId',
   assigneeId: 'assigneeId',
   createdById: 'createdById',
   priority: 'priority',
@@ -537,14 +924,6 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -552,4 +931,12 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

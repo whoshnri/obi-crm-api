@@ -367,10 +367,6 @@ export type EventFlowUncheckedUpdateOneWithoutProgrammeNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EventFlowUpdateToOneWithWhereWithoutProgrammeInput, Prisma.EventFlowUpdateWithoutProgrammeInput>, Prisma.EventFlowUncheckedUpdateWithoutProgrammeInput>
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type EventFlowCreateNestedOneWithoutEventsInput = {
   create?: Prisma.XOR<Prisma.EventFlowCreateWithoutEventsInput, Prisma.EventFlowUncheckedCreateWithoutEventsInput>
   connectOrCreate?: Prisma.EventFlowCreateOrConnectWithoutEventsInput

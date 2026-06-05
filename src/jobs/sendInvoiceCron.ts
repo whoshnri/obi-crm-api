@@ -5,6 +5,7 @@ import { redis } from "../lib/redis";
 import {
   EVENT_SCHEDULE_HASH,
   errorMessage,
+  getEventRecipients,
   getLineItems,
   getNumberConfig,
   getStringConfig,
@@ -145,11 +146,7 @@ async function processInvoiceEvent(eventId: string) {
   const event = await prisma.event.findUnique({
     where: { id: eventId },
     include: {
-      programme: {
-        include: {
-          participants: { include: { participant: true } }
-        }
-      }
+      programme: true
     }
   });
 
@@ -165,11 +162,30 @@ async function processInvoiceEvent(eventId: string) {
 
   await prisma.event.update({ where: { id: event.id }, data: { status: EventStatus.processing } });
 
+  const recipients = await getEventRecipients(event);
   const jobs = [];
-  for (const programmeParticipant of event.programme.participants) {
-    const participant = programmeParticipant.participant;
+  for (const { participant, programmeParticipant } of recipients) {
     if (!participant.stripeCustomerId) {
       const message = "Participant is missing stripeCustomerId";
+      console.error("[invoice:event:participant:error]", JSON.stringify({ eventId: event.id, participantId: participant.id, message }));
+      await prisma.eventParticipantStatus.upsert({
+        where: { eventId_participantId: { eventId: event.id, participantId: participant.id } },
+        create: {
+          eventId: event.id,
+          participantId: participant.id,
+          status: StepStatus.not_sent,
+          metadata: { error: message } as Prisma.InputJsonValue
+        },
+        update: {
+          status: StepStatus.not_sent,
+          metadata: { error: message } as Prisma.InputJsonValue
+        }
+      });
+      continue;
+    }
+
+    if (!programmeParticipant) {
+      const message = "Participant is not enrolled in the programme for this event";
       console.error("[invoice:event:participant:error]", JSON.stringify({ eventId: event.id, participantId: participant.id, message }));
       await prisma.eventParticipantStatus.upsert({
         where: { eventId_participantId: { eventId: event.id, participantId: participant.id } },
@@ -210,8 +226,8 @@ async function processInvoiceEvent(eventId: string) {
   }
 
   const results = await Promise.all(jobs.map(waitForJob));
-  const failureCount = results.filter((result) => !result.ok).length + (event.programme.participants.length - jobs.length);
-  const successCount = event.programme.participants.length - failureCount;
+  const failureCount = results.filter((result) => !result.ok).length + (recipients.length - jobs.length);
+  const successCount = recipients.length - failureCount;
 
   await prisma.event.update({
     where: { id: event.id },
@@ -224,7 +240,7 @@ async function processInvoiceEvent(eventId: string) {
 
   await sendAdminFeedback({
     event,
-    total: event.programme.participants.length,
+    total: recipients.length,
     successCount,
     failureCount
   });

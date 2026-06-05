@@ -28,6 +28,7 @@ export type FormSubmissionMinAggregateOutputType = {
   id: string | null
   formId: string | null
   respondentId: string | null
+  cohortId: string | null
   createdAt: Date | null
 }
 
@@ -35,6 +36,7 @@ export type FormSubmissionMaxAggregateOutputType = {
   id: string | null
   formId: string | null
   respondentId: string | null
+  cohortId: string | null
   createdAt: Date | null
 }
 
@@ -42,6 +44,7 @@ export type FormSubmissionCountAggregateOutputType = {
   id: number
   formId: number
   respondentId: number
+  cohortId: number
   answers: number
   metadata: number
   createdAt: number
@@ -53,6 +56,7 @@ export type FormSubmissionMinAggregateInputType = {
   id?: true
   formId?: true
   respondentId?: true
+  cohortId?: true
   createdAt?: true
 }
 
@@ -60,6 +64,7 @@ export type FormSubmissionMaxAggregateInputType = {
   id?: true
   formId?: true
   respondentId?: true
+  cohortId?: true
   createdAt?: true
 }
 
@@ -67,6 +72,7 @@ export type FormSubmissionCountAggregateInputType = {
   id?: true
   formId?: true
   respondentId?: true
+  cohortId?: true
   answers?: true
   metadata?: true
   createdAt?: true
@@ -149,6 +155,7 @@ export type FormSubmissionGroupByOutputType = {
   id: string
   formId: string
   respondentId: string | null
+  cohortId: string | null
   answers: runtime.JsonValue
   metadata: runtime.JsonValue
   createdAt: Date
@@ -179,6 +186,7 @@ export type FormSubmissionWhereInput = {
   id?: Prisma.StringFilter<"FormSubmission"> | string
   formId?: Prisma.StringFilter<"FormSubmission"> | string
   respondentId?: Prisma.StringNullableFilter<"FormSubmission"> | string | null
+  cohortId?: Prisma.StringNullableFilter<"FormSubmission"> | string | null
   answers?: Prisma.JsonFilter<"FormSubmission">
   metadata?: Prisma.JsonFilter<"FormSubmission">
   createdAt?: Prisma.DateTimeFilter<"FormSubmission"> | Date | string
@@ -190,6 +198,7 @@ export type FormSubmissionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   formId?: Prisma.SortOrder
   respondentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  cohortId?: Prisma.SortOrderInput | Prisma.SortOrder
   answers?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -204,6 +213,7 @@ export type FormSubmissionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FormSubmissionWhereInput | Prisma.FormSubmissionWhereInput[]
   formId?: Prisma.StringFilter<"FormSubmission"> | string
   respondentId?: Prisma.StringNullableFilter<"FormSubmission"> | string | null
+  cohortId?: Prisma.StringNullableFilter<"FormSubmission"> | string | null
   answers?: Prisma.JsonFilter<"FormSubmission">
   metadata?: Prisma.JsonFilter<"FormSubmission">
   createdAt?: Prisma.DateTimeFilter<"FormSubmission"> | Date | string
@@ -215,6 +225,7 @@ export type FormSubmissionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   formId?: Prisma.SortOrder
   respondentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  cohortId?: Prisma.SortOrderInput | Prisma.SortOrder
   answers?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -230,6 +241,7 @@ export type FormSubmissionScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"FormSubmission"> | string
   formId?: Prisma.StringWithAggregatesFilter<"FormSubmission"> | string
   respondentId?: Prisma.StringNullableWithAggregatesFilter<"FormSubmission"> | string | null
+  cohortId?: Prisma.StringNullableWithAggregatesFilter<"FormSubmission"> | string | null
   answers?: Prisma.JsonWithAggregatesFilter<"FormSubmission">
   metadata?: Prisma.JsonWithAggregatesFilter<"FormSubmission">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FormSubmission"> | Date | string
@@ -237,6 +249,7 @@ export type FormSubmissionScalarWhereWithAggregatesInput = {
 
 export type FormSubmissionCreateInput = {
   id?: string
+  cohortId?: string | null
   answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -248,6 +261,7 @@ export type FormSubmissionUncheckedCreateInput = {
   id?: string
   formId: string
   respondentId?: string | null
+  cohortId?: string | null
   answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -255,6 +269,7 @@ export type FormSubmissionUncheckedCreateInput = {
 
 export type FormSubmissionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -266,6 +281,7 @@ export type FormSubmissionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   formId?: Prisma.StringFieldUpdateOperationsInput | string
   respondentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -275,6 +291,7 @@ export type FormSubmissionCreateManyInput = {
   id?: string
   formId: string
   respondentId?: string | null
+  cohortId?: string | null
   answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -282,6 +299,7 @@ export type FormSubmissionCreateManyInput = {
 
 export type FormSubmissionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -291,6 +309,7 @@ export type FormSubmissionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   formId?: Prisma.StringFieldUpdateOperationsInput | string
   respondentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -310,6 +329,7 @@ export type FormSubmissionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   formId?: Prisma.SortOrder
   respondentId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrder
   answers?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -319,6 +339,7 @@ export type FormSubmissionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   formId?: Prisma.SortOrder
   respondentId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -326,6 +347,7 @@ export type FormSubmissionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   formId?: Prisma.SortOrder
   respondentId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -415,6 +437,7 @@ export type FormSubmissionUncheckedUpdateManyWithoutFormNestedInput = {
 
 export type FormSubmissionCreateWithoutParticipantInput = {
   id?: string
+  cohortId?: string | null
   answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -424,6 +447,7 @@ export type FormSubmissionCreateWithoutParticipantInput = {
 export type FormSubmissionUncheckedCreateWithoutParticipantInput = {
   id?: string
   formId: string
+  cohortId?: string | null
   answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -462,6 +486,7 @@ export type FormSubmissionScalarWhereInput = {
   id?: Prisma.StringFilter<"FormSubmission"> | string
   formId?: Prisma.StringFilter<"FormSubmission"> | string
   respondentId?: Prisma.StringNullableFilter<"FormSubmission"> | string | null
+  cohortId?: Prisma.StringNullableFilter<"FormSubmission"> | string | null
   answers?: Prisma.JsonFilter<"FormSubmission">
   metadata?: Prisma.JsonFilter<"FormSubmission">
   createdAt?: Prisma.DateTimeFilter<"FormSubmission"> | Date | string
@@ -469,6 +494,7 @@ export type FormSubmissionScalarWhereInput = {
 
 export type FormSubmissionCreateWithoutFormInput = {
   id?: string
+  cohortId?: string | null
   answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -478,6 +504,7 @@ export type FormSubmissionCreateWithoutFormInput = {
 export type FormSubmissionUncheckedCreateWithoutFormInput = {
   id?: string
   respondentId?: string | null
+  cohortId?: string | null
   answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -512,6 +539,7 @@ export type FormSubmissionUpdateManyWithWhereWithoutFormInput = {
 export type FormSubmissionCreateManyParticipantInput = {
   id?: string
   formId: string
+  cohortId?: string | null
   answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -519,6 +547,7 @@ export type FormSubmissionCreateManyParticipantInput = {
 
 export type FormSubmissionUpdateWithoutParticipantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -528,6 +557,7 @@ export type FormSubmissionUpdateWithoutParticipantInput = {
 export type FormSubmissionUncheckedUpdateWithoutParticipantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   formId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -536,6 +566,7 @@ export type FormSubmissionUncheckedUpdateWithoutParticipantInput = {
 export type FormSubmissionUncheckedUpdateManyWithoutParticipantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   formId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -544,6 +575,7 @@ export type FormSubmissionUncheckedUpdateManyWithoutParticipantInput = {
 export type FormSubmissionCreateManyFormInput = {
   id?: string
   respondentId?: string | null
+  cohortId?: string | null
   answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -551,6 +583,7 @@ export type FormSubmissionCreateManyFormInput = {
 
 export type FormSubmissionUpdateWithoutFormInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -560,6 +593,7 @@ export type FormSubmissionUpdateWithoutFormInput = {
 export type FormSubmissionUncheckedUpdateWithoutFormInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   respondentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -568,6 +602,7 @@ export type FormSubmissionUncheckedUpdateWithoutFormInput = {
 export type FormSubmissionUncheckedUpdateManyWithoutFormInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   respondentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -579,6 +614,7 @@ export type FormSubmissionSelect<ExtArgs extends runtime.Types.Extensions.Intern
   id?: boolean
   formId?: boolean
   respondentId?: boolean
+  cohortId?: boolean
   answers?: boolean
   metadata?: boolean
   createdAt?: boolean
@@ -590,6 +626,7 @@ export type FormSubmissionSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   id?: boolean
   formId?: boolean
   respondentId?: boolean
+  cohortId?: boolean
   answers?: boolean
   metadata?: boolean
   createdAt?: boolean
@@ -601,6 +638,7 @@ export type FormSubmissionSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   id?: boolean
   formId?: boolean
   respondentId?: boolean
+  cohortId?: boolean
   answers?: boolean
   metadata?: boolean
   createdAt?: boolean
@@ -612,12 +650,13 @@ export type FormSubmissionSelectScalar = {
   id?: boolean
   formId?: boolean
   respondentId?: boolean
+  cohortId?: boolean
   answers?: boolean
   metadata?: boolean
   createdAt?: boolean
 }
 
-export type FormSubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "formId" | "respondentId" | "answers" | "metadata" | "createdAt", ExtArgs["result"]["formSubmission"]>
+export type FormSubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "formId" | "respondentId" | "cohortId" | "answers" | "metadata" | "createdAt", ExtArgs["result"]["formSubmission"]>
 export type FormSubmissionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   form?: boolean | Prisma.FormDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.FormSubmission$participantArgs<ExtArgs>
@@ -641,6 +680,7 @@ export type $FormSubmissionPayload<ExtArgs extends runtime.Types.Extensions.Inte
     id: string
     formId: string
     respondentId: string | null
+    cohortId: string | null
     answers: runtime.JsonValue
     metadata: runtime.JsonValue
     createdAt: Date
@@ -1072,6 +1112,7 @@ export interface FormSubmissionFieldRefs {
   readonly id: Prisma.FieldRef<"FormSubmission", 'String'>
   readonly formId: Prisma.FieldRef<"FormSubmission", 'String'>
   readonly respondentId: Prisma.FieldRef<"FormSubmission", 'String'>
+  readonly cohortId: Prisma.FieldRef<"FormSubmission", 'String'>
   readonly answers: Prisma.FieldRef<"FormSubmission", 'Json'>
   readonly metadata: Prisma.FieldRef<"FormSubmission", 'Json'>
   readonly createdAt: Prisma.FieldRef<"FormSubmission", 'DateTime'>

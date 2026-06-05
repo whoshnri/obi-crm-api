@@ -5,6 +5,7 @@ import { handleRoute } from "../lib/http";
 import { serializeForm, serializeFormSubmission } from "../lib/serializers";
 import { createFormSchema, createSubmissionSchema, updateFormSchema } from "../lib/form-contract";
 import { idParamSchema, programmeQuerySchema } from "../lib/schemas";
+import { trackAnalyticsEvent } from "../lib/analytics";
 
 function isDuplicateFormSlugError(error: unknown) {
   if (typeof error !== "object" || error === null) return false;
@@ -112,7 +113,7 @@ export const formsRouter = new Hono()
       const input = createSubmissionSchema.parse(await c.req.json());
       const form = await prisma.form.findUnique({
         where: { id },
-        select: { id: true, programmeId: true }
+        select: { id: true, programmeId: true, cohortId: true }
       });
 
       if (!form) {
@@ -164,6 +165,17 @@ export const formsRouter = new Hono()
           }
         }
       });
+
+      void trackAnalyticsEvent({
+        type: "form_submitted",
+        participantId: respondentId ?? undefined,
+        programmeId: form.programmeId ?? undefined,
+        cohortId: form.cohortId ?? undefined,
+        payload: {
+          formId: id,
+          submissionId: submission.id
+        }
+      }).catch((error) => console.error("failed to track form_submitted", error));
 
       // notify admins of submission
       try {

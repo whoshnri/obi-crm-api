@@ -4,6 +4,7 @@ import { redis } from "../lib/redis";
 import {
   EVENT_SCHEDULE_HASH,
   errorMessage,
+  getEventRecipients,
   getStringConfig,
   isWithinScheduleWindow,
   parseEventConfig,
@@ -15,11 +16,7 @@ async function processEmailEvent(eventId: string) {
   const event = await prisma.event.findUnique({
     where: { id: eventId },
     include: {
-      programme: {
-        include: {
-          participants: { include: { participant: true } }
-        }
-      }
+      programme: true
     }
   });
 
@@ -48,9 +45,10 @@ async function processEmailEvent(eventId: string) {
 
   await prisma.event.update({ where: { id: event.id }, data: { status: EventStatus.processing } });
 
+  const recipients = await getEventRecipients(event);
+
   const results = await Promise.allSettled(
-    event.programme.participants.map(async (programmeParticipant) => {
-      const participant = programmeParticipant.participant;
+    recipients.map(async ({ participant }) => {
       try {
         await sendEmail(participant.email, subject, body);
         await prisma.eventParticipantStatus.upsert({

@@ -519,10 +519,6 @@ export type ProgrammeResourceUncheckedUpdateManyWithoutAddedByNestedInput = {
   deleteMany?: Prisma.ProgrammeResourceScalarWhereInput | Prisma.ProgrammeResourceScalarWhereInput[]
 }
 
-export type EnumResourceTypeFieldUpdateOperationsInput = {
-  set?: $Enums.ResourceType
-}
-
 export type ProgrammeResourceCreateWithoutProgrammeInput = {
   id?: string
   label: string

@@ -31,8 +31,8 @@ export * from "./enums"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Roles
- * const roles = await prisma.role.findMany()
+ * // Fetch zero or more Organisations
+ * const organisations = await prisma.organisation.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -41,6 +41,136 @@ export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
+/**
+ * Model Organisation
+ * 
+ */
+export type Organisation = Prisma.OrganisationModel
+/**
+ * Model OrganisationParticipant
+ * 
+ */
+export type OrganisationParticipant = Prisma.OrganisationParticipantModel
+/**
+ * Model Cohort
+ * 
+ */
+export type Cohort = Prisma.CohortModel
+/**
+ * Model CohortProgramme
+ * 
+ */
+export type CohortProgramme = Prisma.CohortProgrammeModel
+/**
+ * Model CohortParticipant
+ * 
+ */
+export type CohortParticipant = Prisma.CohortParticipantModel
+/**
+ * Model CohortEventFlow
+ * 
+ */
+export type CohortEventFlow = Prisma.CohortEventFlowModel
+/**
+ * Model ParticipantSession
+ * 
+ */
+export type ParticipantSession = Prisma.ParticipantSessionModel
+/**
+ * Model ParticipantMagicLink
+ * 
+ */
+export type ParticipantMagicLink = Prisma.ParticipantMagicLinkModel
+/**
+ * Model ProgrammeTimeline
+ * 
+ */
+export type ProgrammeTimeline = Prisma.ProgrammeTimelineModel
+/**
+ * Model TimelineMilestone
+ * 
+ */
+export type TimelineMilestone = Prisma.TimelineMilestoneModel
+/**
+ * Model ParticipantRequest
+ * 
+ */
+export type ParticipantRequest = Prisma.ParticipantRequestModel
+/**
+ * Model ParticipantRequestResponse
+ * 
+ */
+export type ParticipantRequestResponse = Prisma.ParticipantRequestResponseModel
+/**
+ * Model Deliverable
+ * 
+ */
+export type Deliverable = Prisma.DeliverableModel
+/**
+ * Model CohortCommsChannel
+ * 
+ */
+export type CohortCommsChannel = Prisma.CohortCommsChannelModel
+/**
+ * Model CohortCommsThread
+ * 
+ */
+export type CohortCommsThread = Prisma.CohortCommsThreadModel
+/**
+ * Model CohortCommsReply
+ * 
+ */
+export type CohortCommsReply = Prisma.CohortCommsReplyModel
+/**
+ * Model ProgrammeParticipantCommsChannel
+ * 
+ */
+export type ProgrammeParticipantCommsChannel = Prisma.ProgrammeParticipantCommsChannelModel
+/**
+ * Model ProgrammeParticipantCommsThread
+ * 
+ */
+export type ProgrammeParticipantCommsThread = Prisma.ProgrammeParticipantCommsThreadModel
+/**
+ * Model ProgrammeParticipantCommsReply
+ * 
+ */
+export type ProgrammeParticipantCommsReply = Prisma.ProgrammeParticipantCommsReplyModel
+/**
+ * Model RegistrationPage
+ * 
+ */
+export type RegistrationPage = Prisma.RegistrationPageModel
+/**
+ * Model RegistrationSubmission
+ * 
+ */
+export type RegistrationSubmission = Prisma.RegistrationSubmissionModel
+/**
+ * Model AnalyticsEvent
+ * 
+ */
+export type AnalyticsEvent = Prisma.AnalyticsEventModel
+/**
+ * Model OrganisationAnalytics
+ * 
+ */
+export type OrganisationAnalytics = Prisma.OrganisationAnalyticsModel
+/**
+ * Model CohortAnalytics
+ * 
+ */
+export type CohortAnalytics = Prisma.CohortAnalyticsModel
+/**
+ * Model ParticipantProgress
+ * 
+ */
+export type ParticipantProgress = Prisma.ParticipantProgressModel
+/**
+ * Model CohortResource
+ * 
+ */
+export type CohortResource = Prisma.CohortResourceModel
 /**
  * Model Role
  * 

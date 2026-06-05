@@ -116,6 +116,21 @@ enum Permission {
   notification_manage
   org_settings_view
   org_settings_update
+  organisation_create
+  organisation_update
+  organisation_delete
+  organisation_view
+  cohort_create
+  cohort_update
+  cohort_delete
+  cohort_view
+  analytics_view
+  portal_request_create
+  portal_request_view
+  deliverable_create
+  deliverable_view
+  timeline_manage
+  registration_page_manage
 }
 
 enum NotificationType {
@@ -138,6 +153,9 @@ enum NotificationType {
   comms_tag
   admin_added
   opportunity_converted
+  cohort_participant_added
+  deliverable_ready
+  participant_request_assigned
   error
   info
 }
@@ -164,6 +182,473 @@ enum ResourceType {
   spreadsheet
   image
   other
+}
+
+enum CohortType {
+  org_specific
+  open
+}
+
+enum CohortStatus {
+  draft
+  active
+  completed
+  archived
+}
+
+enum OrgSize {
+  solo
+  small
+  medium
+  large
+  enterprise
+}
+
+enum ParticipantRequestStatus {
+  pending
+  in_progress
+  submitted
+  reviewed
+  approved
+  rejected
+}
+
+enum DeliverableStatus {
+  pending
+  ready
+  delivered
+  acknowledged
+}
+
+enum AnalyticsEventType {
+  portal_login
+  resource_viewed
+  resource_downloaded
+  form_opened
+  form_submitted
+  deliverable_acknowledged
+  forum_post
+  forum_reply
+  timeline_milestone_reached
+  task_completed
+}
+
+model Organisation {
+  id                   String                    @id @default(cuid())
+  name                 String
+  slug                 String                    @unique
+  logoUrl              String?
+  website              String?
+  size                 OrgSize?
+  industry             String?
+  address              String?
+  contactName          String?
+  contactEmail         String?
+  contactPhone         String?
+  parentOrganisationId String?
+  metadata             Json                      @default("{}")
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+  parentOrganisation   Organisation?             @relation("OrganisationHierarchy", fields: [parentOrganisationId], references: [id], onDelete: SetNull)
+  childOrganisations   Organisation[]            @relation("OrganisationHierarchy")
+  cohorts              Cohort[]
+  participants         OrganisationParticipant[]
+  analytics            OrganisationAnalytics[]
+  opportunities        Opportunity[]             @relation("OrgOpportunities")
+  analyticsEvents      AnalyticsEvent[]
+
+  @@index([parentOrganisationId])
+}
+
+model OrganisationParticipant {
+  id             String       @id @default(cuid())
+  organisationId String
+  participantId  String
+  role           String?
+  isPrimary      Boolean      @default(false)
+  joinedAt       DateTime     @default(now())
+  organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  participant    Participant  @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([organisationId, participantId])
+  @@index([participantId])
+}
+
+model Cohort {
+  id                    String                 @id @default(cuid())
+  name                  String
+  slug                  String                 @unique
+  type                  CohortType             @default(open)
+  status                CohortStatus           @default(draft)
+  organisationId        String?
+  logoUrl               String?
+  description           String?
+  maxSize               Int?
+  startDate             DateTime?
+  endDate               DateTime?
+  metadata              Json                   @default("{}")
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  organisation          Organisation?          @relation(fields: [organisationId], references: [id], onDelete: SetNull)
+  programmes            CohortProgramme[]
+  participants          CohortParticipant[]
+  eventFlows            CohortEventFlow[]
+  commsChannel          CohortCommsChannel?
+  resources             CohortResource[]
+  tasks                 Task[]                 @relation("CohortTasks")
+  analytics             CohortAnalytics[]
+  registrationPages     RegistrationPage[]
+  events                Event[]
+  forms                 Form[]
+  requests              ParticipantRequest[]
+  deliverables          Deliverable[]
+  analyticsEvents       AnalyticsEvent[]
+  programmeParticipants ProgrammeParticipant[]
+
+  @@index([organisationId])
+}
+
+model CohortProgramme {
+  id          String    @id @default(cuid())
+  cohortId    String
+  programmeId String
+  enrolledAt  DateTime  @default(now())
+  cohort      Cohort    @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  programme   Programme @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+
+  @@unique([cohortId, programmeId])
+  @@index([programmeId])
+}
+
+model CohortParticipant {
+  id            String      @id @default(cuid())
+  cohortId      String
+  participantId String
+  joinedAt      DateTime    @default(now())
+  metadata      Json        @default("{}")
+  cohort        Cohort      @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([cohortId, participantId])
+  @@index([participantId])
+}
+
+model CohortEventFlow {
+  id         String    @id @default(cuid())
+  cohortId   String    @unique
+  flow       Json      @default("{}")
+  deployedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  cohort     Cohort    @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  events     Event[]   @relation("CohortEvents")
+}
+
+model ParticipantSession {
+  id            String      @id @default(cuid())
+  participantId String
+  tokenHash     String      @unique
+  expiresAt     DateTime
+  revokedAt     DateTime?
+  createdAt     DateTime    @default(now())
+  lastUsedAt    DateTime    @default(now())
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@index([participantId])
+  @@index([expiresAt])
+}
+
+model ParticipantMagicLink {
+  id            String      @id @default(cuid())
+  participantId String
+  tokenHash     String      @unique
+  expiresAt     DateTime
+  usedAt        DateTime?
+  createdAt     DateTime    @default(now())
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@index([participantId])
+  @@index([expiresAt])
+}
+
+model ProgrammeTimeline {
+  id          String              @id @default(cuid())
+  programmeId String              @unique
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  programme   Programme           @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  milestones  TimelineMilestone[]
+}
+
+model TimelineMilestone {
+  id          String            @id @default(cuid())
+  timelineId  String
+  title       String
+  description String?
+  scheduledAt DateTime
+  completedAt DateTime?
+  order       Int               @default(0)
+  metadata    Json              @default("{}")
+  timeline    ProgrammeTimeline @relation(fields: [timelineId], references: [id], onDelete: Cascade)
+
+  @@index([timelineId])
+}
+
+model ParticipantRequest {
+  id            String                   @id @default(cuid())
+  programmeId   String?
+  cohortId      String?
+  participantId String
+  title         String
+  description   String?
+  dueDate       DateTime?
+  status        ParticipantRequestStatus @default(pending)
+  formId        String?
+  metadata      Json                     @default("{}")
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  programme     Programme?               @relation(fields: [programmeId], references: [id], onDelete: SetNull)
+  cohort        Cohort?                  @relation(fields: [cohortId], references: [id], onDelete: SetNull)
+  participant   Participant              @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  form          Form?                    @relation(fields: [formId], references: [id], onDelete: SetNull)
+  response      ParticipantRequestResponse?
+
+  @@index([participantId])
+  @@index([programmeId])
+  @@index([cohortId])
+}
+
+model ParticipantRequestResponse {
+  id          String             @id @default(cuid())
+  requestId   String             @unique
+  content     Json
+  submittedAt DateTime           @default(now())
+  request     ParticipantRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+}
+
+model Deliverable {
+  id             String            @id @default(cuid())
+  programmeId    String?
+  cohortId       String?
+  participantId  String?
+  title          String
+  description    String?
+  resourceType   ResourceType      @default(document)
+  url            String?
+  status         DeliverableStatus @default(pending)
+  scheduledAt    DateTime?
+  deliveredAt    DateTime?
+  acknowledgedAt DateTime?
+  metadata       Json              @default("{}")
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  programme      Programme?        @relation(fields: [programmeId], references: [id], onDelete: SetNull)
+  cohort         Cohort?           @relation(fields: [cohortId], references: [id], onDelete: SetNull)
+  participant    Participant?      @relation(fields: [participantId], references: [id], onDelete: SetNull)
+
+  @@index([programmeId])
+  @@index([cohortId])
+  @@index([participantId])
+}
+
+model CohortCommsChannel {
+  id        String              @id @default(cuid())
+  cohortId  String              @unique
+  createdAt DateTime            @default(now())
+  cohort    Cohort              @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  threads   CohortCommsThread[]
+}
+
+model CohortCommsThread {
+  id        String             @id @default(cuid())
+  channelId String
+  authorId  String
+  title     String
+  body      String
+  isPinned  Boolean            @default(false)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  channel   CohortCommsChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  author    Participant        @relation("CohortCommsAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  replies   CohortCommsReply[]
+
+  @@index([channelId])
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model CohortCommsReply {
+  id        String             @id @default(cuid())
+  threadId  String
+  authorId  String
+  body      String
+  parentId  String?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  thread    CohortCommsThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  author    Participant        @relation("CohortCommsReplyAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  parent    CohortCommsReply?  @relation("CohortCommsReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  children  CohortCommsReply[] @relation("CohortCommsReplies")
+
+  @@index([threadId])
+  @@index([authorId])
+}
+
+model ProgrammeParticipantCommsChannel {
+  id          String                            @id @default(cuid())
+  programmeId String                            @unique
+  createdAt   DateTime                          @default(now())
+  programme   Programme                         @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  threads     ProgrammeParticipantCommsThread[]
+}
+
+model ProgrammeParticipantCommsThread {
+  id        String                           @id @default(cuid())
+  channelId String
+  authorId  String
+  title     String
+  body      String
+  isPinned  Boolean                          @default(false)
+  createdAt DateTime                         @default(now())
+  updatedAt DateTime                         @updatedAt
+  channel   ProgrammeParticipantCommsChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  author    Participant                      @relation("ProgrammeParticipantCommsAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  replies   ProgrammeParticipantCommsReply[]
+
+  @@index([channelId])
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model ProgrammeParticipantCommsReply {
+  id        String                          @id @default(cuid())
+  threadId  String
+  authorId  String
+  body      String
+  parentId  String?
+  createdAt DateTime                        @default(now())
+  updatedAt DateTime                        @updatedAt
+  thread    ProgrammeParticipantCommsThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  author    Participant                     @relation("ProgrammeParticipantCommsReplyAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  parent    ProgrammeParticipantCommsReply? @relation("ProgrammeParticipantCommsReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  children  ProgrammeParticipantCommsReply[] @relation("ProgrammeParticipantCommsReplies")
+
+  @@index([threadId])
+  @@index([authorId])
+}
+
+model RegistrationPage {
+  id          String                   @id @default(cuid())
+  cohortId    String
+  slug        String                   @unique
+  title       String?
+  logoUrl     String?
+  steps       Json                     @default("[]")
+  isPublished Boolean                  @default(false)
+  expiresAt   DateTime?
+  metadata    Json                     @default("{}")
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @updatedAt
+  cohort      Cohort                   @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  submissions RegistrationSubmission[]
+
+  @@index([cohortId])
+}
+
+model RegistrationSubmission {
+  id                 String           @id @default(cuid())
+  registrationPageId String
+  participantId      String?
+  answers            Json
+  metadata           Json             @default("{}")
+  submittedAt        DateTime         @default(now())
+  registrationPage   RegistrationPage @relation(fields: [registrationPageId], references: [id], onDelete: Cascade)
+  participant        Participant?     @relation(fields: [participantId], references: [id], onDelete: SetNull)
+
+  @@index([registrationPageId])
+  @@index([participantId])
+}
+
+model AnalyticsEvent {
+  id             String             @id @default(cuid())
+  type           AnalyticsEventType
+  participantId  String?
+  cohortId       String?
+  programmeId    String?
+  organisationId String?
+  payload        Json               @default("{}")
+  occurredAt     DateTime           @default(now())
+  participant    Participant?       @relation(fields: [participantId], references: [id], onDelete: SetNull)
+  cohort         Cohort?            @relation(fields: [cohortId], references: [id], onDelete: SetNull)
+  programme      Programme?         @relation(fields: [programmeId], references: [id], onDelete: SetNull)
+  organisation   Organisation?      @relation(fields: [organisationId], references: [id], onDelete: SetNull)
+
+  @@index([participantId])
+  @@index([cohortId])
+  @@index([programmeId])
+  @@index([organisationId])
+  @@index([occurredAt])
+  @@index([type])
+}
+
+model OrganisationAnalytics {
+  id             String       @id @default(cuid())
+  organisationId String
+  period         String
+  metrics        Json
+  generatedAt    DateTime     @default(now())
+  organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+
+  @@unique([organisationId, period])
+  @@index([organisationId])
+}
+
+model CohortAnalytics {
+  id          String   @id @default(cuid())
+  cohortId    String
+  period      String
+  metrics     Json
+  generatedAt DateTime @default(now())
+  cohort      Cohort   @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+
+  @@unique([cohortId, period])
+  @@index([cohortId])
+}
+
+model ParticipantProgress {
+  id             String      @id @default(cuid())
+  participantId  String
+  programmeId    String
+  cohortId       String?
+  completionPct  Float       @default(0)
+  milestonesHit  Int         @default(0)
+  formsSubmitted Int         @default(0)
+  requestsDone   Int         @default(0)
+  lastActiveAt   DateTime?
+  metadata       Json        @default("{}")
+  updatedAt      DateTime    @updatedAt
+  participant    Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  programme      Programme   @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+
+  @@unique([participantId, programmeId, cohortId])
+  @@index([programmeId])
+  @@index([cohortId])
+}
+
+model CohortResource {
+  id          String       @id @default(cuid())
+  cohortId    String
+  label       String
+  url         String
+  type        ResourceType @default(link)
+  description String?
+  addedById   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  cohort      Cohort       @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  addedBy     Admin?       @relation("CohortResourceAddedBy", fields: [addedById], references: [id], onDelete: SetNull)
+
+  @@index([cohortId])
 }
 
 model Role {
@@ -196,12 +681,26 @@ model Participant {
   eventStatuses       EventParticipantStatus[]
   formSubmissions     FormSubmission[]
   participantInvoices ParticipantInvoice[]
+  organisations           OrganisationParticipant[]
+  cohorts                 CohortParticipant[]
+  sessions                ParticipantSession[]
+  magicLinks              ParticipantMagicLink[]
+  requests                ParticipantRequest[]
+  deliverables            Deliverable[]
+  registrationSubmissions RegistrationSubmission[]
+  progress                ParticipantProgress[]
+  analyticsEvents         AnalyticsEvent[]
+  cohortCommsThreads      CohortCommsThread[]              @relation("CohortCommsAuthor")
+  cohortCommsReplies      CohortCommsReply[]               @relation("CohortCommsReplyAuthor")
+  programmeParticipantCommsThreads ProgrammeParticipantCommsThread[] @relation("ProgrammeParticipantCommsAuthor")
+  programmeParticipantCommsReplies ProgrammeParticipantCommsReply[] @relation("ProgrammeParticipantCommsReplyAuthor")
 }
 
 model ProgrammeParticipant {
   id            String              @id @default(cuid())
   programmeId   String
   participantId String
+  cohortId      String?
   invoiceId     String?             @unique
   paymentStatus PaymentStatus       @default(not_invoiced)
   metadata      Json                @default("{}")
@@ -209,10 +708,12 @@ model ProgrammeParticipant {
   updatedAt     DateTime            @updatedAt
   programme     Programme           @relation(fields: [programmeId], references: [id], onDelete: Cascade)
   participant   Participant         @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  cohort        Cohort?             @relation(fields: [cohortId], references: [id], onDelete: SetNull)
   invoice       ParticipantInvoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
 
   @@unique([programmeId, participantId])
   @@index([participantId])
+  @@index([cohortId])
 }
 
 model Programme {
@@ -235,6 +736,13 @@ model Programme {
   tasks                 Task[]
   resources             ProgrammeResource[]
   registrationResource  ProgrammeResource?         @relation("ProgrammeRegistrationResource", fields: [registrationResourceId], references: [id], onDelete: SetNull)
+  cohorts               CohortProgramme[]
+  timeline              ProgrammeTimeline?
+  requests              ParticipantRequest[]
+  deliverables          Deliverable[]
+  analyticsEvents       AnalyticsEvent[]
+  participantProgress   ParticipantProgress[]
+  participantCommsChannel ProgrammeParticipantCommsChannel?
 }
 
 model EventFlow {
@@ -249,20 +757,26 @@ model EventFlow {
 }
 
 model Event {
-  id                  String                   @id @default(cuid())
-  name                String
-  programmeId         String
-  eventFlowId         String?
-  baseType            EventBaseType
-  scheduledAt         DateTime
-  status              EventStatus              @default(pending)
-  config              Json
-  createdAt           DateTime                 @default(now())
+  id                String                   @id @default(cuid())
+  name              String
+  programmeId       String
+  eventFlowId       String?
+  cohortEventFlowId String?
+  cohortId          String?
+  baseType          EventBaseType
+  scheduledAt       DateTime
+  status            EventStatus              @default(pending)
+  config            Json
+  createdAt         DateTime                 @default(now())
   programme           Programme                @relation(fields: [programmeId], references: [id], onDelete: Cascade)
   eventFlow           EventFlow?               @relation(fields: [eventFlowId], references: [id], onDelete: SetNull)
+  cohortEventFlow     CohortEventFlow?         @relation("CohortEvents", fields: [cohortEventFlowId], references: [id], onDelete: SetNull)
+  cohort              Cohort?                  @relation(fields: [cohortId], references: [id], onDelete: SetNull)
   participantStatuses EventParticipantStatus[]
   formTables          FormTable[]
   forms               Form[]
+
+  @@index([cohortId])
 }
 
 model EventParticipantStatus {
@@ -283,6 +797,7 @@ model EventParticipantStatus {
 model Form {
   id          String           @id @default(cuid())
   programmeId String?
+  cohortId    String?
   eventId     String?
   slug        String           @unique
   name        String
@@ -292,14 +807,19 @@ model Form {
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   programme   Programme?       @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  cohort      Cohort?          @relation(fields: [cohortId], references: [id], onDelete: SetNull)
   event       Event?           @relation(fields: [eventId], references: [id], onDelete: SetNull)
   submissions FormSubmission[]
+  requests    ParticipantRequest[]
+
+  @@index([cohortId])
 }
 
 model FormSubmission {
   id           String       @id @default(cuid())
   formId       String
   respondentId String?
+  cohortId     String?
   answers      Json
   metadata     Json         @default("{}")
   createdAt    DateTime     @default(now())
@@ -308,6 +828,7 @@ model FormSubmission {
 
   @@index([formId])
   @@index([respondentId])
+  @@index([cohortId])
 }
 
 model FormTable {
@@ -325,6 +846,7 @@ model ParticipantInvoice {
   id                   String                @id @default(cuid())
   programmeId          String
   participantId        String
+  cohortId             String?
   amount               Float
   currency             String                @default("GBP")
   status               InvoiceStatus         @default(draft)
@@ -344,6 +866,7 @@ model ParticipantInvoice {
   @@unique([programmeId, participantId])
   @@index([participantId])
   @@index([programmeId])
+  @@index([cohortId])
 }
 
 model EmailTemplate {
@@ -380,6 +903,7 @@ model Admin {
   createdTasks          Task[]                     @relation("TaskCreator")
   assignedTaskItems     TaskItem[]                 @relation("TaskItemAssignee")
   programmeResources    ProgrammeResource[]        @relation("ProgrammeResourceAddedBy")
+  cohortResources       CohortResource[]           @relation("CohortResourceAddedBy")
 }
 
 model AdminSession {
@@ -401,6 +925,7 @@ model Opportunity {
   name            String
   email           String             @unique
   organisation    String?
+  organisationId  String?
   importanceScore Int                @default(0)
   status          OpportunityStatus  @default(open)
   notes           String?
@@ -408,6 +933,9 @@ model Opportunity {
   events          OpportunityEvent[]
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
+  org             Organisation?      @relation("OrgOpportunities", fields: [organisationId], references: [id], onDelete: SetNull)
+
+  @@index([organisationId])
 }
 
 model OpportunityPipeline {
@@ -599,6 +1127,7 @@ model Task {
   title       String
   description String?
   programmeId String?
+  cohortId    String?
   assigneeId  String?
   createdById String
   priority    TaskPriority @default(medium)
@@ -610,11 +1139,13 @@ model Task {
   assignee    Admin?       @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
   createdBy   Admin        @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Cascade)
   programme   Programme?   @relation(fields: [programmeId], references: [id], onDelete: SetNull)
+  cohort      Cohort?      @relation("CohortTasks", fields: [cohortId], references: [id], onDelete: SetNull)
   items       TaskItem[]
 
   @@index([assigneeId])
   @@index([createdById])
   @@index([programmeId])
+  @@index([cohortId])
   @@index([status])
 }
 

@@ -39,6 +39,7 @@ export type OpportunityMinAggregateOutputType = {
   name: string | null
   email: string | null
   organisation: string | null
+  organisationId: string | null
   importanceScore: number | null
   status: $Enums.OpportunityStatus | null
   notes: string | null
@@ -51,6 +52,7 @@ export type OpportunityMaxAggregateOutputType = {
   name: string | null
   email: string | null
   organisation: string | null
+  organisationId: string | null
   importanceScore: number | null
   status: $Enums.OpportunityStatus | null
   notes: string | null
@@ -63,6 +65,7 @@ export type OpportunityCountAggregateOutputType = {
   name: number
   email: number
   organisation: number
+  organisationId: number
   importanceScore: number
   status: number
   notes: number
@@ -86,6 +89,7 @@ export type OpportunityMinAggregateInputType = {
   name?: true
   email?: true
   organisation?: true
+  organisationId?: true
   importanceScore?: true
   status?: true
   notes?: true
@@ -98,6 +102,7 @@ export type OpportunityMaxAggregateInputType = {
   name?: true
   email?: true
   organisation?: true
+  organisationId?: true
   importanceScore?: true
   status?: true
   notes?: true
@@ -110,6 +115,7 @@ export type OpportunityCountAggregateInputType = {
   name?: true
   email?: true
   organisation?: true
+  organisationId?: true
   importanceScore?: true
   status?: true
   notes?: true
@@ -210,6 +216,7 @@ export type OpportunityGroupByOutputType = {
   name: string
   email: string
   organisation: string | null
+  organisationId: string | null
   importanceScore: number
   status: $Enums.OpportunityStatus
   notes: string | null
@@ -246,6 +253,7 @@ export type OpportunityWhereInput = {
   name?: Prisma.StringFilter<"Opportunity"> | string
   email?: Prisma.StringFilter<"Opportunity"> | string
   organisation?: Prisma.StringNullableFilter<"Opportunity"> | string | null
+  organisationId?: Prisma.StringNullableFilter<"Opportunity"> | string | null
   importanceScore?: Prisma.IntFilter<"Opportunity"> | number
   status?: Prisma.EnumOpportunityStatusFilter<"Opportunity"> | $Enums.OpportunityStatus
   notes?: Prisma.StringNullableFilter<"Opportunity"> | string | null
@@ -253,6 +261,7 @@ export type OpportunityWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Opportunity"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Opportunity"> | Date | string
   events?: Prisma.OpportunityEventListRelationFilter
+  org?: Prisma.XOR<Prisma.OrganisationNullableScalarRelationFilter, Prisma.OrganisationWhereInput> | null
 }
 
 export type OpportunityOrderByWithRelationInput = {
@@ -260,6 +269,7 @@ export type OpportunityOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   organisation?: Prisma.SortOrderInput | Prisma.SortOrder
+  organisationId?: Prisma.SortOrderInput | Prisma.SortOrder
   importanceScore?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -267,6 +277,7 @@ export type OpportunityOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   events?: Prisma.OpportunityEventOrderByRelationAggregateInput
+  org?: Prisma.OrganisationOrderByWithRelationInput
 }
 
 export type OpportunityWhereUniqueInput = Prisma.AtLeast<{
@@ -277,6 +288,7 @@ export type OpportunityWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OpportunityWhereInput | Prisma.OpportunityWhereInput[]
   name?: Prisma.StringFilter<"Opportunity"> | string
   organisation?: Prisma.StringNullableFilter<"Opportunity"> | string | null
+  organisationId?: Prisma.StringNullableFilter<"Opportunity"> | string | null
   importanceScore?: Prisma.IntFilter<"Opportunity"> | number
   status?: Prisma.EnumOpportunityStatusFilter<"Opportunity"> | $Enums.OpportunityStatus
   notes?: Prisma.StringNullableFilter<"Opportunity"> | string | null
@@ -284,6 +296,7 @@ export type OpportunityWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Opportunity"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Opportunity"> | Date | string
   events?: Prisma.OpportunityEventListRelationFilter
+  org?: Prisma.XOR<Prisma.OrganisationNullableScalarRelationFilter, Prisma.OrganisationWhereInput> | null
 }, "id" | "email">
 
 export type OpportunityOrderByWithAggregationInput = {
@@ -291,6 +304,7 @@ export type OpportunityOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   organisation?: Prisma.SortOrderInput | Prisma.SortOrder
+  organisationId?: Prisma.SortOrderInput | Prisma.SortOrder
   importanceScore?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -312,6 +326,7 @@ export type OpportunityScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Opportunity"> | string
   email?: Prisma.StringWithAggregatesFilter<"Opportunity"> | string
   organisation?: Prisma.StringNullableWithAggregatesFilter<"Opportunity"> | string | null
+  organisationId?: Prisma.StringNullableWithAggregatesFilter<"Opportunity"> | string | null
   importanceScore?: Prisma.IntWithAggregatesFilter<"Opportunity"> | number
   status?: Prisma.EnumOpportunityStatusWithAggregatesFilter<"Opportunity"> | $Enums.OpportunityStatus
   notes?: Prisma.StringNullableWithAggregatesFilter<"Opportunity"> | string | null
@@ -332,6 +347,7 @@ export type OpportunityCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   events?: Prisma.OpportunityEventCreateNestedManyWithoutOpportunityInput
+  org?: Prisma.OrganisationCreateNestedOneWithoutOpportunitiesInput
 }
 
 export type OpportunityUncheckedCreateInput = {
@@ -339,6 +355,7 @@ export type OpportunityUncheckedCreateInput = {
   name: string
   email: string
   organisation?: string | null
+  organisationId?: string | null
   importanceScore?: number
   status?: $Enums.OpportunityStatus
   notes?: string | null
@@ -360,6 +377,7 @@ export type OpportunityUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.OpportunityEventUpdateManyWithoutOpportunityNestedInput
+  org?: Prisma.OrganisationUpdateOneWithoutOpportunitiesNestedInput
 }
 
 export type OpportunityUncheckedUpdateInput = {
@@ -367,6 +385,7 @@ export type OpportunityUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   organisation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organisationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   importanceScore?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOpportunityStatusFieldUpdateOperationsInput | $Enums.OpportunityStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -381,6 +400,7 @@ export type OpportunityCreateManyInput = {
   name: string
   email: string
   organisation?: string | null
+  organisationId?: string | null
   importanceScore?: number
   status?: $Enums.OpportunityStatus
   notes?: string | null
@@ -407,6 +427,7 @@ export type OpportunityUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   organisation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organisationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   importanceScore?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOpportunityStatusFieldUpdateOperationsInput | $Enums.OpportunityStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -415,11 +436,22 @@ export type OpportunityUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type OpportunityListRelationFilter = {
+  every?: Prisma.OpportunityWhereInput
+  some?: Prisma.OpportunityWhereInput
+  none?: Prisma.OpportunityWhereInput
+}
+
+export type OpportunityOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type OpportunityCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   organisation?: Prisma.SortOrder
+  organisationId?: Prisma.SortOrder
   importanceScore?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -437,6 +469,7 @@ export type OpportunityMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   organisation?: Prisma.SortOrder
+  organisationId?: Prisma.SortOrder
   importanceScore?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -449,6 +482,7 @@ export type OpportunityMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   organisation?: Prisma.SortOrder
+  organisationId?: Prisma.SortOrder
   importanceScore?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -465,12 +499,46 @@ export type OpportunityScalarRelationFilter = {
   isNot?: Prisma.OpportunityWhereInput
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type OpportunityCreateNestedManyWithoutOrgInput = {
+  create?: Prisma.XOR<Prisma.OpportunityCreateWithoutOrgInput, Prisma.OpportunityUncheckedCreateWithoutOrgInput> | Prisma.OpportunityCreateWithoutOrgInput[] | Prisma.OpportunityUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.OpportunityCreateOrConnectWithoutOrgInput | Prisma.OpportunityCreateOrConnectWithoutOrgInput[]
+  createMany?: Prisma.OpportunityCreateManyOrgInputEnvelope
+  connect?: Prisma.OpportunityWhereUniqueInput | Prisma.OpportunityWhereUniqueInput[]
+}
+
+export type OpportunityUncheckedCreateNestedManyWithoutOrgInput = {
+  create?: Prisma.XOR<Prisma.OpportunityCreateWithoutOrgInput, Prisma.OpportunityUncheckedCreateWithoutOrgInput> | Prisma.OpportunityCreateWithoutOrgInput[] | Prisma.OpportunityUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.OpportunityCreateOrConnectWithoutOrgInput | Prisma.OpportunityCreateOrConnectWithoutOrgInput[]
+  createMany?: Prisma.OpportunityCreateManyOrgInputEnvelope
+  connect?: Prisma.OpportunityWhereUniqueInput | Prisma.OpportunityWhereUniqueInput[]
+}
+
+export type OpportunityUpdateManyWithoutOrgNestedInput = {
+  create?: Prisma.XOR<Prisma.OpportunityCreateWithoutOrgInput, Prisma.OpportunityUncheckedCreateWithoutOrgInput> | Prisma.OpportunityCreateWithoutOrgInput[] | Prisma.OpportunityUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.OpportunityCreateOrConnectWithoutOrgInput | Prisma.OpportunityCreateOrConnectWithoutOrgInput[]
+  upsert?: Prisma.OpportunityUpsertWithWhereUniqueWithoutOrgInput | Prisma.OpportunityUpsertWithWhereUniqueWithoutOrgInput[]
+  createMany?: Prisma.OpportunityCreateManyOrgInputEnvelope
+  set?: Prisma.OpportunityWhereUniqueInput | Prisma.OpportunityWhereUniqueInput[]
+  disconnect?: Prisma.OpportunityWhereUniqueInput | Prisma.OpportunityWhereUniqueInput[]
+  delete?: Prisma.OpportunityWhereUniqueInput | Prisma.OpportunityWhereUniqueInput[]
+  connect?: Prisma.OpportunityWhereUniqueInput | Prisma.OpportunityWhereUniqueInput[]
+  update?: Prisma.OpportunityUpdateWithWhereUniqueWithoutOrgInput | Prisma.OpportunityUpdateWithWhereUniqueWithoutOrgInput[]
+  updateMany?: Prisma.OpportunityUpdateManyWithWhereWithoutOrgInput | Prisma.OpportunityUpdateManyWithWhereWithoutOrgInput[]
+  deleteMany?: Prisma.OpportunityScalarWhereInput | Prisma.OpportunityScalarWhereInput[]
+}
+
+export type OpportunityUncheckedUpdateManyWithoutOrgNestedInput = {
+  create?: Prisma.XOR<Prisma.OpportunityCreateWithoutOrgInput, Prisma.OpportunityUncheckedCreateWithoutOrgInput> | Prisma.OpportunityCreateWithoutOrgInput[] | Prisma.OpportunityUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.OpportunityCreateOrConnectWithoutOrgInput | Prisma.OpportunityCreateOrConnectWithoutOrgInput[]
+  upsert?: Prisma.OpportunityUpsertWithWhereUniqueWithoutOrgInput | Prisma.OpportunityUpsertWithWhereUniqueWithoutOrgInput[]
+  createMany?: Prisma.OpportunityCreateManyOrgInputEnvelope
+  set?: Prisma.OpportunityWhereUniqueInput | Prisma.OpportunityWhereUniqueInput[]
+  disconnect?: Prisma.OpportunityWhereUniqueInput | Prisma.OpportunityWhereUniqueInput[]
+  delete?: Prisma.OpportunityWhereUniqueInput | Prisma.OpportunityWhereUniqueInput[]
+  connect?: Prisma.OpportunityWhereUniqueInput | Prisma.OpportunityWhereUniqueInput[]
+  update?: Prisma.OpportunityUpdateWithWhereUniqueWithoutOrgInput | Prisma.OpportunityUpdateWithWhereUniqueWithoutOrgInput[]
+  updateMany?: Prisma.OpportunityUpdateManyWithWhereWithoutOrgInput | Prisma.OpportunityUpdateManyWithWhereWithoutOrgInput[]
+  deleteMany?: Prisma.OpportunityScalarWhereInput | Prisma.OpportunityScalarWhereInput[]
 }
 
 export type EnumOpportunityStatusFieldUpdateOperationsInput = {
@@ -491,6 +559,77 @@ export type OpportunityUpdateOneRequiredWithoutEventsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OpportunityUpdateToOneWithWhereWithoutEventsInput, Prisma.OpportunityUpdateWithoutEventsInput>, Prisma.OpportunityUncheckedUpdateWithoutEventsInput>
 }
 
+export type OpportunityCreateWithoutOrgInput = {
+  id?: string
+  name: string
+  email: string
+  organisation?: string | null
+  importanceScore?: number
+  status?: $Enums.OpportunityStatus
+  notes?: string | null
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.OpportunityEventCreateNestedManyWithoutOpportunityInput
+}
+
+export type OpportunityUncheckedCreateWithoutOrgInput = {
+  id?: string
+  name: string
+  email: string
+  organisation?: string | null
+  importanceScore?: number
+  status?: $Enums.OpportunityStatus
+  notes?: string | null
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.OpportunityEventUncheckedCreateNestedManyWithoutOpportunityInput
+}
+
+export type OpportunityCreateOrConnectWithoutOrgInput = {
+  where: Prisma.OpportunityWhereUniqueInput
+  create: Prisma.XOR<Prisma.OpportunityCreateWithoutOrgInput, Prisma.OpportunityUncheckedCreateWithoutOrgInput>
+}
+
+export type OpportunityCreateManyOrgInputEnvelope = {
+  data: Prisma.OpportunityCreateManyOrgInput | Prisma.OpportunityCreateManyOrgInput[]
+  skipDuplicates?: boolean
+}
+
+export type OpportunityUpsertWithWhereUniqueWithoutOrgInput = {
+  where: Prisma.OpportunityWhereUniqueInput
+  update: Prisma.XOR<Prisma.OpportunityUpdateWithoutOrgInput, Prisma.OpportunityUncheckedUpdateWithoutOrgInput>
+  create: Prisma.XOR<Prisma.OpportunityCreateWithoutOrgInput, Prisma.OpportunityUncheckedCreateWithoutOrgInput>
+}
+
+export type OpportunityUpdateWithWhereUniqueWithoutOrgInput = {
+  where: Prisma.OpportunityWhereUniqueInput
+  data: Prisma.XOR<Prisma.OpportunityUpdateWithoutOrgInput, Prisma.OpportunityUncheckedUpdateWithoutOrgInput>
+}
+
+export type OpportunityUpdateManyWithWhereWithoutOrgInput = {
+  where: Prisma.OpportunityScalarWhereInput
+  data: Prisma.XOR<Prisma.OpportunityUpdateManyMutationInput, Prisma.OpportunityUncheckedUpdateManyWithoutOrgInput>
+}
+
+export type OpportunityScalarWhereInput = {
+  AND?: Prisma.OpportunityScalarWhereInput | Prisma.OpportunityScalarWhereInput[]
+  OR?: Prisma.OpportunityScalarWhereInput[]
+  NOT?: Prisma.OpportunityScalarWhereInput | Prisma.OpportunityScalarWhereInput[]
+  id?: Prisma.StringFilter<"Opportunity"> | string
+  name?: Prisma.StringFilter<"Opportunity"> | string
+  email?: Prisma.StringFilter<"Opportunity"> | string
+  organisation?: Prisma.StringNullableFilter<"Opportunity"> | string | null
+  organisationId?: Prisma.StringNullableFilter<"Opportunity"> | string | null
+  importanceScore?: Prisma.IntFilter<"Opportunity"> | number
+  status?: Prisma.EnumOpportunityStatusFilter<"Opportunity"> | $Enums.OpportunityStatus
+  notes?: Prisma.StringNullableFilter<"Opportunity"> | string | null
+  metadata?: Prisma.JsonFilter<"Opportunity">
+  createdAt?: Prisma.DateTimeFilter<"Opportunity"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Opportunity"> | Date | string
+}
+
 export type OpportunityCreateWithoutEventsInput = {
   id?: string
   name: string
@@ -502,6 +641,7 @@ export type OpportunityCreateWithoutEventsInput = {
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  org?: Prisma.OrganisationCreateNestedOneWithoutOpportunitiesInput
 }
 
 export type OpportunityUncheckedCreateWithoutEventsInput = {
@@ -509,6 +649,7 @@ export type OpportunityUncheckedCreateWithoutEventsInput = {
   name: string
   email: string
   organisation?: string | null
+  organisationId?: string | null
   importanceScore?: number
   status?: $Enums.OpportunityStatus
   notes?: string | null
@@ -544,9 +685,65 @@ export type OpportunityUpdateWithoutEventsInput = {
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  org?: Prisma.OrganisationUpdateOneWithoutOpportunitiesNestedInput
 }
 
 export type OpportunityUncheckedUpdateWithoutEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  organisation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organisationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importanceScore?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOpportunityStatusFieldUpdateOperationsInput | $Enums.OpportunityStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OpportunityCreateManyOrgInput = {
+  id?: string
+  name: string
+  email: string
+  organisation?: string | null
+  importanceScore?: number
+  status?: $Enums.OpportunityStatus
+  notes?: string | null
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OpportunityUpdateWithoutOrgInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  organisation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importanceScore?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOpportunityStatusFieldUpdateOperationsInput | $Enums.OpportunityStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.OpportunityEventUpdateManyWithoutOpportunityNestedInput
+}
+
+export type OpportunityUncheckedUpdateWithoutOrgInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  organisation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importanceScore?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOpportunityStatusFieldUpdateOperationsInput | $Enums.OpportunityStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.OpportunityEventUncheckedUpdateManyWithoutOpportunityNestedInput
+}
+
+export type OpportunityUncheckedUpdateManyWithoutOrgInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -595,6 +792,7 @@ export type OpportunitySelect<ExtArgs extends runtime.Types.Extensions.InternalA
   name?: boolean
   email?: boolean
   organisation?: boolean
+  organisationId?: boolean
   importanceScore?: boolean
   status?: boolean
   notes?: boolean
@@ -602,6 +800,7 @@ export type OpportunitySelect<ExtArgs extends runtime.Types.Extensions.InternalA
   createdAt?: boolean
   updatedAt?: boolean
   events?: boolean | Prisma.Opportunity$eventsArgs<ExtArgs>
+  org?: boolean | Prisma.Opportunity$orgArgs<ExtArgs>
   _count?: boolean | Prisma.OpportunityCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["opportunity"]>
 
@@ -610,12 +809,14 @@ export type OpportunitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   name?: boolean
   email?: boolean
   organisation?: boolean
+  organisationId?: boolean
   importanceScore?: boolean
   status?: boolean
   notes?: boolean
   metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  org?: boolean | Prisma.Opportunity$orgArgs<ExtArgs>
 }, ExtArgs["result"]["opportunity"]>
 
 export type OpportunitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -623,12 +824,14 @@ export type OpportunitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   name?: boolean
   email?: boolean
   organisation?: boolean
+  organisationId?: boolean
   importanceScore?: boolean
   status?: boolean
   notes?: boolean
   metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  org?: boolean | Prisma.Opportunity$orgArgs<ExtArgs>
 }, ExtArgs["result"]["opportunity"]>
 
 export type OpportunitySelectScalar = {
@@ -636,6 +839,7 @@ export type OpportunitySelectScalar = {
   name?: boolean
   email?: boolean
   organisation?: boolean
+  organisationId?: boolean
   importanceScore?: boolean
   status?: boolean
   notes?: boolean
@@ -644,24 +848,31 @@ export type OpportunitySelectScalar = {
   updatedAt?: boolean
 }
 
-export type OpportunityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "organisation" | "importanceScore" | "status" | "notes" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["opportunity"]>
+export type OpportunityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "organisation" | "organisationId" | "importanceScore" | "status" | "notes" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["opportunity"]>
 export type OpportunityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   events?: boolean | Prisma.Opportunity$eventsArgs<ExtArgs>
+  org?: boolean | Prisma.Opportunity$orgArgs<ExtArgs>
   _count?: boolean | Prisma.OpportunityCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type OpportunityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type OpportunityIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type OpportunityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  org?: boolean | Prisma.Opportunity$orgArgs<ExtArgs>
+}
+export type OpportunityIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  org?: boolean | Prisma.Opportunity$orgArgs<ExtArgs>
+}
 
 export type $OpportunityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Opportunity"
   objects: {
     events: Prisma.$OpportunityEventPayload<ExtArgs>[]
+    org: Prisma.$OrganisationPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     email: string
     organisation: string | null
+    organisationId: string | null
     importanceScore: number
     status: $Enums.OpportunityStatus
     notes: string | null
@@ -1063,6 +1274,7 @@ readonly fields: OpportunityFieldRefs;
 export interface Prisma__OpportunityClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   events<T extends Prisma.Opportunity$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Opportunity$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OpportunityEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  org<T extends Prisma.Opportunity$orgArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Opportunity$orgArgs<ExtArgs>>): Prisma.Prisma__OrganisationClient<runtime.Types.Result.GetResult<Prisma.$OrganisationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1096,6 +1308,7 @@ export interface OpportunityFieldRefs {
   readonly name: Prisma.FieldRef<"Opportunity", 'String'>
   readonly email: Prisma.FieldRef<"Opportunity", 'String'>
   readonly organisation: Prisma.FieldRef<"Opportunity", 'String'>
+  readonly organisationId: Prisma.FieldRef<"Opportunity", 'String'>
   readonly importanceScore: Prisma.FieldRef<"Opportunity", 'Int'>
   readonly status: Prisma.FieldRef<"Opportunity", 'OpportunityStatus'>
   readonly notes: Prisma.FieldRef<"Opportunity", 'String'>
@@ -1356,6 +1569,10 @@ export type OpportunityCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    */
   data: Prisma.OpportunityCreateManyInput | Prisma.OpportunityCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OpportunityIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1426,6 +1643,10 @@ export type OpportunityUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    * Limit how many Opportunities to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OpportunityIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1516,6 +1737,25 @@ export type Opportunity$eventsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.OpportunityEventScalarFieldEnum | Prisma.OpportunityEventScalarFieldEnum[]
+}
+
+/**
+ * Opportunity.org
+ */
+export type Opportunity$orgArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organisation
+   */
+  select?: Prisma.OrganisationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organisation
+   */
+  omit?: Prisma.OrganisationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganisationInclude<ExtArgs> | null
+  where?: Prisma.OrganisationWhereInput
 }
 
 /**

@@ -141,7 +141,22 @@ export const Permission = {
   notification_view: 'notification_view',
   notification_manage: 'notification_manage',
   org_settings_view: 'org_settings_view',
-  org_settings_update: 'org_settings_update'
+  org_settings_update: 'org_settings_update',
+  organisation_create: 'organisation_create',
+  organisation_update: 'organisation_update',
+  organisation_delete: 'organisation_delete',
+  organisation_view: 'organisation_view',
+  cohort_create: 'cohort_create',
+  cohort_update: 'cohort_update',
+  cohort_delete: 'cohort_delete',
+  cohort_view: 'cohort_view',
+  analytics_view: 'analytics_view',
+  portal_request_create: 'portal_request_create',
+  portal_request_view: 'portal_request_view',
+  deliverable_create: 'deliverable_create',
+  deliverable_view: 'deliverable_view',
+  timeline_manage: 'timeline_manage',
+  registration_page_manage: 'registration_page_manage'
 } as const
 
 export type Permission = (typeof Permission)[keyof typeof Permission]
@@ -167,6 +182,9 @@ export const NotificationType = {
   comms_tag: 'comms_tag',
   admin_added: 'admin_added',
   opportunity_converted: 'opportunity_converted',
+  cohort_participant_added: 'cohort_participant_added',
+  deliverable_ready: 'deliverable_ready',
+  participant_request_assigned: 'participant_request_assigned',
   error: 'error',
   info: 'info'
 } as const
@@ -205,3 +223,70 @@ export const ResourceType = {
 } as const
 
 export type ResourceType = (typeof ResourceType)[keyof typeof ResourceType]
+
+
+export const CohortType = {
+  org_specific: 'org_specific',
+  open: 'open'
+} as const
+
+export type CohortType = (typeof CohortType)[keyof typeof CohortType]
+
+
+export const CohortStatus = {
+  draft: 'draft',
+  active: 'active',
+  completed: 'completed',
+  archived: 'archived'
+} as const
+
+export type CohortStatus = (typeof CohortStatus)[keyof typeof CohortStatus]
+
+
+export const OrgSize = {
+  solo: 'solo',
+  small: 'small',
+  medium: 'medium',
+  large: 'large',
+  enterprise: 'enterprise'
+} as const
+
+export type OrgSize = (typeof OrgSize)[keyof typeof OrgSize]
+
+
+export const ParticipantRequestStatus = {
+  pending: 'pending',
+  in_progress: 'in_progress',
+  submitted: 'submitted',
+  reviewed: 'reviewed',
+  approved: 'approved',
+  rejected: 'rejected'
+} as const
+
+export type ParticipantRequestStatus = (typeof ParticipantRequestStatus)[keyof typeof ParticipantRequestStatus]
+
+
+export const DeliverableStatus = {
+  pending: 'pending',
+  ready: 'ready',
+  delivered: 'delivered',
+  acknowledged: 'acknowledged'
+} as const
+
+export type DeliverableStatus = (typeof DeliverableStatus)[keyof typeof DeliverableStatus]
+
+
+export const AnalyticsEventType = {
+  portal_login: 'portal_login',
+  resource_viewed: 'resource_viewed',
+  resource_downloaded: 'resource_downloaded',
+  form_opened: 'form_opened',
+  form_submitted: 'form_submitted',
+  deliverable_acknowledged: 'deliverable_acknowledged',
+  forum_post: 'forum_post',
+  forum_reply: 'forum_reply',
+  timeline_milestone_reached: 'timeline_milestone_reached',
+  task_completed: 'task_completed'
+} as const
+
+export type AnalyticsEventType = (typeof AnalyticsEventType)[keyof typeof AnalyticsEventType]

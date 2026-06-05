@@ -28,6 +28,7 @@ export type ProgrammeParticipantMinAggregateOutputType = {
   id: string | null
   programmeId: string | null
   participantId: string | null
+  cohortId: string | null
   invoiceId: string | null
   paymentStatus: $Enums.PaymentStatus | null
   createdAt: Date | null
@@ -38,6 +39,7 @@ export type ProgrammeParticipantMaxAggregateOutputType = {
   id: string | null
   programmeId: string | null
   participantId: string | null
+  cohortId: string | null
   invoiceId: string | null
   paymentStatus: $Enums.PaymentStatus | null
   createdAt: Date | null
@@ -48,6 +50,7 @@ export type ProgrammeParticipantCountAggregateOutputType = {
   id: number
   programmeId: number
   participantId: number
+  cohortId: number
   invoiceId: number
   paymentStatus: number
   metadata: number
@@ -61,6 +64,7 @@ export type ProgrammeParticipantMinAggregateInputType = {
   id?: true
   programmeId?: true
   participantId?: true
+  cohortId?: true
   invoiceId?: true
   paymentStatus?: true
   createdAt?: true
@@ -71,6 +75,7 @@ export type ProgrammeParticipantMaxAggregateInputType = {
   id?: true
   programmeId?: true
   participantId?: true
+  cohortId?: true
   invoiceId?: true
   paymentStatus?: true
   createdAt?: true
@@ -81,6 +86,7 @@ export type ProgrammeParticipantCountAggregateInputType = {
   id?: true
   programmeId?: true
   participantId?: true
+  cohortId?: true
   invoiceId?: true
   paymentStatus?: true
   metadata?: true
@@ -165,6 +171,7 @@ export type ProgrammeParticipantGroupByOutputType = {
   id: string
   programmeId: string
   participantId: string
+  cohortId: string | null
   invoiceId: string | null
   paymentStatus: $Enums.PaymentStatus
   metadata: runtime.JsonValue
@@ -197,6 +204,7 @@ export type ProgrammeParticipantWhereInput = {
   id?: Prisma.StringFilter<"ProgrammeParticipant"> | string
   programmeId?: Prisma.StringFilter<"ProgrammeParticipant"> | string
   participantId?: Prisma.StringFilter<"ProgrammeParticipant"> | string
+  cohortId?: Prisma.StringNullableFilter<"ProgrammeParticipant"> | string | null
   invoiceId?: Prisma.StringNullableFilter<"ProgrammeParticipant"> | string | null
   paymentStatus?: Prisma.EnumPaymentStatusFilter<"ProgrammeParticipant"> | $Enums.PaymentStatus
   metadata?: Prisma.JsonFilter<"ProgrammeParticipant">
@@ -204,6 +212,7 @@ export type ProgrammeParticipantWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"ProgrammeParticipant"> | Date | string
   programme?: Prisma.XOR<Prisma.ProgrammeScalarRelationFilter, Prisma.ProgrammeWhereInput>
   participant?: Prisma.XOR<Prisma.ParticipantScalarRelationFilter, Prisma.ParticipantWhereInput>
+  cohort?: Prisma.XOR<Prisma.CohortNullableScalarRelationFilter, Prisma.CohortWhereInput> | null
   invoice?: Prisma.XOR<Prisma.ParticipantInvoiceNullableScalarRelationFilter, Prisma.ParticipantInvoiceWhereInput> | null
 }
 
@@ -211,6 +220,7 @@ export type ProgrammeParticipantOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   programmeId?: Prisma.SortOrder
   participantId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrderInput | Prisma.SortOrder
   invoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
@@ -218,6 +228,7 @@ export type ProgrammeParticipantOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   programme?: Prisma.ProgrammeOrderByWithRelationInput
   participant?: Prisma.ParticipantOrderByWithRelationInput
+  cohort?: Prisma.CohortOrderByWithRelationInput
   invoice?: Prisma.ParticipantInvoiceOrderByWithRelationInput
 }
 
@@ -230,12 +241,14 @@ export type ProgrammeParticipantWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ProgrammeParticipantWhereInput | Prisma.ProgrammeParticipantWhereInput[]
   programmeId?: Prisma.StringFilter<"ProgrammeParticipant"> | string
   participantId?: Prisma.StringFilter<"ProgrammeParticipant"> | string
+  cohortId?: Prisma.StringNullableFilter<"ProgrammeParticipant"> | string | null
   paymentStatus?: Prisma.EnumPaymentStatusFilter<"ProgrammeParticipant"> | $Enums.PaymentStatus
   metadata?: Prisma.JsonFilter<"ProgrammeParticipant">
   createdAt?: Prisma.DateTimeFilter<"ProgrammeParticipant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProgrammeParticipant"> | Date | string
   programme?: Prisma.XOR<Prisma.ProgrammeScalarRelationFilter, Prisma.ProgrammeWhereInput>
   participant?: Prisma.XOR<Prisma.ParticipantScalarRelationFilter, Prisma.ParticipantWhereInput>
+  cohort?: Prisma.XOR<Prisma.CohortNullableScalarRelationFilter, Prisma.CohortWhereInput> | null
   invoice?: Prisma.XOR<Prisma.ParticipantInvoiceNullableScalarRelationFilter, Prisma.ParticipantInvoiceWhereInput> | null
 }, "id" | "invoiceId" | "programmeId_participantId">
 
@@ -243,6 +256,7 @@ export type ProgrammeParticipantOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   programmeId?: Prisma.SortOrder
   participantId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrderInput | Prisma.SortOrder
   invoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
@@ -260,6 +274,7 @@ export type ProgrammeParticipantScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"ProgrammeParticipant"> | string
   programmeId?: Prisma.StringWithAggregatesFilter<"ProgrammeParticipant"> | string
   participantId?: Prisma.StringWithAggregatesFilter<"ProgrammeParticipant"> | string
+  cohortId?: Prisma.StringNullableWithAggregatesFilter<"ProgrammeParticipant"> | string | null
   invoiceId?: Prisma.StringNullableWithAggregatesFilter<"ProgrammeParticipant"> | string | null
   paymentStatus?: Prisma.EnumPaymentStatusWithAggregatesFilter<"ProgrammeParticipant"> | $Enums.PaymentStatus
   metadata?: Prisma.JsonWithAggregatesFilter<"ProgrammeParticipant">
@@ -275,6 +290,7 @@ export type ProgrammeParticipantCreateInput = {
   updatedAt?: Date | string
   programme: Prisma.ProgrammeCreateNestedOneWithoutParticipantsInput
   participant: Prisma.ParticipantCreateNestedOneWithoutProgrammesInput
+  cohort?: Prisma.CohortCreateNestedOneWithoutProgrammeParticipantsInput
   invoice?: Prisma.ParticipantInvoiceCreateNestedOneWithoutProgrammeParticipantInput
 }
 
@@ -282,6 +298,7 @@ export type ProgrammeParticipantUncheckedCreateInput = {
   id?: string
   programmeId: string
   participantId: string
+  cohortId?: string | null
   invoiceId?: string | null
   paymentStatus?: $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -297,6 +314,7 @@ export type ProgrammeParticipantUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   programme?: Prisma.ProgrammeUpdateOneRequiredWithoutParticipantsNestedInput
   participant?: Prisma.ParticipantUpdateOneRequiredWithoutProgrammesNestedInput
+  cohort?: Prisma.CohortUpdateOneWithoutProgrammeParticipantsNestedInput
   invoice?: Prisma.ParticipantInvoiceUpdateOneWithoutProgrammeParticipantNestedInput
 }
 
@@ -304,6 +322,7 @@ export type ProgrammeParticipantUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   programmeId?: Prisma.StringFieldUpdateOperationsInput | string
   participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -315,6 +334,7 @@ export type ProgrammeParticipantCreateManyInput = {
   id?: string
   programmeId: string
   participantId: string
+  cohortId?: string | null
   invoiceId?: string | null
   paymentStatus?: $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -334,6 +354,7 @@ export type ProgrammeParticipantUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   programmeId?: Prisma.StringFieldUpdateOperationsInput | string
   participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -360,6 +381,7 @@ export type ProgrammeParticipantCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   programmeId?: Prisma.SortOrder
   participantId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrder
   invoiceId?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
@@ -371,6 +393,7 @@ export type ProgrammeParticipantMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   programmeId?: Prisma.SortOrder
   participantId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrder
   invoiceId?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -381,6 +404,7 @@ export type ProgrammeParticipantMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   programmeId?: Prisma.SortOrder
   participantId?: Prisma.SortOrder
+  cohortId?: Prisma.SortOrder
   invoiceId?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -390,6 +414,48 @@ export type ProgrammeParticipantMinOrderByAggregateInput = {
 export type ProgrammeParticipantNullableScalarRelationFilter = {
   is?: Prisma.ProgrammeParticipantWhereInput | null
   isNot?: Prisma.ProgrammeParticipantWhereInput | null
+}
+
+export type ProgrammeParticipantCreateNestedManyWithoutCohortInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeParticipantCreateWithoutCohortInput, Prisma.ProgrammeParticipantUncheckedCreateWithoutCohortInput> | Prisma.ProgrammeParticipantCreateWithoutCohortInput[] | Prisma.ProgrammeParticipantUncheckedCreateWithoutCohortInput[]
+  connectOrCreate?: Prisma.ProgrammeParticipantCreateOrConnectWithoutCohortInput | Prisma.ProgrammeParticipantCreateOrConnectWithoutCohortInput[]
+  createMany?: Prisma.ProgrammeParticipantCreateManyCohortInputEnvelope
+  connect?: Prisma.ProgrammeParticipantWhereUniqueInput | Prisma.ProgrammeParticipantWhereUniqueInput[]
+}
+
+export type ProgrammeParticipantUncheckedCreateNestedManyWithoutCohortInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeParticipantCreateWithoutCohortInput, Prisma.ProgrammeParticipantUncheckedCreateWithoutCohortInput> | Prisma.ProgrammeParticipantCreateWithoutCohortInput[] | Prisma.ProgrammeParticipantUncheckedCreateWithoutCohortInput[]
+  connectOrCreate?: Prisma.ProgrammeParticipantCreateOrConnectWithoutCohortInput | Prisma.ProgrammeParticipantCreateOrConnectWithoutCohortInput[]
+  createMany?: Prisma.ProgrammeParticipantCreateManyCohortInputEnvelope
+  connect?: Prisma.ProgrammeParticipantWhereUniqueInput | Prisma.ProgrammeParticipantWhereUniqueInput[]
+}
+
+export type ProgrammeParticipantUpdateManyWithoutCohortNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeParticipantCreateWithoutCohortInput, Prisma.ProgrammeParticipantUncheckedCreateWithoutCohortInput> | Prisma.ProgrammeParticipantCreateWithoutCohortInput[] | Prisma.ProgrammeParticipantUncheckedCreateWithoutCohortInput[]
+  connectOrCreate?: Prisma.ProgrammeParticipantCreateOrConnectWithoutCohortInput | Prisma.ProgrammeParticipantCreateOrConnectWithoutCohortInput[]
+  upsert?: Prisma.ProgrammeParticipantUpsertWithWhereUniqueWithoutCohortInput | Prisma.ProgrammeParticipantUpsertWithWhereUniqueWithoutCohortInput[]
+  createMany?: Prisma.ProgrammeParticipantCreateManyCohortInputEnvelope
+  set?: Prisma.ProgrammeParticipantWhereUniqueInput | Prisma.ProgrammeParticipantWhereUniqueInput[]
+  disconnect?: Prisma.ProgrammeParticipantWhereUniqueInput | Prisma.ProgrammeParticipantWhereUniqueInput[]
+  delete?: Prisma.ProgrammeParticipantWhereUniqueInput | Prisma.ProgrammeParticipantWhereUniqueInput[]
+  connect?: Prisma.ProgrammeParticipantWhereUniqueInput | Prisma.ProgrammeParticipantWhereUniqueInput[]
+  update?: Prisma.ProgrammeParticipantUpdateWithWhereUniqueWithoutCohortInput | Prisma.ProgrammeParticipantUpdateWithWhereUniqueWithoutCohortInput[]
+  updateMany?: Prisma.ProgrammeParticipantUpdateManyWithWhereWithoutCohortInput | Prisma.ProgrammeParticipantUpdateManyWithWhereWithoutCohortInput[]
+  deleteMany?: Prisma.ProgrammeParticipantScalarWhereInput | Prisma.ProgrammeParticipantScalarWhereInput[]
+}
+
+export type ProgrammeParticipantUncheckedUpdateManyWithoutCohortNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgrammeParticipantCreateWithoutCohortInput, Prisma.ProgrammeParticipantUncheckedCreateWithoutCohortInput> | Prisma.ProgrammeParticipantCreateWithoutCohortInput[] | Prisma.ProgrammeParticipantUncheckedCreateWithoutCohortInput[]
+  connectOrCreate?: Prisma.ProgrammeParticipantCreateOrConnectWithoutCohortInput | Prisma.ProgrammeParticipantCreateOrConnectWithoutCohortInput[]
+  upsert?: Prisma.ProgrammeParticipantUpsertWithWhereUniqueWithoutCohortInput | Prisma.ProgrammeParticipantUpsertWithWhereUniqueWithoutCohortInput[]
+  createMany?: Prisma.ProgrammeParticipantCreateManyCohortInputEnvelope
+  set?: Prisma.ProgrammeParticipantWhereUniqueInput | Prisma.ProgrammeParticipantWhereUniqueInput[]
+  disconnect?: Prisma.ProgrammeParticipantWhereUniqueInput | Prisma.ProgrammeParticipantWhereUniqueInput[]
+  delete?: Prisma.ProgrammeParticipantWhereUniqueInput | Prisma.ProgrammeParticipantWhereUniqueInput[]
+  connect?: Prisma.ProgrammeParticipantWhereUniqueInput | Prisma.ProgrammeParticipantWhereUniqueInput[]
+  update?: Prisma.ProgrammeParticipantUpdateWithWhereUniqueWithoutCohortInput | Prisma.ProgrammeParticipantUpdateWithWhereUniqueWithoutCohortInput[]
+  updateMany?: Prisma.ProgrammeParticipantUpdateManyWithWhereWithoutCohortInput | Prisma.ProgrammeParticipantUpdateManyWithWhereWithoutCohortInput[]
+  deleteMany?: Prisma.ProgrammeParticipantScalarWhereInput | Prisma.ProgrammeParticipantScalarWhereInput[]
 }
 
 export type ProgrammeParticipantCreateNestedManyWithoutParticipantInput = {
@@ -512,6 +578,69 @@ export type ProgrammeParticipantUncheckedUpdateOneWithoutInvoiceNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProgrammeParticipantUpdateToOneWithWhereWithoutInvoiceInput, Prisma.ProgrammeParticipantUpdateWithoutInvoiceInput>, Prisma.ProgrammeParticipantUncheckedUpdateWithoutInvoiceInput>
 }
 
+export type ProgrammeParticipantCreateWithoutCohortInput = {
+  id?: string
+  paymentStatus?: $Enums.PaymentStatus
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  programme: Prisma.ProgrammeCreateNestedOneWithoutParticipantsInput
+  participant: Prisma.ParticipantCreateNestedOneWithoutProgrammesInput
+  invoice?: Prisma.ParticipantInvoiceCreateNestedOneWithoutProgrammeParticipantInput
+}
+
+export type ProgrammeParticipantUncheckedCreateWithoutCohortInput = {
+  id?: string
+  programmeId: string
+  participantId: string
+  invoiceId?: string | null
+  paymentStatus?: $Enums.PaymentStatus
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProgrammeParticipantCreateOrConnectWithoutCohortInput = {
+  where: Prisma.ProgrammeParticipantWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProgrammeParticipantCreateWithoutCohortInput, Prisma.ProgrammeParticipantUncheckedCreateWithoutCohortInput>
+}
+
+export type ProgrammeParticipantCreateManyCohortInputEnvelope = {
+  data: Prisma.ProgrammeParticipantCreateManyCohortInput | Prisma.ProgrammeParticipantCreateManyCohortInput[]
+  skipDuplicates?: boolean
+}
+
+export type ProgrammeParticipantUpsertWithWhereUniqueWithoutCohortInput = {
+  where: Prisma.ProgrammeParticipantWhereUniqueInput
+  update: Prisma.XOR<Prisma.ProgrammeParticipantUpdateWithoutCohortInput, Prisma.ProgrammeParticipantUncheckedUpdateWithoutCohortInput>
+  create: Prisma.XOR<Prisma.ProgrammeParticipantCreateWithoutCohortInput, Prisma.ProgrammeParticipantUncheckedCreateWithoutCohortInput>
+}
+
+export type ProgrammeParticipantUpdateWithWhereUniqueWithoutCohortInput = {
+  where: Prisma.ProgrammeParticipantWhereUniqueInput
+  data: Prisma.XOR<Prisma.ProgrammeParticipantUpdateWithoutCohortInput, Prisma.ProgrammeParticipantUncheckedUpdateWithoutCohortInput>
+}
+
+export type ProgrammeParticipantUpdateManyWithWhereWithoutCohortInput = {
+  where: Prisma.ProgrammeParticipantScalarWhereInput
+  data: Prisma.XOR<Prisma.ProgrammeParticipantUpdateManyMutationInput, Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutCohortInput>
+}
+
+export type ProgrammeParticipantScalarWhereInput = {
+  AND?: Prisma.ProgrammeParticipantScalarWhereInput | Prisma.ProgrammeParticipantScalarWhereInput[]
+  OR?: Prisma.ProgrammeParticipantScalarWhereInput[]
+  NOT?: Prisma.ProgrammeParticipantScalarWhereInput | Prisma.ProgrammeParticipantScalarWhereInput[]
+  id?: Prisma.StringFilter<"ProgrammeParticipant"> | string
+  programmeId?: Prisma.StringFilter<"ProgrammeParticipant"> | string
+  participantId?: Prisma.StringFilter<"ProgrammeParticipant"> | string
+  cohortId?: Prisma.StringNullableFilter<"ProgrammeParticipant"> | string | null
+  invoiceId?: Prisma.StringNullableFilter<"ProgrammeParticipant"> | string | null
+  paymentStatus?: Prisma.EnumPaymentStatusFilter<"ProgrammeParticipant"> | $Enums.PaymentStatus
+  metadata?: Prisma.JsonFilter<"ProgrammeParticipant">
+  createdAt?: Prisma.DateTimeFilter<"ProgrammeParticipant"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ProgrammeParticipant"> | Date | string
+}
+
 export type ProgrammeParticipantCreateWithoutParticipantInput = {
   id?: string
   paymentStatus?: $Enums.PaymentStatus
@@ -519,12 +648,14 @@ export type ProgrammeParticipantCreateWithoutParticipantInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   programme: Prisma.ProgrammeCreateNestedOneWithoutParticipantsInput
+  cohort?: Prisma.CohortCreateNestedOneWithoutProgrammeParticipantsInput
   invoice?: Prisma.ParticipantInvoiceCreateNestedOneWithoutProgrammeParticipantInput
 }
 
 export type ProgrammeParticipantUncheckedCreateWithoutParticipantInput = {
   id?: string
   programmeId: string
+  cohortId?: string | null
   invoiceId?: string | null
   paymentStatus?: $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -558,20 +689,6 @@ export type ProgrammeParticipantUpdateManyWithWhereWithoutParticipantInput = {
   data: Prisma.XOR<Prisma.ProgrammeParticipantUpdateManyMutationInput, Prisma.ProgrammeParticipantUncheckedUpdateManyWithoutParticipantInput>
 }
 
-export type ProgrammeParticipantScalarWhereInput = {
-  AND?: Prisma.ProgrammeParticipantScalarWhereInput | Prisma.ProgrammeParticipantScalarWhereInput[]
-  OR?: Prisma.ProgrammeParticipantScalarWhereInput[]
-  NOT?: Prisma.ProgrammeParticipantScalarWhereInput | Prisma.ProgrammeParticipantScalarWhereInput[]
-  id?: Prisma.StringFilter<"ProgrammeParticipant"> | string
-  programmeId?: Prisma.StringFilter<"ProgrammeParticipant"> | string
-  participantId?: Prisma.StringFilter<"ProgrammeParticipant"> | string
-  invoiceId?: Prisma.StringNullableFilter<"ProgrammeParticipant"> | string | null
-  paymentStatus?: Prisma.EnumPaymentStatusFilter<"ProgrammeParticipant"> | $Enums.PaymentStatus
-  metadata?: Prisma.JsonFilter<"ProgrammeParticipant">
-  createdAt?: Prisma.DateTimeFilter<"ProgrammeParticipant"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"ProgrammeParticipant"> | Date | string
-}
-
 export type ProgrammeParticipantCreateWithoutProgrammeInput = {
   id?: string
   paymentStatus?: $Enums.PaymentStatus
@@ -579,12 +696,14 @@ export type ProgrammeParticipantCreateWithoutProgrammeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   participant: Prisma.ParticipantCreateNestedOneWithoutProgrammesInput
+  cohort?: Prisma.CohortCreateNestedOneWithoutProgrammeParticipantsInput
   invoice?: Prisma.ParticipantInvoiceCreateNestedOneWithoutProgrammeParticipantInput
 }
 
 export type ProgrammeParticipantUncheckedCreateWithoutProgrammeInput = {
   id?: string
   participantId: string
+  cohortId?: string | null
   invoiceId?: string | null
   paymentStatus?: $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -626,12 +745,14 @@ export type ProgrammeParticipantCreateWithoutInvoiceInput = {
   updatedAt?: Date | string
   programme: Prisma.ProgrammeCreateNestedOneWithoutParticipantsInput
   participant: Prisma.ParticipantCreateNestedOneWithoutProgrammesInput
+  cohort?: Prisma.CohortCreateNestedOneWithoutProgrammeParticipantsInput
 }
 
 export type ProgrammeParticipantUncheckedCreateWithoutInvoiceInput = {
   id?: string
   programmeId: string
   participantId: string
+  cohortId?: string | null
   paymentStatus?: $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -662,12 +783,58 @@ export type ProgrammeParticipantUpdateWithoutInvoiceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   programme?: Prisma.ProgrammeUpdateOneRequiredWithoutParticipantsNestedInput
   participant?: Prisma.ParticipantUpdateOneRequiredWithoutProgrammesNestedInput
+  cohort?: Prisma.CohortUpdateOneWithoutProgrammeParticipantsNestedInput
 }
 
 export type ProgrammeParticipantUncheckedUpdateWithoutInvoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   programmeId?: Prisma.StringFieldUpdateOperationsInput | string
   participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProgrammeParticipantCreateManyCohortInput = {
+  id?: string
+  programmeId: string
+  participantId: string
+  invoiceId?: string | null
+  paymentStatus?: $Enums.PaymentStatus
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProgrammeParticipantUpdateWithoutCohortInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  programme?: Prisma.ProgrammeUpdateOneRequiredWithoutParticipantsNestedInput
+  participant?: Prisma.ParticipantUpdateOneRequiredWithoutProgrammesNestedInput
+  invoice?: Prisma.ParticipantInvoiceUpdateOneWithoutProgrammeParticipantNestedInput
+}
+
+export type ProgrammeParticipantUncheckedUpdateWithoutCohortInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  programmeId?: Prisma.StringFieldUpdateOperationsInput | string
+  participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProgrammeParticipantUncheckedUpdateManyWithoutCohortInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  programmeId?: Prisma.StringFieldUpdateOperationsInput | string
+  participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -677,6 +844,7 @@ export type ProgrammeParticipantUncheckedUpdateWithoutInvoiceInput = {
 export type ProgrammeParticipantCreateManyParticipantInput = {
   id?: string
   programmeId: string
+  cohortId?: string | null
   invoiceId?: string | null
   paymentStatus?: $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -691,12 +859,14 @@ export type ProgrammeParticipantUpdateWithoutParticipantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   programme?: Prisma.ProgrammeUpdateOneRequiredWithoutParticipantsNestedInput
+  cohort?: Prisma.CohortUpdateOneWithoutProgrammeParticipantsNestedInput
   invoice?: Prisma.ParticipantInvoiceUpdateOneWithoutProgrammeParticipantNestedInput
 }
 
 export type ProgrammeParticipantUncheckedUpdateWithoutParticipantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   programmeId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -707,6 +877,7 @@ export type ProgrammeParticipantUncheckedUpdateWithoutParticipantInput = {
 export type ProgrammeParticipantUncheckedUpdateManyWithoutParticipantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   programmeId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -717,6 +888,7 @@ export type ProgrammeParticipantUncheckedUpdateManyWithoutParticipantInput = {
 export type ProgrammeParticipantCreateManyProgrammeInput = {
   id?: string
   participantId: string
+  cohortId?: string | null
   invoiceId?: string | null
   paymentStatus?: $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -731,12 +903,14 @@ export type ProgrammeParticipantUpdateWithoutProgrammeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participant?: Prisma.ParticipantUpdateOneRequiredWithoutProgrammesNestedInput
+  cohort?: Prisma.CohortUpdateOneWithoutProgrammeParticipantsNestedInput
   invoice?: Prisma.ParticipantInvoiceUpdateOneWithoutProgrammeParticipantNestedInput
 }
 
 export type ProgrammeParticipantUncheckedUpdateWithoutProgrammeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -747,6 +921,7 @@ export type ProgrammeParticipantUncheckedUpdateWithoutProgrammeInput = {
 export type ProgrammeParticipantUncheckedUpdateManyWithoutProgrammeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   participantId?: Prisma.StringFieldUpdateOperationsInput | string
+  cohortId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -760,6 +935,7 @@ export type ProgrammeParticipantSelect<ExtArgs extends runtime.Types.Extensions.
   id?: boolean
   programmeId?: boolean
   participantId?: boolean
+  cohortId?: boolean
   invoiceId?: boolean
   paymentStatus?: boolean
   metadata?: boolean
@@ -767,6 +943,7 @@ export type ProgrammeParticipantSelect<ExtArgs extends runtime.Types.Extensions.
   updatedAt?: boolean
   programme?: boolean | Prisma.ProgrammeDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.ParticipantDefaultArgs<ExtArgs>
+  cohort?: boolean | Prisma.ProgrammeParticipant$cohortArgs<ExtArgs>
   invoice?: boolean | Prisma.ProgrammeParticipant$invoiceArgs<ExtArgs>
 }, ExtArgs["result"]["programmeParticipant"]>
 
@@ -774,6 +951,7 @@ export type ProgrammeParticipantSelectCreateManyAndReturn<ExtArgs extends runtim
   id?: boolean
   programmeId?: boolean
   participantId?: boolean
+  cohortId?: boolean
   invoiceId?: boolean
   paymentStatus?: boolean
   metadata?: boolean
@@ -781,6 +959,7 @@ export type ProgrammeParticipantSelectCreateManyAndReturn<ExtArgs extends runtim
   updatedAt?: boolean
   programme?: boolean | Prisma.ProgrammeDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.ParticipantDefaultArgs<ExtArgs>
+  cohort?: boolean | Prisma.ProgrammeParticipant$cohortArgs<ExtArgs>
   invoice?: boolean | Prisma.ProgrammeParticipant$invoiceArgs<ExtArgs>
 }, ExtArgs["result"]["programmeParticipant"]>
 
@@ -788,6 +967,7 @@ export type ProgrammeParticipantSelectUpdateManyAndReturn<ExtArgs extends runtim
   id?: boolean
   programmeId?: boolean
   participantId?: boolean
+  cohortId?: boolean
   invoiceId?: boolean
   paymentStatus?: boolean
   metadata?: boolean
@@ -795,6 +975,7 @@ export type ProgrammeParticipantSelectUpdateManyAndReturn<ExtArgs extends runtim
   updatedAt?: boolean
   programme?: boolean | Prisma.ProgrammeDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.ParticipantDefaultArgs<ExtArgs>
+  cohort?: boolean | Prisma.ProgrammeParticipant$cohortArgs<ExtArgs>
   invoice?: boolean | Prisma.ProgrammeParticipant$invoiceArgs<ExtArgs>
 }, ExtArgs["result"]["programmeParticipant"]>
 
@@ -802,6 +983,7 @@ export type ProgrammeParticipantSelectScalar = {
   id?: boolean
   programmeId?: boolean
   participantId?: boolean
+  cohortId?: boolean
   invoiceId?: boolean
   paymentStatus?: boolean
   metadata?: boolean
@@ -809,20 +991,23 @@ export type ProgrammeParticipantSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProgrammeParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "programmeId" | "participantId" | "invoiceId" | "paymentStatus" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["programmeParticipant"]>
+export type ProgrammeParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "programmeId" | "participantId" | "cohortId" | "invoiceId" | "paymentStatus" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["programmeParticipant"]>
 export type ProgrammeParticipantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   programme?: boolean | Prisma.ProgrammeDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.ParticipantDefaultArgs<ExtArgs>
+  cohort?: boolean | Prisma.ProgrammeParticipant$cohortArgs<ExtArgs>
   invoice?: boolean | Prisma.ProgrammeParticipant$invoiceArgs<ExtArgs>
 }
 export type ProgrammeParticipantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   programme?: boolean | Prisma.ProgrammeDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.ParticipantDefaultArgs<ExtArgs>
+  cohort?: boolean | Prisma.ProgrammeParticipant$cohortArgs<ExtArgs>
   invoice?: boolean | Prisma.ProgrammeParticipant$invoiceArgs<ExtArgs>
 }
 export type ProgrammeParticipantIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   programme?: boolean | Prisma.ProgrammeDefaultArgs<ExtArgs>
   participant?: boolean | Prisma.ParticipantDefaultArgs<ExtArgs>
+  cohort?: boolean | Prisma.ProgrammeParticipant$cohortArgs<ExtArgs>
   invoice?: boolean | Prisma.ProgrammeParticipant$invoiceArgs<ExtArgs>
 }
 
@@ -831,12 +1016,14 @@ export type $ProgrammeParticipantPayload<ExtArgs extends runtime.Types.Extension
   objects: {
     programme: Prisma.$ProgrammePayload<ExtArgs>
     participant: Prisma.$ParticipantPayload<ExtArgs>
+    cohort: Prisma.$CohortPayload<ExtArgs> | null
     invoice: Prisma.$ParticipantInvoicePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     programmeId: string
     participantId: string
+    cohortId: string | null
     invoiceId: string | null
     paymentStatus: $Enums.PaymentStatus
     metadata: runtime.JsonValue
@@ -1238,6 +1425,7 @@ export interface Prisma__ProgrammeParticipantClient<T, Null = never, ExtArgs ext
   readonly [Symbol.toStringTag]: "PrismaPromise"
   programme<T extends Prisma.ProgrammeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProgrammeDefaultArgs<ExtArgs>>): Prisma.Prisma__ProgrammeClient<runtime.Types.Result.GetResult<Prisma.$ProgrammePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   participant<T extends Prisma.ParticipantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ParticipantDefaultArgs<ExtArgs>>): Prisma.Prisma__ParticipantClient<runtime.Types.Result.GetResult<Prisma.$ParticipantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  cohort<T extends Prisma.ProgrammeParticipant$cohortArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProgrammeParticipant$cohortArgs<ExtArgs>>): Prisma.Prisma__CohortClient<runtime.Types.Result.GetResult<Prisma.$CohortPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   invoice<T extends Prisma.ProgrammeParticipant$invoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProgrammeParticipant$invoiceArgs<ExtArgs>>): Prisma.Prisma__ParticipantInvoiceClient<runtime.Types.Result.GetResult<Prisma.$ParticipantInvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1271,6 +1459,7 @@ export interface ProgrammeParticipantFieldRefs {
   readonly id: Prisma.FieldRef<"ProgrammeParticipant", 'String'>
   readonly programmeId: Prisma.FieldRef<"ProgrammeParticipant", 'String'>
   readonly participantId: Prisma.FieldRef<"ProgrammeParticipant", 'String'>
+  readonly cohortId: Prisma.FieldRef<"ProgrammeParticipant", 'String'>
   readonly invoiceId: Prisma.FieldRef<"ProgrammeParticipant", 'String'>
   readonly paymentStatus: Prisma.FieldRef<"ProgrammeParticipant", 'PaymentStatus'>
   readonly metadata: Prisma.FieldRef<"ProgrammeParticipant", 'Json'>
@@ -1674,6 +1863,25 @@ export type ProgrammeParticipantDeleteManyArgs<ExtArgs extends runtime.Types.Ext
    * Limit how many ProgrammeParticipants to delete.
    */
   limit?: number
+}
+
+/**
+ * ProgrammeParticipant.cohort
+ */
+export type ProgrammeParticipant$cohortArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Cohort
+   */
+  select?: Prisma.CohortSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Cohort
+   */
+  omit?: Prisma.CohortOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CohortInclude<ExtArgs> | null
+  where?: Prisma.CohortWhereInput
 }
 
 /**

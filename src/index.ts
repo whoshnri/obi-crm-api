@@ -18,6 +18,10 @@ import { templatesRouter } from "./routes/templates";
 import { webhooksRouter } from "./routes/webhooks";
 import { notificationsRouter } from "./routes/notifications";
 import { orgRouter } from "./routes/org";
+import { organisationsRouter } from "./routes/organisations";
+import { cohortsRouter } from "./routes/cohorts";
+import { portalRouter } from "./routes/portal";
+import { analyticsRouter } from "./routes/analytics";
 
 const app = new Hono();
 
@@ -26,8 +30,10 @@ const allowedOrigins = new Set(
     "http://localhost:3000",
     "http://localhost:3001",
     "http://localhost:3002",
+    "http://localhost:3003", // OBI_PORTAL_ORIGIN
     Bun.env.OBI_CRM_ORIGIN,
     Bun.env.OBI_FORMS_APP_ORIGIN,
+    Bun.env.OBI_PORTAL_ORIGIN,
     ...(Bun.env.OBI_ALLOWED_ORIGINS ?? "")
       .split(",")
       .map((origin) => origin.trim())
@@ -49,6 +55,7 @@ app.use(
 app.get("/", (c) => c.json({ok: true}))
 app.get("/health", (c) => c.json({ ok: true, service: "obi-api" }));
 app.route("/webhooks", webhooksRouter);
+app.route("/portal", portalRouter);
 app.use("*", authMiddleware());
 app.route("/auth", authRouter);
 app.route("/programmes", programmesRouter);
@@ -61,6 +68,9 @@ app.route("/templates", templatesRouter);
 app.route("/admins", adminsRouter);
 app.route("/notifications", notificationsRouter);
 app.route("/org", orgRouter);
+app.route("/organisations", organisationsRouter);
+app.route("/cohorts", cohortsRouter);
+app.route("/analytics", analyticsRouter);
 app.route("/public", publicRouter);
 app.route("/assets", assetsRouter);
 
@@ -70,25 +80,21 @@ app.onError((error, c) => {
 });
 
 
-export default app;
+// export default app;
 
-// export default {
-//   fetch: app.fetch
-// };
+if (import.meta.main && !process.env.VERCEL) {
+  await import("./jobs");
 
-// if (import.meta.main && !process.env.VERCEL) {
-//   await import("./jobs");
+  const port = Number(Bun.env.OBI_APP_PORT ?? 3001);
 
-//   const port = Number(Bun.env.OBI_APP_PORT ?? 3001);
+  if (!Number.isInteger(port) || port <= 0) {
+    throw new Error("OBI_APP_PORT must be a positive integer");
+  }
 
-//   if (!Number.isInteger(port) || port <= 0) {
-//     throw new Error("OBI_APP_PORT must be a positive integer");
-//   }
+  Bun.serve({
+    port,
+    fetch: app.fetch
+  });
 
-//   Bun.serve({
-//     port,
-//     fetch: app.fetch
-//   });
-
-//   console.log(`OBI API listening on http://localhost:${port}`);
-// }
+  console.log(`OBI API listening on http://localhost:${port}`);
+}

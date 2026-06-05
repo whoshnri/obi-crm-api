@@ -168,8 +168,12 @@ export function authMiddleware(): MiddlewareHandler {
       path.startsWith("/assets/") ||
       (method === "GET" && /^\/forms\/(slug\/)?[^/]+$/.test(path)) ||
       (method === "POST" && /^\/forms\/[^/]+\/submissions$/.test(path));
+    const isPortalPublic =
+      path === "/portal/auth/request-link" ||
+      path === "/portal/auth/verify" ||
+      path.startsWith("/portal/auth/");
 
-    if (isPublic) {
+    if (isPublic || isPortalPublic || path.startsWith("/portal/")) {
       await next();
       return;
     }
