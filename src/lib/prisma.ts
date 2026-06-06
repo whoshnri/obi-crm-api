@@ -1,5 +1,5 @@
-import 'dotenv/config'
-import { PrismaClient } from '../../lib/generated/prisma/client'
+import "dotenv/config";
+import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 
@@ -15,8 +15,8 @@ const pool = new pg.Pool({
   idleTimeoutMillis: 40_000,
   connectionTimeoutMillis: 40_000,
   ssl: {
-    rejectUnauthorized: true  // equivalent to verify-full
-  }
+    rejectUnauthorized: true,
+  },
 });
 
 pool.on("error", (error) => {
@@ -25,8 +25,8 @@ pool.on("error", (error) => {
     JSON.stringify({
       errorName: error.name,
       message: error.message,
-      code: (error as { code?: string }).code
-    })
+      code: (error as { code?: string }).code,
+    }),
   );
 });
 
@@ -35,7 +35,7 @@ const adapter = new PrismaPg(pool);
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    adapter
+    adapter,
   });
 
 if (process.env.NODE_ENV !== "production") {
