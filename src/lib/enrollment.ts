@@ -1,4 +1,4 @@
-import { Prisma } from "../generated/client.js";
+import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma.js";
 import { createStripeCustomerForParticipant } from "./stripe.js";
 

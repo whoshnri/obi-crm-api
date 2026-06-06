@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import type { Prisma } from "../generated/client.js";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { handleRoute } from "../lib/http.js";
 import { serializeForm, serializeFormSubmission } from "../lib/serializers.js";

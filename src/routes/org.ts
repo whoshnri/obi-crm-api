@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import type { Context } from "hono";
 import { z } from "zod";
-import { NotificationType, Prisma, ResourceType, TaskPriority, TaskStatus } from "../generated/client.js";
+import { NotificationType, Prisma, ResourceType, TaskPriority, TaskStatus } from "@prisma/client";
 import { handleRoute } from "../lib/http.js";
 import { prisma } from "../lib/prisma.js";
 

@@ -1,4 +1,4 @@
-import type { Event, Prisma } from "../generated/client.js";
+import type { Event, Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 
 export const EVENT_SCHEDULE_HASH = "event_schedule";

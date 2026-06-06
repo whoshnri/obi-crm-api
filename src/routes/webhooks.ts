@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import type Stripe from "stripe";
-import { InvoiceStatus, PaymentStatus } from "../generated/client.js";
+import { InvoiceStatus, PaymentStatus } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { stripe } from "../lib/stripe.js";
 import { errorMessage } from "../jobs/utils.js";

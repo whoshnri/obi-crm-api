@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { OpportunityEventStatus, OpportunityStatus } from "../generated/client.js";
+import { OpportunityEventStatus, OpportunityStatus } from "@prisma/client";
 import { handleRoute } from "../lib/http.js";
 import {
   cancelOpportunityCron,

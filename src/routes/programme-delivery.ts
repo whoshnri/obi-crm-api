@@ -1,6 +1,6 @@
 import type { Hono } from "hono";
 import { z } from "zod";
-import { DeliverableDeliveryChannel, DeliverableStatus, ParticipantRequestStatus, Prisma, ResourceType } from "../generated/client.js";
+import { DeliverableDeliveryChannel, DeliverableStatus, ParticipantRequestStatus, Prisma, ResourceType } from "@prisma/client";
 import { handleRoute } from "../lib/http.js";
 import { prisma } from "../lib/prisma.js";
 import {

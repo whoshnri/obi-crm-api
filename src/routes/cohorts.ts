@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { EventBaseType, EventStatus, Prisma } from "../generated/client.js";
+import { EventBaseType, EventStatus, Prisma } from "@prisma/client";
 import { enrollParticipant } from "../lib/enrollment.js";
 import { handleRoute } from "../lib/http.js";
 import { prisma } from "../lib/prisma.js";

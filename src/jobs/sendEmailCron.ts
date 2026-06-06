@@ -1,4 +1,4 @@
-import { EventBaseType, EventStatus, Prisma, StepStatus } from "../generated/client.js";
+import { EventBaseType, EventStatus, Prisma, StepStatus } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { redis, withRedisFallback } from "../lib/redis.js";
 import { scheduleCronJob } from "./scheduler.js";

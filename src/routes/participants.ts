@@ -1,5 +1,6 @@
 import { Hono } from "hono";
-import { PaymentStatus, Prisma } from "../generated/client.js";
+import { PaymentStatus } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { hashParticipantPassword } from "../lib/auth.js";
 import { prisma } from "../lib/prisma.js";
 import { handleRoute } from "../lib/http.js";

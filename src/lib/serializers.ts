@@ -8,7 +8,7 @@ import type {
   Programme,
   ProgrammeParticipant,
   RegistrationPage
-} from "../generated/client.js";
+} from "@prisma/client";
 
 type JsonRecord = Record<string, unknown>;
 

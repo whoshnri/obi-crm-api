@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { verify } from "argon2";
 import { z } from "zod";
-import type { Prisma } from "../generated/client.js";
+import type { Prisma } from "@prisma/client";
 import { hashParticipantPassword, sha256 } from "../lib/auth.js";
 import { answersSchema } from "../lib/form-contract.js";
 import { handleRoute } from "../lib/http.js";

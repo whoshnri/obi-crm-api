@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { Prisma } from "../generated/client.js";
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { handleRoute } from "../lib/http.js";
 import { prisma } from "../lib/prisma.js";

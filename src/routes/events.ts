@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { EventBaseType, EventStatus, Prisma } from "../generated/client.js";
+import { EventBaseType, EventStatus, Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { redis, withRedisFallback } from "../lib/redis.js";
 import { handleRoute } from "../lib/http.js";

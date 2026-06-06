@@ -1,4 +1,4 @@
-import type { AnalyticsEventType, Prisma } from "../generated/client.js";
+import type { AnalyticsEventType, Prisma } from "@prisma/client";
 import { prisma } from "./prisma.js";
 
 export type TrackAnalyticsEventInput = {

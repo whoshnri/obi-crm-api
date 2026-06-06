@@ -1,6 +1,6 @@
 import { hashAdminPassword } from "../lib/auth.js";
 import { Hono } from "hono";
-import { AdminRole } from "../generated/client.js";
+import { AdminRole } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { handleRoute } from "../lib/http.js";
 import { serializeAdmin } from "../lib/serializers.js";

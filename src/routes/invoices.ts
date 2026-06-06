@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { InvoiceStatus, PaymentStatus, Prisma } from "../generated/client.js";
+import { InvoiceStatus, PaymentStatus, Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { handleRoute } from "../lib/http.js";
 import { serializeInvoice } from "../lib/serializers.js";
