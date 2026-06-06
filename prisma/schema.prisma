@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated"
+  provider            = "prisma-client"
+  output              = "../lib/generated/prisma"
 }
 
 datasource db {
@@ -44,6 +44,11 @@ enum AdminRole {
   standard
   basic
   read_only
+}
+
+enum AdminMagicLinkPurpose {
+  sign_in
+  reset_password
 }
 
 enum OpportunityStatus {
@@ -215,9 +220,12 @@ enum ParticipantRequestStatus {
 
 enum DeliverableStatus {
   pending
-  ready
   delivered
-  acknowledged
+}
+
+enum DeliverableDeliveryChannel {
+  email
+  resource_folder
 }
 
 enum AnalyticsEventType {
@@ -404,6 +412,7 @@ model ParticipantRequest {
   dueDate       DateTime?
   status        ParticipantRequestStatus @default(pending)
   formId        String?
+  linkUrl       String?
   metadata      Json                     @default("{}")
   createdAt     DateTime                 @default(now())
   updatedAt     DateTime                 @updatedAt
@@ -436,9 +445,9 @@ model Deliverable {
   resourceType   ResourceType      @default(document)
   url            String?
   status         DeliverableStatus @default(pending)
+  deliveryChannel DeliverableDeliveryChannel?
   scheduledAt    DateTime?
   deliveredAt    DateTime?
-  acknowledgedAt DateTime?
   metadata       Json              @default("{}")
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
@@ -667,6 +676,7 @@ model Participant {
   id                  String                   @id @default(cuid())
   name                String
   email               String                   @unique
+  password            String?
   organisation        String?
   address             String?
   phone               String?
@@ -884,12 +894,13 @@ model Admin {
   email                 String                     @unique
   role                  AdminRole                  @default(read_only)
   roleId                String?
-  password              String
+  password              String?
   notificationsEnabled  Boolean                    @default(true)
   photoId               String?
   createdAt             DateTime                   @default(now())
   updatedAt             DateTime                   @updatedAt
   sessions              AdminSession[]
+  magicLinks            AdminMagicLink[]
   roleModel             Role?                      @relation("AdminRoleAssignments", fields: [roleId], references: [id], onDelete: SetNull)
   programmeAssignments  AdminProgrammeAssignment[]
   orgCommsThreads       OrgCommsThread[]           @relation("OrgCommsAuthor")
@@ -915,6 +926,20 @@ model AdminSession {
   createdAt  DateTime  @default(now())
   lastUsedAt DateTime  @default(now())
   admin      Admin     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([expiresAt])
+}
+
+model AdminMagicLink {
+  id         String               @id @default(cuid())
+  adminId    String
+  tokenHash  String               @unique
+  purpose    AdminMagicLinkPurpose @default(sign_in)
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime             @default(now())
+  admin      Admin                @relation(fields: [adminId], references: [id], onDelete: Cascade)
 
   @@index([adminId])
   @@index([expiresAt])

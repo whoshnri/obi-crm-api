@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { EventBaseType, EventStatus, Prisma } from "../generated/client.js";
 import { prisma } from "../lib/prisma.js";
-import { redis } from "../lib/redis.js";
+import { redis, withRedisFallback } from "../lib/redis.js";
 import { handleRoute } from "../lib/http.js";
 import { serializeEvent } from "../lib/serializers.js";
 import { EVENT_SCHEDULE_HASH } from "../jobs/utils.js";
@@ -109,7 +109,7 @@ export const eventsRouter = new Hono()
         data: { status: EventStatus.pending }
       });
 
-      await redis.hset(EVENT_SCHEDULE_HASH, { [id]: new Date().toISOString() });
+      await withRedisFallback(() => redis.hset(EVENT_SCHEDULE_HASH, { [id]: new Date().toISOString() }), 0);
 
       if (event.baseType === EventBaseType.send_email) {
         await runSendEmailEventNow(id);

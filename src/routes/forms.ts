@@ -166,6 +166,45 @@ export const formsRouter = new Hono()
         }
       });
 
+      if (respondentId) {
+        const linkedRequest = await prisma.participantRequest.findFirst({
+          where: {
+            formId: id,
+            participantId: respondentId,
+            status: {
+              in: ["pending", "in_progress", "rejected"]
+            }
+          },
+          orderBy: [{ dueDate: "asc" }, { createdAt: "desc" }]
+        });
+
+        if (linkedRequest) {
+          await prisma.$transaction([
+            prisma.participantRequest.update({
+              where: { id: linkedRequest.id },
+              data: { status: "submitted" }
+            }),
+            prisma.participantRequestResponse.upsert({
+              where: { requestId: linkedRequest.id },
+              create: {
+                requestId: linkedRequest.id,
+                content: {
+                  type: "form_submission",
+                  submissionId: submission.id
+                } as Prisma.InputJsonValue
+              },
+              update: {
+                content: {
+                  type: "form_submission",
+                  submissionId: submission.id
+                } as Prisma.InputJsonValue,
+                submittedAt: new Date()
+              }
+            })
+          ]);
+        }
+      }
+
       void trackAnalyticsEvent({
         type: "form_submitted",
         participantId: respondentId ?? undefined,

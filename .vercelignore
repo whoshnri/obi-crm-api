@@ -1,0 +1,3 @@
+# Keep tsconfig.json deployable — Vercel uses it for ESM/Bun builds (see vercel/hono-starter#2).
+package-lock.json
+README.md

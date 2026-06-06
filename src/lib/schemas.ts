@@ -85,6 +85,7 @@ export const createParticipantSchema = z.object({
   programmeId: z.string().min(1).optional(),
   name: z.string().min(1),
   email: z.string().email(),
+  password: z.string().min(8).optional(),
   organisation: z.string().optional(),
   address: z.string().optional(),
   phone: z.string().optional(),

@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { EventBaseType, EventStatus, Prisma } from "../generated/client.js";
 import { prisma } from "../lib/prisma.js";
-import { redis } from "../lib/redis.js";
+import { redis, withRedisFallback } from "../lib/redis.js";
 import { handleRoute } from "../lib/http.js";
 import { serializeFormSubmission, serializeProgramme } from "../lib/serializers.js";
 import { EVENT_SCHEDULE_HASH } from "../jobs/utils.js";
@@ -420,9 +420,13 @@ const programmesApp = new Hono()
       });
 
       if (events.length > 0) {
-        await redis.hset(
-          EVENT_SCHEDULE_HASH,
-          Object.fromEntries(events.map((event) => [event.id, event.scheduledAt.toISOString()]))
+        await withRedisFallback(
+          () =>
+            redis.hset(
+              EVENT_SCHEDULE_HASH,
+              Object.fromEntries(events.map((event) => [event.id, event.scheduledAt.toISOString()]))
+            ),
+          0
         );
       }
 

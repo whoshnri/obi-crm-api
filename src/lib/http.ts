@@ -52,12 +52,20 @@ function getErrorCode(error: unknown) {
 
 function getHttpStatus(error: unknown) {
   const code = getErrorCode(error);
-  if (code === "ETIMEDOUT" || code === "ECONNRESET" || code === "ECONNREFUSED") return 503;
+  if (code === "P2025") return 404;
+  if (code === "P2002") return 409;
+  if (code === "P2003") return 409;
+  if (code === "EAI_AGAIN" || code === "ENOTFOUND" || code === "ETIMEDOUT" || code === "ECONNRESET" || code === "ECONNREFUSED") return 503;
   return 500;
 }
 
 function getShortMessage(error: unknown) {
   const code = getErrorCode(error);
+  if (code === "P2025") return "Requested record was not found";
+  if (code === "P2002") return "Unique constraint failed";
+  if (code === "P2003") return "Foreign key constraint failed";
+  if (code === "EAI_AGAIN") return "Database DNS lookup failed";
+  if (code === "ENOTFOUND") return "Database host could not be resolved";
   if (code === "ETIMEDOUT") return "Database request timed out";
   if (code === "ECONNRESET") return "Database connection was reset";
   if (code === "ECONNREFUSED") return "Database connection was refused";
@@ -122,7 +130,18 @@ export async function handleRoute<T>(c: Context, fn: () => Promise<T> | T) {
 
     const status = getHttpStatus(error);
     logApiError(c, status, error);
-    const message = getErrorMessage(error);
-    return c.json({ error: status === 503 ? "Database unavailable" : message }, status);
+    return c.json(
+      {
+        error:
+          status === 404
+            ? "Not found"
+            : status === 409
+              ? "Conflict"
+              : status === 503
+                ? "Database unavailable"
+                : "Unexpected API error"
+      },
+      status
+    );
   }
 }

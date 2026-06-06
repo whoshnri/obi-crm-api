@@ -1,3 +1,4 @@
+import { hashAdminPassword } from "../lib/auth.js";
 import { Hono } from "hono";
 import { AdminRole } from "../generated/client.js";
 import { prisma } from "../lib/prisma.js";
@@ -26,7 +27,7 @@ export const adminsRouter = new Hono()
           name: input.name,
           email: input.email,
           role: (input.role ?? "read_only") as AdminRole,
-          password: input.password ?? "change-me",
+          password: input.password ? await hashAdminPassword(input.password) : undefined,
           notificationsEnabled: input.notificationsEnabled ?? true,
           photoId: input.photoId
         }
@@ -42,6 +43,7 @@ export const adminsRouter = new Hono()
         where: { id },
         data: {
           ...input,
+          password: input.password ? await hashAdminPassword(input.password) : undefined,
           role: input.role as AdminRole | undefined
         }
       });

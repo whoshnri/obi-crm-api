@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { PaymentStatus, Prisma } from "../generated/client.js";
+import { hashParticipantPassword } from "../lib/auth.js";
 import { prisma } from "../lib/prisma.js";
 import { handleRoute } from "../lib/http.js";
 import { serializeProgramParticipant } from "../lib/serializers.js";
@@ -57,6 +58,7 @@ export const participantsRouter = new Hono()
           data: {
             name: input.name,
             email: input.email,
+            password: input.password ? await hashParticipantPassword(input.password) : undefined,
             organisation: input.organisation,
             address: input.address,
             phone: input.phone,
@@ -65,7 +67,7 @@ export const participantsRouter = new Hono()
             stripeCustomerId,
             notes: input.notes,
             metadata: participantMetadata
-          }
+          } as Prisma.ParticipantCreateInput
         });
 
         return tx.programmeParticipant.create({
@@ -124,6 +126,7 @@ export const participantsRouter = new Hono()
           data: {
             name: input.name,
             email: input.email,
+            password: input.password ? await hashParticipantPassword(input.password) : undefined,
             organisation: input.organisation,
             address: input.address,
             phone: input.phone,
@@ -132,7 +135,7 @@ export const participantsRouter = new Hono()
             notes: input.notes,
             stripeCustomerId: input.stripeCustomerId,
             metadata: participantMetadata
-          }
+          } as Prisma.ParticipantUpdateInput
         });
 
         if (input.paymentStatus || input.programmeParticipantMetadata) {

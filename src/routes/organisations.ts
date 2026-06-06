@@ -166,7 +166,11 @@ export const organisationsRouter = new Hono()
       const { id } = idParamSchema.parse(c.req.param());
       const input = addOrganisationParticipantSchema.parse(await c.req.json());
 
-      await prisma.participant.findUniqueOrThrow({ where: { id: input.participantId } });
+      const participant = await prisma.participant.findUnique({ where: { id: input.participantId } });
+      if (!participant) {
+        return c.json({ error: "Participant not found" }, 404);
+      }
+      console.log("here")
 
       const link = await prisma.organisationParticipant.upsert({
         where: {

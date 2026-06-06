@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { verify } from "argon2";
+import { hash, verify } from "argon2";
 import type { Context, MiddlewareHandler } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { prisma } from "./prisma.js";
@@ -28,6 +28,15 @@ type JwtPayload = {
   sub: string;
   email: string;
   role: string;
+  exp: number;
+  iat: number;
+};
+
+type PasswordSetupJwtPayload = {
+  sub: string;
+  email: string;
+  type: "admin_password_setup";
+  purpose: "sign_in" | "reset_password";
   exp: number;
   iat: number;
 };
@@ -85,6 +94,22 @@ export async function signAccessToken(admin: { id: string; email: string; role: 
   return `${body}.${signature}`;
 }
 
+export async function signAdminPasswordSetupToken(admin: { id: string; email: string }, purpose: "sign_in" | "reset_password") {
+  const now = Math.floor(Date.now() / 1000);
+  const payload: PasswordSetupJwtPayload = {
+    sub: admin.id,
+    email: admin.email,
+    type: "admin_password_setup",
+    purpose,
+    iat: now,
+    exp: now + 30 * 60
+  };
+  const header = { alg: "HS256", typ: "JWT" };
+  const body = `${base64Url(JSON.stringify(header))}.${base64Url(JSON.stringify(payload))}`;
+  const signature = base64Url(await hmac(body));
+  return `${body}.${signature}`;
+}
+
 export async function verifyAccessToken(token: string) {
   const [header, payload, signature] = token.split(".");
   if (!header || !payload || !signature) throw new Error("Invalid access token");
@@ -95,6 +120,27 @@ export async function verifyAccessToken(token: string) {
   const parsed = JSON.parse(fromBase64Url(payload)) as JwtPayload;
   if (parsed.exp <= Math.floor(Date.now() / 1000)) throw new Error("Access token expired");
   return parsed;
+}
+
+export async function verifyAdminPasswordSetupToken(token: string) {
+  const [header, payload, signature] = token.split(".");
+  if (!header || !payload || !signature) throw new Error("Invalid password setup token");
+
+  const expected = base64Url(await hmac(`${header}.${payload}`));
+  if (expected !== signature) throw new Error("Invalid password setup token signature");
+
+  const parsed = JSON.parse(fromBase64Url(payload)) as PasswordSetupJwtPayload;
+  if (parsed.type !== "admin_password_setup") throw new Error("Invalid password setup token type");
+  if (parsed.exp <= Math.floor(Date.now() / 1000)) throw new Error("Password setup token expired");
+  return parsed;
+}
+
+export async function hashAdminPassword(password: string) {
+  return hash(password);
+}
+
+export async function hashParticipantPassword(password: string) {
+  return hash(password);
 }
 
 export function createRefreshToken() {

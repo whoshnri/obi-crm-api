@@ -427,11 +427,12 @@ export function serializeParticipantRequest(
     dueDate: Date | null;
     status: string;
     formId: string | null;
+    linkUrl: string | null;
     metadata: Prisma.JsonValue;
     createdAt: Date;
     updatedAt: Date;
     participant?: { id: string; name: string; email: string };
-    form?: { id: string; name: string; slug: string } | null;
+    form?: { id: string; name: string; slug: string; description?: string | null; status?: string; sections?: Prisma.JsonValue } | null;
     response?: { id: string; content: Prisma.JsonValue; submittedAt: Date } | null;
   }
 ) {
@@ -445,11 +446,18 @@ export function serializeParticipantRequest(
     dueDate: request.dueDate?.toISOString() ?? undefined,
     status: request.status,
     formId: request.formId ?? undefined,
+    linkUrl: request.linkUrl ?? undefined,
     metadata: isRecord(request.metadata) ? request.metadata : {},
     createdAt: request.createdAt.toISOString(),
     updatedAt: request.updatedAt.toISOString(),
     participant: request.participant,
-    form: request.form ?? undefined,
+    form: request.form
+      ? {
+          ...request.form,
+          description: request.form.description ?? undefined,
+          sections: Array.isArray(request.form.sections) ? request.form.sections : []
+        }
+      : undefined,
     response: request.response
       ? {
           id: request.response.id,
@@ -471,9 +479,9 @@ export function serializeDeliverable(
     resourceType: string;
     url: string | null;
     status: string;
+    deliveryChannel: string | null;
     scheduledAt: Date | null;
     deliveredAt: Date | null;
-    acknowledgedAt: Date | null;
     metadata: Prisma.JsonValue;
     createdAt: Date;
     updatedAt: Date;
@@ -490,9 +498,9 @@ export function serializeDeliverable(
     resourceType: deliverable.resourceType,
     url: deliverable.url ?? undefined,
     status: deliverable.status,
+    deliveryChannel: deliverable.deliveryChannel ?? undefined,
     scheduledAt: deliverable.scheduledAt?.toISOString() ?? undefined,
     deliveredAt: deliverable.deliveredAt?.toISOString() ?? undefined,
-    acknowledgedAt: deliverable.acknowledgedAt?.toISOString() ?? undefined,
     metadata: isRecord(deliverable.metadata) ? deliverable.metadata : {},
     createdAt: deliverable.createdAt.toISOString(),
     updatedAt: deliverable.updatedAt.toISOString(),

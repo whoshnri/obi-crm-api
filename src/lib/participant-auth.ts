@@ -32,6 +32,14 @@ type ParticipantJwtPayload = {
   iat: number;
 };
 
+type ParticipantPasswordSetupJwtPayload = {
+  sub: string;
+  email: string;
+  type: "participant_password_setup";
+  exp: number;
+  iat: number;
+};
+
 function getSecret() {
   const secret = process.env.OBI_JWT_SECRET ?? process.env.JWT_SECRET;
   if (!secret || secret.length < 32) {
@@ -90,6 +98,34 @@ export async function verifyParticipantAccessToken(token: string) {
   const parsed = JSON.parse(fromBase64Url(payload)) as ParticipantJwtPayload;
   if (parsed.type !== "participant") throw new Error("Invalid token type");
   if (parsed.exp <= Math.floor(Date.now() / 1000)) throw new Error("Access token expired");
+  return parsed;
+}
+
+export async function signParticipantPasswordSetupToken(participant: { id: string; email: string }) {
+  const now = Math.floor(Date.now() / 1000);
+  const payload: ParticipantPasswordSetupJwtPayload = {
+    sub: participant.id,
+    email: participant.email,
+    type: "participant_password_setup",
+    iat: now,
+    exp: now + MAGIC_LINK_TTL_SECONDS
+  };
+  const header = { alg: "HS256", typ: "JWT" };
+  const body = `${base64Url(JSON.stringify(header))}.${base64Url(JSON.stringify(payload))}`;
+  const signature = base64Url(await hmac(body));
+  return `${body}.${signature}`;
+}
+
+export async function verifyParticipantPasswordSetupToken(token: string) {
+  const [header, payload, signature] = token.split(".");
+  if (!header || !payload || !signature) throw new Error("Invalid password setup token");
+
+  const expected = base64Url(await hmac(`${header}.${payload}`));
+  if (expected !== signature) throw new Error("Invalid password setup token signature");
+
+  const parsed = JSON.parse(fromBase64Url(payload)) as ParticipantPasswordSetupJwtPayload;
+  if (parsed.type !== "participant_password_setup") throw new Error("Invalid password setup token type");
+  if (parsed.exp <= Math.floor(Date.now() / 1000)) throw new Error("Password setup token expired");
   return parsed;
 }
 
@@ -159,6 +195,10 @@ export function getMagicLinkExpiry() {
 
 export function getPortalOrigin() {
   return process.env.OBI_PORTAL_ORIGIN ?? "http://localhost:3003";
+}
+
+export function getFormsAppOrigin() {
+  return process.env.OBI_CUSTOM_FORMS_APP_ORIGIN ?? "http://localhost:3000";
 }
 
 export function participantAuthMiddleware(): MiddlewareHandler {

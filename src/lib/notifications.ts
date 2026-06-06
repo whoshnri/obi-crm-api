@@ -1,5 +1,5 @@
 import { prisma } from "./prisma.js";
-import { redis } from "./redis.js";
+import { redis, withRedisFallback } from "./redis.js";
 
 export type NotificationType =
   | "event_deployed"
@@ -34,7 +34,7 @@ export async function addNotificationForAdmins(payload: Omit<Notification, "id" 
   for (const admin of admins) {
     const id = crypto.randomUUID();
     const notif: Notification = { id, ...payload, createdAt, isNew: true };
-    ops.push(redis.hset(adminNotificationsKey(admin.id), id, JSON.stringify(notif)));
+    ops.push(withRedisFallback(() => redis.hset(adminNotificationsKey(admin.id), id, JSON.stringify(notif)), 0));
   }
 
   await Promise.all(ops);
@@ -42,7 +42,7 @@ export async function addNotificationForAdmins(payload: Omit<Notification, "id" 
 }
 
 export async function getNotificationsForAdmin(adminId: string) {
-  const raw = await redis.hgetall(adminNotificationsKey(adminId));
+  const raw = await withRedisFallback(() => redis.hgetall(adminNotificationsKey(adminId)), {} as Record<string, string>);
   const items: Notification[] = Object.values(raw)
     .map((v) => {
       try {
@@ -59,9 +59,9 @@ export async function getNotificationsForAdmin(adminId: string) {
 
 export async function markAllNotificationsSeen(adminId: string) {
   const key = `notifications:lastseen:${adminId}`;
-  await redis.set(key, new Date().toISOString());
+  await withRedisFallback(() => redis.set(key, new Date().toISOString()), "OK");
 }
 
 export async function clearNotificationsForAdmin(adminId: string) {
-  await redis.del(adminNotificationsKey(adminId));
+  await withRedisFallback(() => redis.del(adminNotificationsKey(adminId)), 0);
 }

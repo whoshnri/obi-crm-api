@@ -1,6 +1,6 @@
 import { EventBaseType, EventStatus, Prisma, StepStatus } from "../generated/client.js";
 import { prisma } from "../lib/prisma.js";
-import { redis } from "../lib/redis.js";
+import { redis, withRedisFallback } from "../lib/redis.js";
 import { scheduleCronJob } from "./scheduler.js";
 import {
   EVENT_SCHEDULE_HASH,
@@ -138,7 +138,7 @@ async function processInvoiceEvent(eventId: string) {
   });
 
   if (failureCount === 0) {
-    await redis.hdel(EVENT_SCHEDULE_HASH, event.id);
+    await withRedisFallback(() => redis.hdel(EVENT_SCHEDULE_HASH, event.id), 0);
   }
 
   await sendAdminFeedback({
@@ -151,7 +151,7 @@ async function processInvoiceEvent(eventId: string) {
 
 export async function runSendInvoiceCronTick() {
   try {
-    const scheduledEvents = await redis.hgetall(EVENT_SCHEDULE_HASH);
+    const scheduledEvents = await withRedisFallback(() => redis.hgetall(EVENT_SCHEDULE_HASH), {} as Record<string, string>);
     const matchedEventIds = (Object.entries(scheduledEvents) as Array<[string, string]>)
       .filter(([, scheduledAt]) => isWithinScheduleWindow(scheduledAt))
       .map(([eventId]) => eventId);
@@ -161,12 +161,12 @@ export async function runSendInvoiceCronTick() {
         try {
           const event = await prisma.event.findUnique({ where: { id: eventId }, select: { baseType: true, status: true } });
           if (!event || event.baseType !== EventBaseType.send_invoice) {
-            await redis.hdel(EVENT_SCHEDULE_HASH, eventId);
+            await withRedisFallback(() => redis.hdel(EVENT_SCHEDULE_HASH, eventId), 0);
             return;
           }
 
           if (event.status !== EventStatus.pending) {
-            await redis.hdel(EVENT_SCHEDULE_HASH, eventId);
+            await withRedisFallback(() => redis.hdel(EVENT_SCHEDULE_HASH, eventId), 0);
             return;
           }
 

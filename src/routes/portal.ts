@@ -1,14 +1,18 @@
 import { Hono } from "hono";
+import { verify } from "argon2";
 import { z } from "zod";
-import { sha256 } from "../lib/auth.js";
+import type { Prisma } from "../generated/client.js";
+import { hashParticipantPassword, sha256 } from "../lib/auth.js";
+import { answersSchema } from "../lib/form-contract.js";
 import { handleRoute } from "../lib/http.js";
-import { prisma } from "../lib/prisma.js";
+import { prisma, retryDatabaseOperation } from "../lib/prisma.js";
 import {
   clearParticipantAccessCookie,
   clearParticipantRefreshCookie,
   createMagicLinkToken,
   createParticipantSession,
   getMagicLinkExpiry,
+  getFormsAppOrigin,
   getParticipantAccessCookie,
   getParticipantRefreshCookie,
   getPortalOrigin,
@@ -16,7 +20,9 @@ import {
   rotateParticipantRefreshSession,
   setParticipantAccessCookie,
   setParticipantRefreshCookie,
+  signParticipantPasswordSetupToken,
   signParticipantAccessToken,
+  verifyParticipantPasswordSetupToken,
   verifyParticipantAccessToken
 } from "../lib/participant-auth.js";
 import { sendEmail } from "../jobs/utils.js";
@@ -24,8 +30,54 @@ import { trackAnalyticsEvent } from "../lib/analytics.js";
 import { serializeParticipantForumThread } from "../lib/serializers.js";
 
 const requestLinkSchema = z.object({
+  email: z.string().email(),
+  app: z.enum(["portal", "forms"]).optional(),
+  nextPath: z
+    .string()
+    .optional()
+    .refine((value) => value === undefined || value.startsWith("/"), {
+      message: "nextPath must start with /"
+    })
+});
+
+const participantAuthOptionsSchema = z.object({
   email: z.string().email()
 });
+
+const participantLoginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1)
+});
+
+const participantSetPasswordSchema = z
+  .object({
+    token: z.string().min(1),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8)
+  })
+  .refine((input) => input.password === input.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"]
+  });
+
+const participantSettingsSchema = z.object({
+  name: z.string().trim().min(1, "Name is required"),
+  organisation: z.string().trim().max(200).optional().nullable(),
+  address: z.string().trim().max(500).optional().nullable(),
+  phone: z.string().trim().max(50).optional().nullable(),
+  socialLinks: z.array(z.string().trim().url("Enter valid links")).max(6).default([])
+});
+
+const participantChangePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Current password is required"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(8, "Confirm your new password")
+  })
+  .refine((input) => input.password === input.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"]
+  });
 
 const forumThreadSchema = z.object({
   title: z.string().min(1),
@@ -39,7 +91,10 @@ const forumReplySchema = z.object({
 });
 
 const requestResponseSchema = z.object({
-  content: z.record(z.string(), z.unknown())
+  content: z.record(z.string(), z.unknown()).optional(),
+  answers: answersSchema.optional()
+}).refine((input) => input.content || input.answers, {
+  message: "Response content is required"
 });
 
 const participantSelect = { id: true, name: true, email: true } as const;
@@ -58,16 +113,47 @@ type ParticipantAuthPayload = {
   type: "participant";
 };
 
+type ParticipantAuthRecord = {
+  id: string;
+  name: string;
+  email: string;
+  organisation: string | null;
+  address: string | null;
+  phone: string | null;
+  socialLinks: string[];
+  photoId: string | null;
+  password: string | null;
+};
+
 function getParticipantPayload(c: { get: (key: never) => unknown }) {
   return c.get("participant" as never) as ParticipantAuthPayload;
 }
 
-function serializeParticipant(participant: { id: string; name: string; email: string; organisation: string | null }) {
+function normalizeOptionalString(value?: string | null) {
+  if (value == null) return null;
+  const normalized = value.trim();
+  return normalized.length ? normalized : null;
+}
+
+function serializeParticipant(participant: {
+  id: string;
+  name: string;
+  email: string;
+  organisation: string | null;
+  address: string | null;
+  phone: string | null;
+  socialLinks: string[];
+  photoId: string | null;
+}) {
   return {
     id: participant.id,
     name: participant.name,
     email: participant.email,
-    organisation: participant.organisation
+    organisation: participant.organisation,
+    address: participant.address,
+    phone: participant.phone,
+    socialLinks: participant.socialLinks,
+    photoId: participant.photoId
   };
 }
 
@@ -83,12 +169,70 @@ function isUniqueConstraintError(error: unknown, field: string) {
   return Array.isArray(target) && target.includes(field);
 }
 
+async function verifyParticipantPassword(input: string, stored: string) {
+  if (stored.startsWith("$")) {
+    return verify(stored, input);
+  }
+  return input === stored;
+}
+
+async function findParticipantByEmail(email: string) {
+  return retryDatabaseOperation<ParticipantAuthRecord | null>(() =>
+    prisma.participant.findUnique({
+      where: { email }
+    }) as Promise<ParticipantAuthRecord | null>
+  );
+}
+
 export const portalRouter = new Hono()
+  .post("/auth/options", (c) =>
+    handleRoute(c, async () => {
+      const input = participantAuthOptionsSchema.parse(await c.req.json());
+      const participant = await findParticipantByEmail(input.email.trim().toLowerCase());
+      return {
+        method: participant?.password ? "password" : "magic_link"
+      } as const;
+    })
+  )
+  .post("/auth/login", (c) =>
+    handleRoute(c, async () => {
+      const input = participantLoginSchema.parse(await c.req.json());
+      const participant = await findParticipantByEmail(input.email.trim().toLowerCase());
+
+      if (!participant?.password) {
+        clearParticipantAccessCookie(c);
+        clearParticipantRefreshCookie(c);
+        return c.json({ error: "Use your sign-in link to continue." }, 401);
+      }
+
+      const passwordMatches = await verifyParticipantPassword(input.password, participant.password);
+      if (!passwordMatches) {
+        clearParticipantAccessCookie(c);
+        clearParticipantRefreshCookie(c);
+        return c.json({ error: "Invalid email or password" }, 401);
+      }
+
+      const accessToken = await signParticipantAccessToken(participant);
+      const { refreshToken } = await createParticipantSession(participant.id);
+      setParticipantAccessCookie(c, accessToken);
+      setParticipantRefreshCookie(c, refreshToken);
+
+      void trackAnalyticsEvent({
+        type: "portal_login",
+        participantId: participant.id,
+        payload: { source: "password" }
+      }).catch((error) => console.error("failed to track portal_login", error));
+
+      return {
+        participant: serializeParticipant(participant)
+      };
+    })
+  )
   .post("/auth/request-link", (c) =>
     handleRoute(c, async () => {
       const input = requestLinkSchema.parse(await c.req.json());
       const email = input.email.trim().toLowerCase();
-      const participant = await prisma.participant.findUnique({ where: { email } });
+      const participant = await findParticipantByEmail(email);
 
       if (!participant) {
         return { ok: true };
@@ -96,21 +240,29 @@ export const portalRouter = new Hono()
 
       const rawToken = createMagicLinkToken();
       const tokenHash = await sha256(rawToken);
-      await prisma.participantMagicLink.create({
-        data: {
-          participantId: participant.id,
-          tokenHash,
-          expiresAt: getMagicLinkExpiry()
-        }
-      });
+      await retryDatabaseOperation(() =>
+        prisma.participantMagicLink.create({
+          data: {
+            participantId: participant.id,
+            tokenHash,
+            expiresAt: getMagicLinkExpiry()
+          }
+        })
+      );
 
-      const verifyUrl = `${getPortalOrigin()}/auth/verify?token=${encodeURIComponent(rawToken)}`;
-      const subject = "Your OBI participant portal sign-in link";
+      const origin = input.app === "forms" ? getFormsAppOrigin() : getPortalOrigin();
+      const verifyUrl = new URL("/auth/verify", origin);
+      verifyUrl.searchParams.set("token", rawToken);
+      if (input.nextPath) {
+        verifyUrl.searchParams.set("next", input.nextPath);
+      }
+      const targetLabel = input.app === "forms" ? "OBI form" : "OBI participant portal";
+      const subject = `Your ${targetLabel} sign-in link`;
       const body = [
         `Hi ${participant.name},`,
         "",
-        "Use the link below to sign in to your participant portal:",
-        verifyUrl,
+        `Use the link below to sign in to your ${input.app === "forms" ? "form" : "participant portal"}:`,
+        verifyUrl.toString(),
         "",
         "This link expires in 30 minutes. If you did not request this, you can ignore this email."
       ].join("\n");
@@ -131,34 +283,72 @@ export const portalRouter = new Hono()
       if (!token) return c.json({ error: "Missing token" }, 400);
 
       const tokenHash = await sha256(token);
-      const magicLink = await prisma.participantMagicLink.findUnique({
-        where: { tokenHash },
-        include: { participant: true }
-      });
+      const magicLink = await retryDatabaseOperation(() =>
+        prisma.participantMagicLink.findUnique({
+          where: { tokenHash },
+          include: { participant: true }
+        })
+      );
 
       if (!magicLink || magicLink.usedAt || magicLink.expiresAt <= new Date()) {
         return c.json({ error: "Invalid or expired magic link" }, 401);
       }
 
-      await prisma.participantMagicLink.update({
-        where: { id: magicLink.id },
-        data: { usedAt: new Date() }
-      });
+      await retryDatabaseOperation(() =>
+        prisma.participantMagicLink.update({
+          where: { id: magicLink.id },
+          data: { usedAt: new Date() }
+        })
+      );
 
-      const accessToken = await signParticipantAccessToken(magicLink.participant);
-      const { refreshToken } = await createParticipantSession(magicLink.participant.id);
+      return {
+        participant: serializeParticipant(magicLink.participant),
+        requiresPasswordSetup: true,
+        setupToken: await signParticipantPasswordSetupToken(magicLink.participant)
+      };
+    })
+  )
+  .post("/auth/set-password", (c) =>
+    handleRoute(c, async () => {
+      const input = participantSetPasswordSchema.parse(await c.req.json());
+      const payload = await verifyParticipantPasswordSetupToken(input.token);
+      const participant = await retryDatabaseOperation(() =>
+        prisma.participant.findUnique({
+          where: { id: payload.sub }
+        })
+      );
+
+      if (!participant) {
+        return c.json({ error: "Participant not found" }, 404);
+      }
+
+      const password = await hashParticipantPassword(input.password);
+      await retryDatabaseOperation(() =>
+        prisma.$transaction([
+          prisma.participant.update({
+            where: { id: participant.id },
+            data: { password }
+          }),
+          prisma.participantSession.updateMany({
+            where: { participantId: participant.id, revokedAt: null },
+            data: { revokedAt: new Date() }
+          })
+        ])
+      );
+
+      const nextParticipant = { ...participant, password };
+      const accessToken = await signParticipantAccessToken(nextParticipant);
+      const { refreshToken } = await createParticipantSession(participant.id);
       setParticipantAccessCookie(c, accessToken);
       setParticipantRefreshCookie(c, refreshToken);
 
       void trackAnalyticsEvent({
         type: "portal_login",
-        participantId: magicLink.participant.id,
-        payload: { source: "magic_link" }
+        participantId: participant.id,
+        payload: { source: "password_reset" }
       }).catch((error) => console.error("failed to track portal_login", error));
 
-      return {
-        participant: serializeParticipant(magicLink.participant)
-      };
+      return { participant: serializeParticipant(participant) };
     })
   )
   .post("/auth/refresh", (c) =>
@@ -208,10 +398,69 @@ export const portalRouter = new Hono()
         return c.json({ error: "Invalid or expired access token" }, 401);
       }
 
-      const participant = await prisma.participant.findUnique({ where: { id: payload.sub } });
+      const participant = await retryDatabaseOperation(() =>
+        prisma.participant.findUnique({ where: { id: payload.sub } })
+      );
       if (!participant) return c.json({ error: "Participant not found" }, 401);
 
       return { participant: serializeParticipant(participant) };
+    })
+  )
+  .patch("/me", (c) =>
+    handleRoute(c, async () => {
+      const payload = getParticipantPayload(c);
+      const input = participantSettingsSchema.parse(await c.req.json());
+
+      const participant = await retryDatabaseOperation(() =>
+        prisma.participant.update({
+          where: { id: payload.sub },
+          data: {
+            name: input.name.trim(),
+            organisation: normalizeOptionalString(input.organisation),
+            address: normalizeOptionalString(input.address),
+            phone: normalizeOptionalString(input.phone),
+            socialLinks: input.socialLinks.map((link) => link.trim())
+          }
+        })
+      );
+
+      return { participant: serializeParticipant(participant) };
+    })
+  )
+  .post("/me/change-password", (c) =>
+    handleRoute(c, async () => {
+      const payload = getParticipantPayload(c);
+      const input = participantChangePasswordSchema.parse(await c.req.json());
+      const participant = await retryDatabaseOperation(() =>
+        prisma.participant.findUnique({
+          where: { id: payload.sub }
+        })
+      );
+
+      if (!participant) {
+        clearParticipantAccessCookie(c);
+        clearParticipantRefreshCookie(c);
+        return c.json({ error: "Participant not found" }, 404);
+      }
+
+      if (!participant.password) {
+        return c.json({ error: "Set a password from your sign-in link first." }, 400);
+      }
+
+      const passwordMatches = await verifyParticipantPassword(input.currentPassword, participant.password);
+      if (!passwordMatches) {
+        return c.json({ error: "Current password is incorrect" }, 401);
+      }
+
+      const password = await hashParticipantPassword(input.password);
+      await retryDatabaseOperation(() =>
+        prisma.participant.update({
+          where: { id: participant.id },
+          data: { password }
+        })
+      );
+
+      return { ok: true };
     })
   )
   .get("/programmes", (c) =>
@@ -316,7 +565,17 @@ export const portalRouter = new Hono()
             programmeId
           },
           include: {
-            response: true
+            response: true,
+            form: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+                description: true,
+                status: true,
+                sections: true
+              }
+            }
           },
           orderBy: { createdAt: "desc" }
         }),
@@ -365,6 +624,28 @@ export const portalRouter = new Hono()
           dueDate: request.dueDate,
           status: request.status,
           hasResponse: Boolean(request.response),
+          formId: request.formId,
+          linkUrl: request.linkUrl,
+          form: request.form
+            ? {
+                id: request.form.id,
+                name: request.form.name,
+                slug: request.form.slug,
+                description: request.form.description,
+                status: request.form.status,
+                sections: Array.isArray(request.form.sections) ? request.form.sections : []
+              }
+            : null,
+          response: request.response
+            ? {
+                id: request.response.id,
+                content:
+                  request.response.content && typeof request.response.content === "object" && !Array.isArray(request.response.content)
+                    ? request.response.content
+                    : {},
+                submittedAt: request.response.submittedAt
+              }
+            : null,
           createdAt: request.createdAt
         })),
         deliverables: deliverables.map((deliverable) => ({
@@ -372,11 +653,11 @@ export const portalRouter = new Hono()
           title: deliverable.title,
           description: deliverable.description,
           status: deliverable.status,
+          deliveryChannel: deliverable.deliveryChannel,
           resourceType: deliverable.resourceType,
           url: deliverable.url,
           scheduledAt: deliverable.scheduledAt,
-          deliveredAt: deliverable.deliveredAt,
-          acknowledgedAt: deliverable.acknowledgedAt
+          deliveredAt: deliverable.deliveredAt
         }))
       };
     })
@@ -690,15 +971,52 @@ export const portalRouter = new Hono()
       const input = requestResponseSchema.parse(await c.req.json());
 
       const request = await prisma.participantRequest.findFirst({
-        where: { id: requestId, participantId: payload.sub }
+        where: { id: requestId, participantId: payload.sub },
+        include: {
+          form: {
+            select: {
+              id: true,
+              programmeId: true,
+              cohortId: true
+            }
+          },
+          response: true
+        }
       });
       if (!request) return c.json({ error: "Request not found" }, 404);
+      if (request.formId && !request.form) return c.json({ error: "Linked form not found" }, 404);
+      if (request.formId && !input.answers) {
+        return c.json({ error: "This request requires a form submission." }, 400);
+      }
 
       const response = await prisma.$transaction(async (tx) => {
+        let content: Record<string, unknown>;
+
+        if (request.formId) {
+          const submission = await tx.formSubmission.create({
+            data: {
+              formId: request.formId,
+              respondentId: payload.sub,
+              answers: input.answers as Prisma.InputJsonValue,
+              metadata: {
+                source: "portal_request",
+                requestId
+              } as Prisma.InputJsonValue
+            }
+          });
+
+          content = {
+            type: "form_submission",
+            submissionId: submission.id
+          };
+        } else {
+          content = input.content ?? {};
+        }
+
         const saved = await tx.participantRequestResponse.upsert({
           where: { requestId },
-          create: { requestId, content: input.content as object },
-          update: { content: input.content as object, submittedAt: new Date() }
+          create: { requestId, content: content as Prisma.InputJsonValue },
+          update: { content: content as Prisma.InputJsonValue, submittedAt: new Date() }
         });
         await tx.participantRequest.update({
           where: { id: requestId },
@@ -724,37 +1042,6 @@ export const portalRouter = new Hono()
   )
   .patch("/deliverables/:deliverableId/acknowledge", (c) =>
     handleRoute(c, async () => {
-      const payload = getParticipantPayload(c);
-      const deliverableId = c.req.param("deliverableId");
-
-      const deliverable = await prisma.deliverable.findFirst({
-        where: {
-          id: deliverableId,
-          OR: [{ participantId: payload.sub }, { participantId: null }]
-        }
-      });
-      if (!deliverable) return c.json({ error: "Deliverable not found" }, 404);
-
-      const updated = await prisma.deliverable.update({
-        where: { id: deliverableId },
-        data: {
-          status: "acknowledged",
-          acknowledgedAt: new Date()
-        }
-      });
-
-      void trackAnalyticsEvent({
-        type: "deliverable_acknowledged",
-        participantId: payload.sub,
-        programmeId: deliverable.programmeId ?? undefined,
-        cohortId: deliverable.cohortId ?? undefined,
-        payload: { deliverableId }
-      }).catch((error) => console.error("failed to track deliverable_acknowledged", error));
-
-      return {
-        id: updated.id,
-        status: updated.status,
-        acknowledgedAt: updated.acknowledgedAt?.toISOString()
-      };
+      return c.json({ error: "Deliverable acknowledgement is no longer supported." }, 410);
     })
   );

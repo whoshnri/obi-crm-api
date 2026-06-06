@@ -1,3 +1,5 @@
 {
-  "buildCommand": "pnpx prisma generate"
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm install",
+  "buildCommand": "npx prisma generate"
 }

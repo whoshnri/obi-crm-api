@@ -1,6 +1,6 @@
 import type { Hono } from "hono";
 import { z } from "zod";
-import { DeliverableStatus, ParticipantRequestStatus, Prisma, ResourceType } from "../generated/client.js";
+import { DeliverableDeliveryChannel, DeliverableStatus, ParticipantRequestStatus, Prisma, ResourceType } from "../generated/client.js";
 import { handleRoute } from "../lib/http.js";
 import { prisma } from "../lib/prisma.js";
 import {
@@ -20,20 +20,62 @@ const milestoneSchema = z.object({
 
 const updateMilestoneSchema = milestoneSchema.partial();
 
-const createRequestSchema = z.object({
+const requestSchemaShape = {
   participantId: z.string().min(1).optional(),
   cohortId: z.string().min(1).optional(),
   title: z.string().min(1),
   description: z.string().optional().nullable(),
   dueDate: z.string().datetime().or(z.string().min(1)).optional().nullable(),
   formId: z.string().min(1).optional().nullable(),
+  linkUrl: z.string().url().optional().nullable(),
   status: z
     .enum(["pending", "in_progress", "submitted", "reviewed", "approved", "rejected"])
     .optional(),
   metadata: z.record(z.string(), z.unknown()).optional()
+} satisfies Parameters<typeof z.object>[0];
+
+function buildRequestMetadata(
+  input: z.infer<typeof createRequestSchema>,
+  scope:
+    | { type: "all" }
+    | { type: "cohort"; cohortId: string }
+    | { type: "participant"; participantId: string }
+) {
+  return {
+    ...(input.metadata ?? {}),
+    scope
+  } as Prisma.InputJsonValue;
+}
+
+const createRequestSchema = z.object(requestSchemaShape).superRefine((input, ctx) => {
+  if (input.formId && input.linkUrl) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Choose either a linked form or an external link, not both.",
+      path: ["formId"]
+    });
+  }
 });
 
-const updateRequestSchema = createRequestSchema.omit({ participantId: true, cohortId: true }).partial();
+const updateRequestSchema = z
+  .object({
+    title: requestSchemaShape.title.optional(),
+    description: requestSchemaShape.description.optional(),
+    dueDate: requestSchemaShape.dueDate.optional(),
+    formId: requestSchemaShape.formId.optional(),
+    linkUrl: requestSchemaShape.linkUrl.optional(),
+    status: requestSchemaShape.status.optional(),
+    metadata: requestSchemaShape.metadata.optional()
+  })
+  .superRefine((input, ctx) => {
+    if (input.formId && input.linkUrl) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Choose either a linked form or an external link, not both.",
+        path: ["formId"]
+      });
+    }
+  });
 
 const createDeliverableSchema = z.object({
   participantId: z.string().min(1).optional().nullable(),
@@ -44,7 +86,8 @@ const createDeliverableSchema = z.object({
     .enum(["link", "document", "video", "spreadsheet", "image", "other"])
     .optional(),
   url: z.string().optional().nullable(),
-  status: z.enum(["pending", "ready", "delivered", "acknowledged"]).optional(),
+  status: z.enum(["pending", "delivered"]).optional(),
+  deliveryChannel: z.enum(["email", "resource_folder"]).optional().nullable(),
   scheduledAt: z.string().datetime().or(z.string().min(1)).optional().nullable(),
   deliveredAt: z.string().datetime().or(z.string().min(1)).optional().nullable(),
   metadata: z.record(z.string(), z.unknown()).optional()
@@ -56,6 +99,42 @@ function parseDate(value: string | null | undefined) {
   if (value === undefined) return undefined;
   if (value === null) return null;
   return new Date(value);
+}
+
+function resolveDeliverableData(
+  input: z.infer<typeof createDeliverableSchema> | z.infer<typeof updateDeliverableSchema>,
+  existing?: {
+    status: DeliverableStatus;
+    deliveryChannel: DeliverableDeliveryChannel | null;
+    url: string | null;
+    deliveredAt: Date | null;
+  }
+) {
+  const nextStatus = (input.status as DeliverableStatus | undefined) ?? existing?.status ?? DeliverableStatus.pending;
+  const nextChannel =
+    input.deliveryChannel !== undefined
+      ? ((input.deliveryChannel ?? null) as DeliverableDeliveryChannel | null)
+      : (existing?.deliveryChannel ?? null);
+  const nextUrl = input.url !== undefined ? input.url ?? null : (existing?.url ?? null);
+
+  if (nextStatus === DeliverableStatus.delivered) {
+    if (!nextChannel) {
+      throw new Error("Select a delivery channel before marking this deliverable as delivered.");
+    }
+
+    if (nextChannel === DeliverableDeliveryChannel.resource_folder && !nextUrl) {
+      throw new Error("Add a resource URL before marking this deliverable as delivered.");
+    }
+  }
+
+  return {
+    status: nextStatus,
+    deliveryChannel: nextStatus === DeliverableStatus.delivered ? nextChannel : null,
+    deliveredAt:
+      nextStatus === DeliverableStatus.delivered
+        ? parseDate(input.deliveredAt ?? undefined) ?? existing?.deliveredAt ?? new Date()
+        : null
+  };
 }
 
 async function assertProgramme(programmeId: string) {
@@ -94,7 +173,7 @@ async function resolveRequestTargets(
 
 const requestInclude = {
   participant: { select: { id: true, name: true, email: true } },
-  form: { select: { id: true, name: true, slug: true } },
+  form: { select: { id: true, name: true, slug: true, description: true, status: true, sections: true } },
   response: true
 } as const;
 
@@ -233,8 +312,16 @@ export function registerProgrammeDeliveryRoutes(router: Hono) {
                 description: input.description ?? null,
                 dueDate: parseDate(input.dueDate ?? undefined) ?? null,
                 formId: input.formId ?? null,
+                linkUrl: input.linkUrl ?? null,
                 status: (input.status ?? "pending") as ParticipantRequestStatus,
-                metadata: (input.metadata ?? {}) as Prisma.InputJsonValue
+                metadata: buildRequestMetadata(
+                  input,
+                  input.participantId
+                    ? { type: "participant", participantId: input.participantId }
+                    : input.cohortId
+                      ? { type: "cohort", cohortId: input.cohortId }
+                      : { type: "all" }
+                )
               },
               include: requestInclude
             })
@@ -261,6 +348,7 @@ export function registerProgrammeDeliveryRoutes(router: Hono) {
             description: input.description,
             dueDate: input.dueDate !== undefined ? parseDate(input.dueDate) : undefined,
             formId: input.formId,
+            linkUrl: input.linkUrl,
             status: input.status as ParticipantRequestStatus | undefined,
             metadata: input.metadata as Prisma.InputJsonValue | undefined
           },
@@ -306,6 +394,7 @@ export function registerProgrammeDeliveryRoutes(router: Hono) {
         const programmeId = c.req.param("programmeId");
         if (!(await assertProgramme(programmeId))) return c.json({ error: "Programme not found" }, 404);
         const input = createDeliverableSchema.parse(await c.req.json());
+        const resolved = resolveDeliverableData(input);
 
         const deliverable = await prisma.deliverable.create({
           data: {
@@ -316,9 +405,10 @@ export function registerProgrammeDeliveryRoutes(router: Hono) {
             description: input.description ?? null,
             resourceType: (input.resourceType ?? "document") as ResourceType,
             url: input.url ?? null,
-            status: (input.status ?? "pending") as DeliverableStatus,
+            status: resolved.status,
+            deliveryChannel: resolved.deliveryChannel,
             scheduledAt: parseDate(input.scheduledAt ?? undefined) ?? null,
-            deliveredAt: parseDate(input.deliveredAt ?? undefined) ?? null,
+            deliveredAt: resolved.deliveredAt,
             metadata: (input.metadata ?? {}) as Prisma.InputJsonValue
           },
           include: {
@@ -338,6 +428,7 @@ export function registerProgrammeDeliveryRoutes(router: Hono) {
           where: { id: deliverableId, programmeId }
         });
         if (!existing) return c.json({ error: "Deliverable not found" }, 404);
+        const resolved = resolveDeliverableData(input, existing);
 
         const updated = await prisma.deliverable.update({
           where: { id: deliverableId },
@@ -348,9 +439,10 @@ export function registerProgrammeDeliveryRoutes(router: Hono) {
             description: input.description,
             resourceType: input.resourceType as ResourceType | undefined,
             url: input.url,
-            status: input.status as DeliverableStatus | undefined,
+            status: resolved.status,
+            deliveryChannel: resolved.deliveryChannel,
             scheduledAt: input.scheduledAt !== undefined ? parseDate(input.scheduledAt) : undefined,
-            deliveredAt: input.deliveredAt !== undefined ? parseDate(input.deliveredAt) : undefined,
+            deliveredAt: input.deliveredAt !== undefined || input.status !== undefined ? resolved.deliveredAt : undefined,
             metadata: input.metadata as Prisma.InputJsonValue | undefined
           },
           include: {
