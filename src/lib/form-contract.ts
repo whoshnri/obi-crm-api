@@ -133,7 +133,7 @@ export const formDefinitionSchema = z.object({
   slug: z.string().min(1).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   name: z.string().min(1),
   description: z.string().optional().nullable(),
-  status: z.enum(["draft", "published", "archived"]).default("draft"),
+  status: z.enum(["draft", "published", "archived"]).default("published"),
   sections: z.array(formSectionSchema).min(1)
 });
 

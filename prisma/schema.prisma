@@ -286,7 +286,7 @@ model Cohort {
   name                  String
   slug                  String                 @unique
   type                  CohortType             @default(open)
-  status                CohortStatus           @default(draft)
+  status                CohortStatus           @default(active)
   organisationId        String?
   logoUrl               String?
   description           String?
@@ -776,6 +776,9 @@ model Event {
   scheduledAt       DateTime
   status            EventStatus              @default(pending)
   config            Json
+  lastAttemptAt     DateTime?
+  attemptCount      Int                      @default(0)
+  executionMetadata Json                     @default("{}")
   createdAt         DateTime                 @default(now())
   programme           Programme                @relation(fields: [programmeId], references: [id], onDelete: Cascade)
   eventFlow           EventFlow?               @relation(fields: [eventFlowId], references: [id], onDelete: SetNull)
@@ -786,6 +789,7 @@ model Event {
   forms               Form[]
 
   @@index([cohortId])
+  @@index([status, scheduledAt])
 }
 
 model EventParticipantStatus {
@@ -811,7 +815,7 @@ model Form {
   slug        String           @unique
   name        String
   description String?
-  status      String           @default("draft")
+  status      String           @default("published")
   sections    Json
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
@@ -879,12 +883,20 @@ model ParticipantInvoice {
 }
 
 model EmailTemplate {
-  id          String    @id @default(cuid())
-  programmeId String
+  id          String     @id @default(cuid())
+  programmeId String?
   name        String
+  label       String?
+  description String?
   subject     String
   body        String
-  programme   Programme @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  fromName    String?
+  metadata    Json       @default("{}")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  programme   Programme? @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+
+  @@index([programmeId])
 }
 
 model Admin {
@@ -945,19 +957,20 @@ model AdminMagicLink {
 }
 
 model Opportunity {
-  id              String             @id @default(cuid())
-  name            String
-  email           String             @unique
-  organisation    String?
-  organisationId  String?
-  importanceScore Int                @default(0)
-  status          OpportunityStatus  @default(open)
-  notes           String?
-  metadata        Json               @default("{}")
-  events          OpportunityEvent[]
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
-  org             Organisation?      @relation("OrgOpportunities", fields: [organisationId], references: [id], onDelete: SetNull)
+  id               String             @id @default(cuid())
+  name             String
+  email            String             @unique
+  organisation     String?
+  organisationId   String?
+  importanceScore  Int                @default(0)
+  status           OpportunityStatus  @default(open)
+  notes            String?
+  metadata         Json               @default("{}")
+  pipelineAnchorAt DateTime?
+  events           OpportunityEvent[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  org              Organisation?      @relation("OrgOpportunities", fields: [organisationId], references: [id], onDelete: SetNull)
 
   @@index([organisationId])
 }
@@ -995,6 +1008,8 @@ model OpportunityEvent {
   name           String
   type           String                   @default("send_email")
   scheduledAt    DateTime
+  anchorAt       DateTime?
+  offsetDays     Int?
   status         OpportunityEventStatus   @default(pending)
   cronJobId      String                   @unique
   config         Json                     @default("{}")

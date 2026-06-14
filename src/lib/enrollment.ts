@@ -18,6 +18,15 @@ export async function enrollParticipant(params: {
   const participantMetadata = (params.metadata ?? {}) as Prisma.InputJsonValue;
 
   return prisma.$transaction(async (tx) => {
+    const organisationName = params.organisationId
+      ? (
+          await tx.organisation.findUnique({
+            where: { id: params.organisationId },
+            select: { name: true }
+          })
+        )?.name
+      : params.organisation;
+
     const existing = await tx.participant.findUnique({
       where: { email: normalizedEmail },
       select: { id: true, stripeCustomerId: true }
@@ -28,7 +37,7 @@ export async function enrollParticipant(params: {
       (await createStripeCustomerForParticipant({
         name: params.name,
         email: normalizedEmail,
-        organisation: params.organisation,
+        organisation: organisationName,
         phone: params.phone
       }));
 
@@ -37,7 +46,7 @@ export async function enrollParticipant(params: {
       create: {
         name: params.name,
         email: normalizedEmail,
-        organisation: params.organisation,
+        organisation: params.organisationId ? null : (params.organisation ?? null),
         phone: params.phone,
         address: params.address,
         notes: params.notes,
@@ -46,7 +55,7 @@ export async function enrollParticipant(params: {
       },
       update: {
         name: params.name,
-        organisation: params.organisation ?? undefined,
+        organisation: params.organisationId ? null : (params.organisation ?? undefined),
         phone: params.phone ?? undefined,
         address: params.address ?? undefined,
         notes: params.notes ?? undefined,
@@ -144,7 +153,8 @@ export async function enrollParticipant(params: {
         },
         create: {
           organisationId: params.organisationId,
-          participantId: participant.id
+          participantId: participant.id,
+          isPrimary: true
         },
         update: {}
       });

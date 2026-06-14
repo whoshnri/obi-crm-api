@@ -1,5 +1,4 @@
-import { startSendEmailCron } from "./sendEmailCron.js";
-import { startSendInvoiceCron } from "./sendInvoiceCron.js";
+import { reconcileScheduledEventsOnBoot } from "../lib/event-scheduler.js";
 
 let started = false;
 
@@ -7,8 +6,7 @@ export function startJobs() {
   if (started) return;
   started = true;
 
-  startSendEmailCron();
-  startSendInvoiceCron();
+  void reconcileScheduledEventsOnBoot();
 }
 
 startJobs();

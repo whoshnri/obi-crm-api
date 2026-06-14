@@ -1,8 +1,6 @@
 import type { Event, Prisma } from "@prisma/client";
+import { sendAppScriptAuthEmail } from "../lib/email/app-script.js";
 import { prisma } from "../lib/prisma.js";
-
-export const EVENT_SCHEDULE_HASH = "event_schedule";
-export const FIFTEEN_MINUTES_MS = 15 * 60 * 1000;
 
 export type EventConfigRecord = Record<string, unknown>;
 
@@ -12,12 +10,6 @@ export function isRecord(value: unknown): value is EventConfigRecord {
 
 export function parseEventConfig(config: Prisma.JsonValue): EventConfigRecord {
   return isRecord(config) ? config : {};
-}
-
-export function isWithinScheduleWindow(isoTimestamp: string, now = new Date()) {
-  const scheduledTime = new Date(isoTimestamp).getTime();
-  if (Number.isNaN(scheduledTime)) return false;
-  return Math.abs(scheduledTime - now.getTime()) <= FIFTEEN_MINUTES_MS;
 }
 
 export function getStringConfig(config: EventConfigRecord, key: string) {
@@ -44,8 +36,17 @@ export function getLineItems(config: EventConfigRecord) {
     .filter((item) => item.amount > 0);
 }
 
-export async function sendEmail(to: string, subject: string, body: string) {
-  console.log("[email:placeholder]", JSON.stringify({ to, subject, bodyLength: body.length }));
+export async function sendEmail(to: string, subject: string, body: string, fromName?: string) {
+  try {
+    await sendAppScriptAuthEmail({ to, subject, body, fromName });
+  } catch (error) {
+    console.log("[email:auth:placeholder]", JSON.stringify({
+      to,
+      subject,
+      bodyLength: body.length,
+      error: error instanceof Error ? error.message : String(error)
+    }));
+  }
 }
 
 export async function sendAdminFeedback(input: {
@@ -53,6 +54,7 @@ export async function sendAdminFeedback(input: {
   total: number;
   successCount: number;
   failureCount: number;
+  errorMessage?: string;
 }) {
   const admins = await prisma.admin.findMany({
     where: { notificationsEnabled: true },
@@ -60,18 +62,24 @@ export async function sendAdminFeedback(input: {
   });
 
   const link = `/programmes/${input.event.programmeId}/events/${input.event.id}/status`;
+  const lines = [
+    `Event: ${input.event.name}`,
+    `Total participants: ${input.total}`,
+    `Success count: ${input.successCount}`,
+    `Failure count: ${input.failureCount}`,
+    `Status: ${link}`
+  ];
+
+  if (input.errorMessage) {
+    lines.push(`Error: ${input.errorMessage}`);
+  }
+
   await Promise.all(
     admins.map((admin) =>
       sendEmail(
         admin.email,
         `Event completed: ${input.event.name}`,
-        [
-          `Event: ${input.event.name}`,
-          `Total participants: ${input.total}`,
-          `Success count: ${input.successCount}`,
-          `Failure count: ${input.failureCount}`,
-          `Status: ${link}`
-        ].join("\n")
+        lines.join("\n")
       )
     )
   );

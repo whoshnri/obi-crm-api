@@ -132,6 +132,7 @@ export const organisationsRouter = new Hono()
         where: { organisationId: id },
         orderBy: { createdAt: "desc" },
         include: {
+          programmes: { include: { programme: true } },
           _count: {
             select: { participants: true, programmes: true, registrationPages: true }
           }

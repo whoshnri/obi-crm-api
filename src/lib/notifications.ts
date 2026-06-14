@@ -26,6 +26,10 @@ function adminNotificationsKey(adminId: string) {
   return `notifications:${adminId}`;
 }
 
+function notificationDedupeKey(dedupeKey: string) {
+  return `notifications:dedupe:${dedupeKey}`;
+}
+
 export async function addNotificationForAdmins(payload: Omit<Notification, "id" | "createdAt">) {
   const admins = await prisma.admin.findMany({ where: { notificationsEnabled: true }, select: { id: true } });
   const createdAt = new Date().toISOString();
@@ -38,6 +42,26 @@ export async function addNotificationForAdmins(payload: Omit<Notification, "id" 
   }
 
   await Promise.all(ops);
+  return true;
+}
+
+export async function addNotificationForAdminsDeduped(
+  payload: Omit<Notification, "id" | "createdAt">,
+  dedupeKey: string,
+  ttlSeconds = 300
+) {
+  const key = notificationDedupeKey(dedupeKey);
+  const existing = await withRedisFallback(() => redis.get(key), null);
+  if (existing) return false;
+
+  await addNotificationForAdmins({
+    ...payload,
+    meta: {
+      ...(payload.meta ?? {}),
+      dedupeKey
+    }
+  });
+  await withRedisFallback(() => redis.set(key, new Date().toISOString(), "EX", ttlSeconds), "OK");
   return true;
 }
 

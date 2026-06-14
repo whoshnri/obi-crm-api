@@ -2,10 +2,9 @@ import { Hono } from "hono";
 import { EventBaseType, EventStatus } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
-import { redis, withRedisFallback } from "../lib/redis.js";
 import { handleRoute } from "../lib/http.js";
 import { serializeFormSubmission, serializeProgramme } from "../lib/serializers.js";
-import { EVENT_SCHEDULE_HASH } from "../jobs/utils.js";
+import { cancelEventCron, findDeployableEvents, resetFailedEventsForDeploy, scheduleDeployedEvents, scheduleOnFlowSave } from "../lib/event-scheduler.js";
 import { addNotificationForAdmins } from "../lib/notifications.js";
 import {
   createProgrammeSchema,
@@ -330,6 +329,29 @@ const programmesApp = new Hono()
         id: retainedEventIds[index]
       }));
 
+      const eventsBeingRemoved = await prisma.event.findMany({
+        where: {
+          programmeId: id,
+          id: { notIn: retainedEventIds },
+        },
+        select: { id: true },
+      });
+      const retainedEventsToReschedule = await prisma.event.findMany({
+        where: {
+          programmeId: id,
+          id: { in: retainedEventIds },
+          status: { not: EventStatus.completed },
+        },
+        select: { id: true },
+      });
+      const cronIdsToCancel = [
+        ...new Set([
+          ...retainedEventsToReschedule.map((event) => event.id),
+          ...eventsBeingRemoved.map((event) => event.id),
+        ]),
+      ];
+      await Promise.all(cronIdsToCancel.map((eventId) => cancelEventCron(eventId)));
+
       await prisma.event.deleteMany({
         where: {
           programmeId: id,
@@ -350,14 +372,14 @@ const programmesApp = new Hono()
             upsert: {
               create: {
                 flow: remappedFlow,
-                deployedAt: null
+                deployedAt: new Date(),
               },
               update: {
                 flow: remappedFlow,
-                deployedAt: null
-              }
-            }
-          }
+                deployedAt: new Date(),
+              },
+            },
+          },
         },
         include: {
           eventFlow: {
@@ -382,7 +404,7 @@ const programmesApp = new Hono()
               ${eventFlowId},
               ${(event.baseType as EventBaseType)}::"EventBaseType",
               ${new Date(event.scheduledAt)},
-              ${(event.status ?? "pending") as EventStatus}::"EventStatus",
+              ${EventStatus.pending}::"EventStatus",
               ${JSON.stringify(event.config ?? {})}::jsonb
             )`)
           )}
@@ -392,7 +414,22 @@ const programmesApp = new Hono()
             "eventFlowId" = EXCLUDED."eventFlowId",
             "baseType" = EXCLUDED."baseType",
             "scheduledAt" = EXCLUDED."scheduledAt",
-            "status" = EXCLUDED."status",
+            "status" = CASE
+              WHEN "Event"."status" = ${EventStatus.completed}::"EventStatus" THEN "Event"."status"
+              ELSE ${EventStatus.pending}::"EventStatus"
+            END,
+            "attemptCount" = CASE
+              WHEN "Event"."status" = ${EventStatus.completed}::"EventStatus" THEN "Event"."attemptCount"
+              ELSE 0
+            END,
+            "lastAttemptAt" = CASE
+              WHEN "Event"."status" = ${EventStatus.completed}::"EventStatus" THEN "Event"."lastAttemptAt"
+              ELSE NULL
+            END,
+            "executionMetadata" = CASE
+              WHEN "Event"."status" = ${EventStatus.completed}::"EventStatus" THEN "Event"."executionMetadata"
+              ELSE '{}'::jsonb
+            END,
             "config" = EXCLUDED."config"
         `;
       }
@@ -409,25 +446,33 @@ const programmesApp = new Hono()
         }
       });
 
-      return serializeProgramme(programme ?? flowProgramme);
+      const schedule = await scheduleOnFlowSave({ programmeId: id });
+
+      return {
+        programme: serializeProgramme(programme ?? flowProgramme),
+        schedule,
+      };
     })
   )
   .post("/:id/deploy", (c) =>
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
-      const events = await prisma.event.findMany({
-        where: { programmeId: id, eventFlow: { programmeId: id }, status: "pending" },
-        select: { id: true, scheduledAt: true }
-      });
+      const events = await findDeployableEvents({ programmeId: id });
+      await resetFailedEventsForDeploy(events);
 
-      if (events.length > 0) {
-        await withRedisFallback(
-          () =>
-            redis.hset(
-              EVENT_SCHEDULE_HASH,
-              Object.fromEntries(events.map((event) => [event.id, event.scheduledAt.toISOString()]))
-            ),
-          0
+      const scheduleResult = await scheduleDeployedEvents(
+        events.map((event) => ({ id: event.id, scheduledAt: event.scheduledAt })),
+        { checkAttachments: true }
+      );
+
+      if (scheduleResult.validationIssues.some((issue) => issue.errors.length > 0)) {
+        return c.json(
+          {
+            ok: false,
+            error: "Deploy validation failed",
+            ...scheduleResult
+          },
+          400
         );
       }
 
@@ -452,14 +497,28 @@ const programmesApp = new Hono()
         await addNotificationForAdmins({
           type: "event_deployed",
           title: "Event flow deployed",
-          message: `Deployed ${events.length} pending events for programme ${id}`,
-          meta: { programmeId: id, scheduled: events.length }
+          message: `Deployed ${scheduleResult.scheduled} pending events for programme ${id}`,
+          meta: {
+            programmeId: id,
+            scheduled: scheduleResult.scheduled,
+            immediate: scheduleResult.immediate,
+            skipped: scheduleResult.skipped,
+            nextEventAt: scheduleResult.nextEventAt,
+            warnings: scheduleResult.validationIssues.flatMap((issue) => issue.warnings)
+          }
         });
       } catch (err) {
         console.error("failed to add deploy notification", err);
       }
 
-      return { ok: true, scheduled: events.length };
+      return {
+        ok: true,
+        scheduled: scheduleResult.scheduled,
+        immediate: scheduleResult.immediate,
+        skipped: scheduleResult.skipped,
+        nextEventAt: scheduleResult.nextEventAt,
+        validationIssues: scheduleResult.validationIssues
+      };
     })
   );
 

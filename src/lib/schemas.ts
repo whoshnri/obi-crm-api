@@ -83,6 +83,8 @@ export const submitFormEntrySchema = z.object({
 
 export const createParticipantSchema = z.object({
   programmeId: z.string().min(1).optional(),
+  cohortId: z.string().min(1).optional(),
+  organisationId: z.string().min(1).optional(),
   name: z.string().min(1),
   email: z.string().email(),
   password: z.string().min(8).optional(),
@@ -131,11 +133,46 @@ export const updateInvoiceSchema = invoiceInputSchema
   .omit({ programmeId: true, participantId: true, programmeParticipantId: true })
   .partial();
 
+export const emailTemplateMetadataSchema = z.object({
+  attachments: z
+    .array(
+      z.object({
+        url: z.string().url(),
+        filename: z.string().min(1),
+        mimeType: z.string().optional()
+      })
+    )
+    .optional(),
+  variables: z
+    .array(
+      z.object({
+        key: z.string().min(1),
+        label: z.string().optional(),
+        description: z.string().optional()
+      })
+    )
+    .optional(),
+  buttons: z
+    .array(
+      z.object({
+        id: z.string().optional(),
+        label: z.string().min(1),
+        url: z.string().min(1),
+        style: z.enum(["button", "link"]).optional()
+      })
+    )
+    .optional()
+});
+
 export const createEmailTemplateSchema = z.object({
-  programmeId: z.string().min(1),
+  programmeId: z.string().min(1).optional(),
   name: z.string().min(1),
+  label: z.string().optional(),
+  description: z.string().optional(),
   subject: z.string(),
-  body: z.string()
+  body: z.string(),
+  fromName: z.string().optional(),
+  metadata: emailTemplateMetadataSchema.optional()
 });
 
 export const updateEmailTemplateSchema = createEmailTemplateSchema.omit({ programmeId: true }).partial();

@@ -1,14 +1,36 @@
 import { Hono } from "hono";
 import { EventBaseType, EventStatus, Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
-import { redis, withRedisFallback } from "../lib/redis.js";
 import { handleRoute } from "../lib/http.js";
 import { serializeEvent } from "../lib/serializers.js";
-import { EVENT_SCHEDULE_HASH } from "../jobs/utils.js";
-import { runSendEmailEventNow } from "../jobs/sendEmailCron.js";
-import { runSendInvoiceEventNow } from "../jobs/sendInvoiceCron.js";
+import { cancelEventCron, runEventNow, scheduleEventCron } from "../lib/event-scheduler.js";
+import { sendEventTestEmail, loadEmailTemplateForEvent } from "../lib/email/send-batch.js";
+import { getAuthenticatedAdmin } from "../lib/auth.js";
 import { addNotificationForAdmins } from "../lib/notifications.js";
 import { createEventSchema, eventsQuerySchema, idParamSchema, updateEventSchema } from "../lib/schemas.js";
+
+async function isEventInDeployedFlow(event: {
+  eventFlowId: string | null;
+  cohortEventFlowId: string | null;
+}) {
+  if (event.eventFlowId) {
+    const flow = await prisma.eventFlow.findFirst({
+      where: { id: event.eventFlowId, deployedAt: { not: null } },
+      select: { id: true },
+    });
+    return Boolean(flow);
+  }
+
+  if (event.cohortEventFlowId) {
+    const flow = await prisma.cohortEventFlow.findFirst({
+      where: { id: event.cohortEventFlowId, deployedAt: { not: null } },
+      select: { id: true },
+    });
+    return Boolean(flow);
+  }
+
+  return false;
+}
 
 export const eventsRouter = new Hono()
   .get("/", (c) =>
@@ -78,6 +100,9 @@ export const eventsRouter = new Hono()
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
       const input = updateEventSchema.parse(await c.req.json());
+      const existing = await prisma.event.findUnique({ where: { id } });
+      if (!existing) throw new Error("Event not found");
+
       const event = await prisma.event.update({
         where: { id },
         data: {
@@ -88,12 +113,19 @@ export const eventsRouter = new Hono()
           config: input.config as Prisma.InputJsonValue | undefined
         }
       });
+
+      if (event.status === EventStatus.pending && (await isEventInDeployedFlow(existing))) {
+        await cancelEventCron(id);
+        await scheduleEventCron({ id: event.id, scheduledAt: event.scheduledAt });
+      }
+
       return serializeEvent(event);
     })
   )
   .delete("/:id", (c) =>
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
+      await cancelEventCron(id);
       await prisma.event.delete({ where: { id } });
       return { ok: true };
     })
@@ -103,44 +135,55 @@ export const eventsRouter = new Hono()
       const { id } = idParamSchema.parse(c.req.param());
       const event = await prisma.event.findUnique({ where: { id } });
       if (!event) throw new Error("Event not found");
-
-      const updated = await prisma.event.update({
-        where: { id },
-        data: { status: EventStatus.pending }
-      });
-
-      await withRedisFallback(() => redis.hset(EVENT_SCHEDULE_HASH, { [id]: new Date().toISOString() }), 0);
-
-      if (event.baseType === EventBaseType.send_email) {
-        await runSendEmailEventNow(id);
+      if (event.status === "completed") {
+        return c.json({ error: "Completed events cannot be run again" }, 400);
       }
 
-      if (event.baseType === EventBaseType.send_invoice) {
-        await runSendInvoiceEventNow(id);
-      }
+      await runEventNow(id);
 
       const finalEvent = await prisma.event.findUnique({ where: { id } });
 
-      // create notifications for admins
       try {
-        const status = (finalEvent ?? updated).status;
+        const status = finalEvent?.status;
         const notifType = status === "completed" ? "event_completed" : status === "failed" ? "event_failed" : undefined;
-        if (notifType) {
+        if (notifType && finalEvent) {
           await addNotificationForAdmins({
-            type: notifType as any,
+            type: notifType as "event_completed" | "event_failed",
             title: `Event ${status}`,
-            message: `Event ${(finalEvent ?? updated).name} ${status}`,
-            meta: { eventId: id, programmeId: (finalEvent ?? updated).programmeId }
+            message: `Event ${finalEvent.name} ${status}`,
+            meta: { eventId: id, programmeId: finalEvent.programmeId }
           });
         }
       } catch (err) {
-        // best-effort; don't block response
         console.error("failed to add notification", err);
       }
 
-      const result = serializeEvent(finalEvent ?? updated);
-      // inform client that we added a notification to the cache
-      // (small non-sensitive flag)
+      const result = serializeEvent(finalEvent ?? event);
       return { ...result, isNewNotif: true };
+    })
+  )
+  .post("/:id/test-send", (c) =>
+    handleRoute(c, async () => {
+      const { id } = idParamSchema.parse(c.req.param());
+      const admin = getAuthenticatedAdmin(c);
+
+      const event = await prisma.event.findUnique({
+        where: { id },
+        include: { programme: true }
+      });
+      if (!event) throw new Error("Event not found");
+      if (event.baseType !== EventBaseType.send_email) {
+        throw new Error("Only email events support test send.");
+      }
+
+      const template = await loadEmailTemplateForEvent(event);
+      await sendEventTestEmail({
+        event,
+        template,
+        to: admin.email,
+        toName: admin.email
+      });
+
+      return { ok: true, sentTo: admin.email };
     })
   );

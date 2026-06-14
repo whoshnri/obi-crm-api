@@ -28,6 +28,7 @@ export function serializeEvent(event: {
   eventFlowId?: string | null;
   cohortEventFlowId?: string | null;
   cohortId?: string | null;
+  executionMetadata?: Prisma.JsonValue;
 }) {
   return {
     id: event.id,
@@ -38,6 +39,7 @@ export function serializeEvent(event: {
     scheduledAt: event.scheduledAt.toISOString(),
     createdAt: event.createdAt.toISOString(),
     config: isRecord(event.config) ? event.config : {},
+    executionMetadata: isRecord(event.executionMetadata) ? event.executionMetadata : undefined,
     eventFlowId: event.eventFlowId ?? undefined,
     cohortEventFlowId: event.cohortEventFlowId ?? undefined,
     cohortId: event.cohortId ?? undefined
@@ -62,14 +64,71 @@ export function serializeBaseParticipant(participant: Participant) {
   };
 }
 
+type ParticipantOrganisationLink = {
+  isPrimary: boolean;
+  organisation: Organisation;
+};
+
+export function resolveLinkedOrganisation(
+  participant: Participant & { organisations?: ParticipantOrganisationLink[] },
+  cohort?: { organisation?: Organisation | null } | null,
+) {
+  const links = participant.organisations ?? [];
+  const primary = links.find((link) => link.isPrimary) ?? links[0];
+  if (primary?.organisation) {
+    return serializeOrganisationSummary(primary.organisation);
+  }
+  if (cohort?.organisation) {
+    return serializeOrganisationSummary(cohort.organisation);
+  }
+  return undefined;
+}
+
+export function serializeParticipantEnrollmentSummary(
+  enrollment: ProgrammeParticipant & { programme: Programme },
+) {
+  return {
+    id: enrollment.id,
+    programmeId: enrollment.programmeId,
+    paymentStatus: enrollment.paymentStatus,
+    enrolledAt: enrollment.createdAt.toISOString(),
+    programme: {
+      id: enrollment.programme.id,
+      name: enrollment.programme.name,
+      startDate: enrollment.programme.startDate.toISOString(),
+    },
+  };
+}
+
+export function serializeParticipantDirectory(
+  participant: Participant & {
+    organisations?: ParticipantOrganisationLink[];
+    programmes?: Array<ProgrammeParticipant & { programme: Programme }>;
+  },
+) {
+  const enrollments = participant.programmes ?? [];
+
+  return {
+    ...serializeBaseParticipant(participant),
+    linkedOrganisation: resolveLinkedOrganisation(participant),
+    programmeIds: enrollments.map((enrollment) => enrollment.programmeId),
+    enrollments: enrollments.map(serializeParticipantEnrollmentSummary),
+  };
+}
+
 export function serializeProgramParticipant(programParticipant: ProgrammeParticipant & {
-  participant: Participant;
+  participant: Participant & { organisations?: ParticipantOrganisationLink[] };
   programme: Programme;
+  cohort?: { organisation?: Organisation | null } | null;
   invoice?: ParticipantInvoice | null;
-  progress?: Array<{ completionPct: number }>;
+  progress?: Array<{ completionPct: number; programmeId?: string }>;
 }) {
   const baseParticipant = serializeBaseParticipant(programParticipant.participant);
   const progressRecord = programParticipant.progress?.[0];
+  const linkedOrganisation = resolveLinkedOrganisation(
+    programParticipant.participant,
+    programParticipant.cohort,
+  );
 
   return {
     ...baseParticipant,
@@ -86,6 +145,7 @@ export function serializeProgramParticipant(programParticipant: ProgrammePartici
     completionPct: progressRecord?.completionPct,
     progressPct: progressRecord?.completionPct,
     metadata: isRecord(programParticipant.metadata) ? programParticipant.metadata : {},
+    linkedOrganisation,
     participant: baseParticipant,
     programme: serializeProgramme(programParticipant.programme),
     invoice: programParticipant.invoice ? serializeInvoice(programParticipant.invoice) : undefined
@@ -212,6 +272,7 @@ export function serializeForm(form: {
   sections: Prisma.JsonValue;
   createdAt: Date;
   updatedAt: Date;
+  _count?: { submissions: number };
 }) {
   return {
     id: form.id,
@@ -222,6 +283,7 @@ export function serializeForm(form: {
     description: form.description ?? undefined,
     status: form.status,
     sections: Array.isArray(form.sections) ? form.sections : [],
+    submissionsCount: form._count?.submissions ?? 0,
     createdAt: form.createdAt.toISOString(),
     updatedAt: form.updatedAt.toISOString()
   };

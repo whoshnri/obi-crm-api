@@ -1,6 +1,16 @@
 import type { Context } from "hono";
 import { ZodError } from "zod";
 
+export class HttpError extends Error {
+  readonly status: number;
+
+  constructor(message: string, status = 400) {
+    super(message);
+    this.name = "HttpError";
+    this.status = status;
+  }
+}
+
 type ApiErrorLogEntry = {
   timestamp: string;
   method: string;
@@ -51,6 +61,7 @@ function getErrorCode(error: unknown) {
 }
 
 function getHttpStatus(error: unknown) {
+  if (error instanceof HttpError) return error.status;
   const code = getErrorCode(error);
   if (code === "P2025") return 404;
   if (code === "P2002") return 409;
@@ -114,6 +125,14 @@ export function logApiError(c: Context, status: number, error: unknown, issues?:
   console.error("[api:error]", JSON.stringify(entry, (_key, value) => (value === undefined ? undefined : value)));
 }
 
+function getClientErrorMessage(error: unknown, status: number) {
+  if (error instanceof HttpError) return error.message;
+  if (status === 404) return "Not found";
+  if (status === 409) return "Conflict";
+  if (status === 503) return "Database unavailable";
+  return "Unexpected API error";
+}
+
 export async function handleRoute<T>(c: Context, fn: () => Promise<T> | T) {
   try {
     const data = await fn();
@@ -128,20 +147,8 @@ export async function handleRoute<T>(c: Context, fn: () => Promise<T> | T) {
       return c.json({ error: "Invalid request", issues: error.issues }, 400);
     }
 
-    const status = getHttpStatus(error);
+    const status = getHttpStatus(error) as 400 | 404 | 409 | 500 | 503;
     logApiError(c, status, error);
-    return c.json(
-      {
-        error:
-          status === 404
-            ? "Not found"
-            : status === 409
-              ? "Conflict"
-              : status === 503
-                ? "Database unavailable"
-                : "Unexpected API error"
-      },
-      status
-    );
+    return c.json({ error: getClientErrorMessage(error, status) }, status);
   }
 }

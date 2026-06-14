@@ -41,6 +41,18 @@ type PasswordSetupJwtPayload = {
   iat: number;
 };
 
+export type AdminContext = {
+  sub: string;
+  email: string;
+  role: string;
+};
+
+export function getAuthenticatedAdmin(c: Context) {
+  const admin = (c as Context<{ Variables: { admin: AdminContext } }>).get("admin");
+  if (!admin?.email) throw new Error("Authenticated admin email is required.");
+  return admin;
+}
+
 function getSecret() {
   const secret = process.env.OBI_JWT_SECRET ?? process.env.JWT_SECRET;
   if (!secret || secret.length < 32) {

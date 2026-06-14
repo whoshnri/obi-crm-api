@@ -1,10 +1,10 @@
 import { Hono } from "hono";
 import { EventBaseType, EventStatus, Prisma } from "@prisma/client";
 import { enrollParticipant } from "../lib/enrollment.js";
+import { ensureCohortParticipantRelations } from "../lib/cohort-links.js";
 import { handleRoute } from "../lib/http.js";
 import { prisma } from "../lib/prisma.js";
-import { redis, withRedisFallback } from "../lib/redis.js";
-import { EVENT_SCHEDULE_HASH } from "../jobs/utils.js";
+import { cancelEventCron, findDeployableEvents, resetFailedEventsForDeploy, scheduleDeployedEvents, scheduleOnFlowSave } from "../lib/event-scheduler.js";
 import { addNotificationForAdmins } from "../lib/notifications.js";
 import {
   serializeBaseParticipant,
@@ -83,7 +83,7 @@ export const cohortsRouter = new Hono()
           name: input.name,
           slug,
           type: input.type,
-          status: input.status,
+          status: input.status ?? "active",
           organisationId: input.organisationId ?? null,
           logoUrl: input.logoUrl ?? null,
           description: input.description ?? null,
@@ -239,36 +239,23 @@ export const cohortsRouter = new Hono()
           where: { id: input.participantId }
         });
 
-        const cohortParticipant = await prisma.cohortParticipant.upsert({
-          where: {
-            cohortId_participantId: {
-              cohortId,
-              participantId: participant.id
-            }
-          },
-          create: {
+        const cohortParticipant = await prisma.$transaction(async (tx) => {
+          await ensureCohortParticipantRelations(tx, {
             cohortId,
-            participantId: participant.id
-          },
-          update: {},
-          include: { participant: true }
-        });
-
-        if (cohort.organisationId) {
-          await prisma.organisationParticipant.upsert({
-            where: {
-              organisationId_participantId: {
-                organisationId: cohort.organisationId,
-                participantId: participant.id
-              }
-            },
-            create: {
-              organisationId: cohort.organisationId,
-              participantId: participant.id
-            },
-            update: {}
+            participantId: participant.id,
+            programmeId: input.programmeId,
           });
-        }
+
+          return tx.cohortParticipant.findUniqueOrThrow({
+            where: {
+              cohortId_participantId: {
+                cohortId,
+                participantId: participant.id,
+              },
+            },
+            include: { participant: true },
+          });
+        });
 
         return {
           id: cohortParticipant.id,
@@ -400,6 +387,29 @@ export const cohortsRouter = new Hono()
         id: retainedEventIds[index]
       }));
 
+      const eventsBeingRemoved = await prisma.event.findMany({
+        where: {
+          cohortId: id,
+          id: { notIn: retainedEventIds },
+        },
+        select: { id: true },
+      });
+      const retainedEventsToReschedule = await prisma.event.findMany({
+        where: {
+          cohortId: id,
+          id: { in: retainedEventIds },
+          status: { not: EventStatus.completed },
+        },
+        select: { id: true },
+      });
+      const cronIdsToCancel = [
+        ...new Set([
+          ...retainedEventsToReschedule.map((event) => event.id),
+          ...eventsBeingRemoved.map((event) => event.id),
+        ]),
+      ];
+      await Promise.all(cronIdsToCancel.map((eventId) => cancelEventCron(eventId)));
+
       await prisma.event.deleteMany({
         where: {
           cohortId: id,
@@ -418,12 +428,12 @@ export const cohortsRouter = new Hono()
         create: {
           cohortId: id,
           flow: remappedFlow,
-          deployedAt: null
+          deployedAt: new Date(),
         },
         update: {
           flow: remappedFlow,
-          deployedAt: null
-        }
+          deployedAt: new Date(),
+        },
       });
 
       const cohortEventFlowId = cohortEventFlow.id;
@@ -440,7 +450,7 @@ export const cohortsRouter = new Hono()
               ${id},
               ${(event.baseType as EventBaseType)}::"EventBaseType",
               ${new Date(event.scheduledAt)},
-              ${(event.status ?? "pending") as EventStatus}::"EventStatus",
+              ${EventStatus.pending}::"EventStatus",
               ${JSON.stringify(event.config ?? {})}::jsonb
             )`)
           )}
@@ -451,7 +461,22 @@ export const cohortsRouter = new Hono()
             "cohortId" = EXCLUDED."cohortId",
             "baseType" = EXCLUDED."baseType",
             "scheduledAt" = EXCLUDED."scheduledAt",
-            "status" = EXCLUDED."status",
+            "status" = CASE
+              WHEN "Event"."status" = ${EventStatus.completed}::"EventStatus" THEN "Event"."status"
+              ELSE ${EventStatus.pending}::"EventStatus"
+            END,
+            "attemptCount" = CASE
+              WHEN "Event"."status" = ${EventStatus.completed}::"EventStatus" THEN "Event"."attemptCount"
+              ELSE 0
+            END,
+            "lastAttemptAt" = CASE
+              WHEN "Event"."status" = ${EventStatus.completed}::"EventStatus" THEN "Event"."lastAttemptAt"
+              ELSE NULL
+            END,
+            "executionMetadata" = CASE
+              WHEN "Event"."status" = ${EventStatus.completed}::"EventStatus" THEN "Event"."executionMetadata"
+              ELSE '{}'::jsonb
+            END,
             "config" = EXCLUDED."config"
         `;
       }
@@ -461,29 +486,33 @@ export const cohortsRouter = new Hono()
         include: cohortDetailInclude
       });
 
-      return updatedCohort ? serializeCohort(updatedCohort) : null;
+      const schedule = await scheduleOnFlowSave({ cohortId: id });
+
+      return {
+        cohort: updatedCohort ? serializeCohort(updatedCohort) : null,
+        schedule,
+      };
     })
   )
   .post("/:id/deploy-events", (c) =>
     handleRoute(c, async () => {
       const { id } = idParamSchema.parse(c.req.param());
-      const events = await prisma.event.findMany({
-        where: {
-          cohortId: id,
-          cohortEventFlow: { cohortId: id },
-          status: "pending"
-        },
-        select: { id: true, scheduledAt: true }
-      });
+      const events = await findDeployableEvents({ cohortId: id });
+      await resetFailedEventsForDeploy(events);
 
-      if (events.length > 0) {
-        await withRedisFallback(
-          () =>
-            redis.hset(
-              EVENT_SCHEDULE_HASH,
-              Object.fromEntries(events.map((event) => [event.id, event.scheduledAt.toISOString()]))
-            ),
-          0
+      const scheduleResult = await scheduleDeployedEvents(
+        events.map((event) => ({ id: event.id, scheduledAt: event.scheduledAt })),
+        { checkAttachments: true }
+      );
+
+      if (scheduleResult.validationIssues.some((issue) => issue.errors.length > 0)) {
+        return c.json(
+          {
+            ok: false,
+            error: "Deploy validation failed",
+            ...scheduleResult
+          },
+          400
         );
       }
 
@@ -503,14 +532,28 @@ export const cohortsRouter = new Hono()
         await addNotificationForAdmins({
           type: "event_deployed",
           title: "Cohort event flow deployed",
-          message: `Deployed ${events.length} pending events for cohort ${id}`,
-          meta: { cohortId: id, scheduled: events.length }
+          message: `Deployed ${scheduleResult.scheduled} pending events for cohort ${id}`,
+          meta: {
+            cohortId: id,
+            scheduled: scheduleResult.scheduled,
+            immediate: scheduleResult.immediate,
+            skipped: scheduleResult.skipped,
+            nextEventAt: scheduleResult.nextEventAt,
+            warnings: scheduleResult.validationIssues.flatMap((issue) => issue.warnings)
+          }
         });
       } catch (err) {
         console.error("failed to add deploy notification", err);
       }
 
-      return { ok: true, scheduled: events.length };
+      return {
+        ok: true,
+        scheduled: scheduleResult.scheduled,
+        immediate: scheduleResult.immediate,
+        skipped: scheduleResult.skipped,
+        nextEventAt: scheduleResult.nextEventAt,
+        validationIssues: scheduleResult.validationIssues
+      };
     })
   )
   .post("/:id/registration-pages", (c) =>

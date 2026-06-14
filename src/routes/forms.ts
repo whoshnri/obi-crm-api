@@ -19,7 +19,12 @@ export const formsRouter = new Hono()
       const { programmeId } = programmeQuerySchema.parse(c.req.query());
       const forms = await prisma.form.findMany({
         where: programmeId ? { programmeId } : undefined,
-        orderBy: { name: "asc" }
+        orderBy: { name: "asc" },
+        include: {
+          _count: {
+            select: { submissions: true }
+          }
+        }
       });
       return forms.map(serializeForm);
     })
