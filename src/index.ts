@@ -59,6 +59,7 @@ app.get("/", (c) => c.json({ok: true}))
 app.get("/health", (c) => c.json({ ok: true, service: "obi-api" }));
 app.route("/webhooks", webhooksRouter);
 app.route("/portal", portalRouter);
+app.route("/internal", internalRouter);
 app.use("*", authMiddleware());
 app.route("/auth", authRouter);
 app.route("/programmes", programmesRouter);
@@ -76,7 +77,6 @@ app.route("/cohorts", cohortsRouter);
 app.route("/analytics", analyticsRouter);
 app.route("/public", publicRouter);
 app.route("/assets", assetsRouter);
-app.route("/internal", internalRouter);
 
 app.onError((error, c) => {
   logApiError(c, 500, error);

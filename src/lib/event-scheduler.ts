@@ -1,10 +1,15 @@
 import { EventStatus, OpportunityEventStatus } from "@prisma/client";
-import { cancelScheduledJob, scheduleCronJob, LogStatus, getActiveScheduledJobs } from "../jobs/scheduler.js";
+import {
+  cancelScheduledJob,
+  scheduleCronJob,
+  LogStatus,
+  getActiveScheduledJobs,
+} from "../jobs/scheduler.js";
 import { scheduleOpportunityCron } from "./opportunity-scheduler.js";
 import { executeEmailEvent } from "../jobs/executeEmailEvent.js";
 import { executeInvoiceEvent } from "../jobs/executeInvoiceEvent.js";
 import { validateEventsForDeploy } from "./events/validate-deploy.js";
-import { prisma } from "./prisma.js"; 
+import { prisma } from "./prisma.js";
 import { addNotificationForAdminsDeduped } from "./notifications.js";
 import { logEventExecution } from "./observability/event-logger.js";
 import { errorMessage } from "../jobs/utils.js";
@@ -39,7 +44,6 @@ async function markEventInfrastructureFailure(eventId: string, error: unknown) {
 }
 
 export const OVERDUE_GRACE_MS = 2 * 60 * 60 * 1000;
-
 
 export type DeployScheduleResult = {
   scheduled: number;
@@ -134,7 +138,11 @@ export async function scheduleEventCron(event: {
   id: string;
   scheduledAt: Date;
 }) {
-  const res = await scheduleCronJob(event.id, event.scheduledAt, "participant_event");
+  const res = await scheduleCronJob(
+    event.id,
+    event.scheduledAt,
+    "participant_event",
+  );
 
   if (!res) {
     console.error(
@@ -273,26 +281,31 @@ function getTopOfNextHour(now = new Date()): Date {
 
 export async function reconcileScheduledEventsOnBoot() {
   const now = new Date();
-  
+
   // 1. Fetch active scheduled jobs from Supabase
   const supabaseJobs = await getActiveScheduledJobs();
   const supabaseJobMap = new Map(supabaseJobs.map((job) => [job.job_id, job]));
 
   // 2. Fetch local pending participant events
-  const localEvents = await prisma.event.findMany({
-    where: {
-      status: EventStatus.pending,
-      OR: [
-        { eventFlow: { deployedAt: { not: null } } },
-        { cohortEventFlow: { deployedAt: { not: null } } },
-      ],
-    },
-    select: { id: true, scheduledAt: true },
-  });
+  let localEvents = [];
+  try {
+    localEvents = await prisma.event.findMany({
+      where: {
+        status: EventStatus.pending,
+        OR: [
+          { eventFlow: { deployedAt: { not: null } } },
+          { cohortEventFlow: { deployedAt: { not: null } } },
+        ],
+      },
+      select: { id: true, scheduledAt: true },
+    });
+  } catch (error) {
+    return;
+  }
 
   // Filter out participant events with null scheduledAt
   const validLocalEvents = localEvents.filter(
-    (e): e is typeof e & { scheduledAt: Date } => e.scheduledAt !== null
+    (e): e is typeof e & { scheduledAt: Date } => e.scheduledAt !== null,
   );
 
   // 3. Fetch local pending/scheduled opportunity events
@@ -314,9 +327,12 @@ export async function reconcileScheduledEventsOnBoot() {
     const supabaseJob = supabaseJobMap.get(event.id);
     supabaseJobMap.delete(event.id); // Mark as not orphaned
 
-    const dueTime = supabaseJob ? new Date(supabaseJob.due_at) : event.scheduledAt;
+    const dueTime = supabaseJob
+      ? new Date(supabaseJob.due_at)
+      : event.scheduledAt;
     const isOverdue = dueTime.getTime() <= now.getTime();
-    const isPastGrace = isOverdue && (now.getTime() - dueTime.getTime() > OVERDUE_GRACE_MS);
+    const isPastGrace =
+      isOverdue && now.getTime() - dueTime.getTime() > OVERDUE_GRACE_MS;
 
     if (isPastGrace) {
       // Overdue beyond grace period: reschedule to top of next hour
@@ -340,9 +356,12 @@ export async function reconcileScheduledEventsOnBoot() {
     const supabaseJob = supabaseJobMap.get(oEvent.cronJobId);
     supabaseJobMap.delete(oEvent.cronJobId); // Mark as not orphaned
 
-    const dueTime = supabaseJob ? new Date(supabaseJob.due_at) : oEvent.scheduledAt;
+    const dueTime = supabaseJob
+      ? new Date(supabaseJob.due_at)
+      : oEvent.scheduledAt;
     const isOverdue = dueTime.getTime() <= now.getTime();
-    const isPastGrace = isOverdue && (now.getTime() - dueTime.getTime() > OVERDUE_GRACE_MS);
+    const isPastGrace =
+      isOverdue && now.getTime() - dueTime.getTime() > OVERDUE_GRACE_MS;
 
     if (isPastGrace) {
       // Overdue beyond grace: reschedule to top of next hour
@@ -367,7 +386,10 @@ export async function reconcileScheduledEventsOnBoot() {
         });
         reconciledCount++;
       } catch (err) {
-        console.error(`[reconciler] Failed to schedule opportunity event ${oEvent.id}:`, err);
+        console.error(
+          `[reconciler] Failed to schedule opportunity event ${oEvent.id}:`,
+          err,
+        );
         skippedCount++;
       }
     }
@@ -375,7 +397,9 @@ export async function reconcileScheduledEventsOnBoot() {
 
   // 6. Clean up orphaned Supabase jobs
   for (const [jobId, job] of supabaseJobMap.entries()) {
-    console.log(`[reconciler] Cancelling orphaned Supabase job: ${jobId} (${job.job_type})`);
+    console.log(
+      `[reconciler] Cancelling orphaned Supabase job: ${jobId} (${job.job_type})`,
+    );
     const cancelled = await cancelScheduledJob(jobId, "cancelled");
     if (cancelled) {
       skippedCount++;
@@ -396,7 +420,11 @@ export async function reconcileScheduledEventsOnBoot() {
     },
   });
 
-  return { reconciled: reconciledCount, rescheduled: rescheduledCount, skipped: skippedCount };
+  return {
+    reconciled: reconciledCount,
+    rescheduled: rescheduledCount,
+    skipped: skippedCount,
+  };
 }
 
 type EventFetchResult = {
@@ -458,7 +486,10 @@ export async function scheduleOnFlowSave(filter: {
 
   const scheduleResult = await scheduleDeployedEvents(
     events
-      .filter((event): event is typeof event & { scheduledAt: Date } => event.scheduledAt !== null)
+      .filter(
+        (event): event is typeof event & { scheduledAt: Date } =>
+          event.scheduledAt !== null,
+      )
       .map((event) => ({
         id: event.id,
         scheduledAt: event.scheduledAt,

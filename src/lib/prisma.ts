@@ -12,8 +12,10 @@ if (!process.env.DATABASE_URL) {
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
   max: 4,
-  idleTimeoutMillis: 40_000,
+  idleTimeoutMillis: 15_000,
   connectionTimeoutMillis: 40_000,
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 10_000,
   ssl: {
     rejectUnauthorized: true,
   },
@@ -65,7 +67,31 @@ export function getDatabaseErrorCode(error: unknown) {
 
 export function isTransientDatabaseError(error: unknown) {
   const code = getDatabaseErrorCode(error);
-  return typeof code === "string" && TRANSIENT_DATABASE_ERROR_CODES.has(code);
+  if (typeof code === "string" && TRANSIENT_DATABASE_ERROR_CODES.has(code)) {
+    return true;
+  }
+
+  const message = error instanceof Error ? error.message : String(error);
+  if (
+    message.includes("Connection terminated") ||
+    message.includes("timeout") ||
+    message.includes("unexpectedly")
+  ) {
+    return true;
+  }
+
+  if (error && typeof error === "object" && "cause" in error && error.cause) {
+    const causeMsg = error.cause instanceof Error ? error.cause.message : String(error.cause);
+    if (
+      causeMsg.includes("Connection terminated") ||
+      causeMsg.includes("timeout") ||
+      causeMsg.includes("unexpectedly")
+    ) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function sleep(ms: number) {
