@@ -24,6 +24,7 @@ import { organisationsRouter } from "./routes/organisations.js";
 import { cohortsRouter } from "./routes/cohorts.js";
 import { portalRouter } from "./routes/portal.js";
 import { analyticsRouter } from "./routes/analytics.js";
+import { internalRouter } from "./routes/internal.js";
 
 const app = new Hono();
 
@@ -75,6 +76,7 @@ app.route("/cohorts", cohortsRouter);
 app.route("/analytics", analyticsRouter);
 app.route("/public", publicRouter);
 app.route("/assets", assetsRouter);
+app.route("/internal", internalRouter);
 
 app.onError((error, c) => {
   logApiError(c, 500, error);

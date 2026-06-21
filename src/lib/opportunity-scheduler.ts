@@ -1,5 +1,5 @@
 import { OpportunityEventStatus, type Prisma } from "@prisma/client";
-import { cancelScheduledJob, scheduleOneOffJob } from "../jobs/scheduler.js";
+import { cancelScheduledJob, scheduleCronJob, LogStatus } from "../jobs/scheduler.js";
 import { buildAndSendOpportunityEmailBatch } from "./email/send-batch.js";
 import {
   getVariableBindingsFromConfig,
@@ -12,9 +12,16 @@ import { HttpError } from "./http.js";
 import { addNotificationForAdminsDeduped } from "./notifications.js";
 import { logEventExecution } from "./observability/event-logger.js";
 import { prisma } from "./prisma.js";
-import { errorMessage, getStringConfig, parseEventConfig } from "../jobs/utils.js";
+import {
+  errorMessage,
+  getStringConfig,
+  parseEventConfig,
+} from "../jobs/utils.js";
 
-export function getOpportunityCronJobId(opportunityId: string, pipelineStepId: string) {
+export function getOpportunityCronJobId(
+  opportunityId: string,
+  pipelineStepId: string,
+) {
   return `obi-opportunity-${opportunityId}-${pipelineStepId}`;
 }
 
@@ -27,7 +34,7 @@ async function resolveOpportunityEmailContent(event: {
 
   if (templateId) {
     const template = await prisma.emailTemplate.findUnique({
-      where: { id: templateId }
+      where: { id: templateId },
     });
 
     if (!template) {
@@ -35,16 +42,24 @@ async function resolveOpportunityEmailContent(event: {
     }
 
     const metadata = parseTemplateMetadata(template.metadata);
-    const bindings = getVariableBindingsFromConfig(config as Record<string, unknown>);
-    const validation = validateVariableBindings(metadata.variables ?? [], bindings);
+    const bindings = getVariableBindingsFromConfig(
+      config as Record<string, unknown>,
+    );
+    const validation = validateVariableBindings(
+      metadata.variables ?? [],
+      bindings,
+    );
     if (!validation.valid) {
-      throw new Error(`Missing variable bindings: ${validation.missing.join(", ")}`);
+      throw new Error(
+        `Missing variable bindings: ${validation.missing.join(", ")}`,
+      );
     }
 
     return {
       subject: template.subject,
       bodyHtml: template.body,
-      fromName: getStringConfig(config, "fromName") ?? template.fromName ?? undefined,
+      fromName:
+        getStringConfig(config, "fromName") ?? template.fromName ?? undefined,
       attachments: metadata.attachments ?? [],
       buttons: metadata.buttons ?? [],
       bindings,
@@ -61,18 +76,32 @@ async function resolveOpportunityEmailContent(event: {
   };
 }
 
-export async function executeOpportunityEvent(eventId: string, options?: { force?: boolean }) {
+export async function executeOpportunityEvent(
+  eventId: string,
+  options?: { force?: boolean },
+) {
   const startedAt = Date.now();
   const event = await prisma.opportunityEvent.findUnique({
     where: { id: eventId },
     include: {
-      opportunity: true
-    }
+      opportunity: true,
+    },
   });
 
   if (!event || event.status !== OpportunityEventStatus.scheduled) return;
   if (!options?.force && event.scheduledAt > new Date()) return;
 
+  const claimResult = await prisma.opportunityEvent.updateMany({
+    where: {
+      id: eventId,
+      status: OpportunityEventStatus.scheduled,
+    },
+    data: {
+      status: OpportunityEventStatus.completed,
+    },
+  });
+
+  if (claimResult.count === 0) return;
   try {
     const content = await resolveOpportunityEmailContent(event);
 
@@ -86,11 +115,19 @@ export async function executeOpportunityEvent(eventId: string, options?: { force
         email: event.opportunity.email,
         organisation: event.opportunity.organisation ?? "",
         id: event.opportunity.id,
-      }
+      },
     };
 
-    const renderedSubject = renderTemplateWithBindings(content.subject, content.bindings, context);
-    const renderedBody = renderTemplateWithBindings(content.bodyHtml, content.bindings, context);
+    const renderedSubject = renderTemplateWithBindings(
+      content.subject,
+      content.bindings,
+      context,
+    );
+    const renderedBody = renderTemplateWithBindings(
+      content.bodyHtml,
+      content.bindings,
+      context,
+    );
 
     await withRetry(
       `opportunity-email:${event.id}`,
@@ -105,7 +142,7 @@ export async function executeOpportunityEvent(eventId: string, options?: { force
           buttons: content.buttons,
           context,
         }),
-      { eventId: event.id, maxAttempts: 3 }
+      { eventId: event.id, maxAttempts: 3 },
     );
 
     await prisma.opportunityEvent.update({
@@ -113,16 +150,18 @@ export async function executeOpportunityEvent(eventId: string, options?: { force
       data: {
         status: OpportunityEventStatus.completed,
         completedAt: new Date(),
-        error: null
-      }
+        error: null,
+      },
     });
+
+    await cancelOpportunityCron(event.cronJobId, "completed");
 
     logEventExecution({
       eventId: event.id,
       phase: "complete",
       status: "completed",
       durationMs: Date.now() - startedAt,
-      meta: { opportunityId: event.opportunityId, type: "opportunity" }
+      meta: { opportunityId: event.opportunityId, type: "opportunity" },
     });
   } catch (error) {
     const message = errorMessage(error);
@@ -130,8 +169,8 @@ export async function executeOpportunityEvent(eventId: string, options?: { force
       where: { id: event.id },
       data: {
         status: OpportunityEventStatus.failed,
-        error: message
-      }
+        error: message,
+      },
     });
 
     logEventExecution({
@@ -140,7 +179,7 @@ export async function executeOpportunityEvent(eventId: string, options?: { force
       status: "failed",
       durationMs: Date.now() - startedAt,
       error: message,
-      meta: { opportunityId: event.opportunityId, type: "opportunity" }
+      meta: { opportunityId: event.opportunityId, type: "opportunity" },
     });
 
     await addNotificationForAdminsDeduped(
@@ -148,28 +187,44 @@ export async function executeOpportunityEvent(eventId: string, options?: { force
         type: "event_failed",
         title: "Opportunity email failed",
         message: `Opportunity event "${event.name}" failed: ${message}`,
-        meta: { opportunityEventId: event.id, opportunityId: event.opportunityId, error: message }
+        meta: {
+          opportunityEventId: event.id,
+          opportunityId: event.opportunityId,
+          error: message,
+        },
       },
-      `opportunity_failed:${event.id}`
+      `opportunity_failed:${event.id}`,
     );
-  } finally {
-    await cancelOpportunityCron(event.cronJobId);
+
+    await cancelOpportunityCron(event.cronJobId, "failed");
   }
 }
 
-export async function scheduleOpportunityCron(event: { id: string; cronJobId: string; scheduledAt: Date }) {
-  await cancelOpportunityCron(event.cronJobId);
-  scheduleOneOffJob(event.cronJobId, event.scheduledAt, async () => {
-    await executeOpportunityEvent(event.id);
-  });
+export async function scheduleOpportunityCron(event: {
+  id: string;
+  cronJobId: string;
+  scheduledAt: Date;
+}) {
+  const res = await scheduleCronJob(
+    event.cronJobId,
+    event.scheduledAt,
+    "opportunity_event",
+  );
+
+  if (!res) {
+    throw new Error("Failed to schedule opportunity event");
+  }
 }
 
-export async function cancelOpportunityCron(cronJobId: string) {
-  cancelScheduledJob(cronJobId);
+export async function cancelOpportunityCron(cronJobId: string, status?: LogStatus) {
+  const res = await cancelScheduledJob(cronJobId, status);
+  return res;
 }
 
 export async function runOpportunityEventNow(eventId: string) {
-  const event = await prisma.opportunityEvent.findUnique({ where: { id: eventId } });
+  const event = await prisma.opportunityEvent.findUnique({
+    where: { id: eventId },
+  });
   if (!event) {
     throw new HttpError("Event not found.", 404);
   }
@@ -177,10 +232,16 @@ export async function runOpportunityEventNow(eventId: string) {
     throw new HttpError("Completed events cannot be run again.", 409);
   }
   if (event.status === OpportunityEventStatus.cancelled) {
-    throw new HttpError("Cancelled events cannot be run. Re-apply a pipeline to schedule a new event.", 409);
+    throw new HttpError(
+      "Cancelled events cannot be run. Re-apply a pipeline to schedule a new event.",
+      409,
+    );
   }
 
-  await cancelOpportunityCron(event.cronJobId);
+  const isCancelled = await cancelOpportunityCron(event.cronJobId, "cancelled");
+  if (!isCancelled) {
+    throw new Error("Failed to cancel opportunity event");
+  }
   await prisma.opportunityEvent.update({
     where: { id: eventId },
     data: {

@@ -19,7 +19,9 @@ export function getStringConfig(config: EventConfigRecord, key: string) {
 
 export function getNumberConfig(config: EventConfigRecord, key: string) {
   const value = config[key];
-  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+  return typeof value === "number" && Number.isFinite(value)
+    ? value
+    : undefined;
 }
 
 export function getLineItems(config: EventConfigRecord) {
@@ -29,23 +31,40 @@ export function getLineItems(config: EventConfigRecord) {
   return value
     .filter(isRecord)
     .map((item) => ({
-      description: typeof item.description === "string" && item.description.trim() ? item.description.trim() : "Programme fee",
-      amount: typeof item.amount === "number" && Number.isFinite(item.amount) ? item.amount : 0,
-      currency: typeof item.currency === "string" && item.currency.trim() ? item.currency.trim().toUpperCase() : undefined
+      description:
+        typeof item.description === "string" && item.description.trim()
+          ? item.description.trim()
+          : "Programme fee",
+      amount:
+        typeof item.amount === "number" && Number.isFinite(item.amount)
+          ? item.amount
+          : 0,
+      currency:
+        typeof item.currency === "string" && item.currency.trim()
+          ? item.currency.trim().toUpperCase()
+          : undefined,
     }))
     .filter((item) => item.amount > 0);
 }
 
-export async function sendEmail(to: string, subject: string, body: string, fromName?: string) {
+export async function sendEmail(
+  to: string,
+  subject: string,
+  body: string,
+  fromName?: string,
+) {
   try {
     await sendAppScriptAuthEmail({ to, subject, body, fromName });
   } catch (error) {
-    console.log("[email:auth:placeholder]", JSON.stringify({
-      to,
-      subject,
-      bodyLength: body.length,
-      error: error instanceof Error ? error.message : String(error)
-    }));
+    console.log(
+      "[email:auth:placeholder]",
+      JSON.stringify({
+        to,
+        subject,
+        bodyLength: body.length,
+        error: error instanceof Error ? error.message : String(error),
+      }),
+    );
   }
 }
 
@@ -58,7 +77,7 @@ export async function sendAdminFeedback(input: {
 }) {
   const admins = await prisma.admin.findMany({
     where: { notificationsEnabled: true },
-    select: { email: true }
+    select: { email: true },
   });
 
   const link = `/programmes/${input.event.programmeId}/events/${input.event.id}/status`;
@@ -67,7 +86,7 @@ export async function sendAdminFeedback(input: {
     `Total participants: ${input.total}`,
     `Success count: ${input.successCount}`,
     `Failure count: ${input.failureCount}`,
-    `Status: ${link}`
+    `Status: ${link}`,
   ];
 
   if (input.errorMessage) {
@@ -79,9 +98,9 @@ export async function sendAdminFeedback(input: {
       sendEmail(
         admin.email,
         `Event completed: ${input.event.name}`,
-        lines.join("\n")
-      )
-    )
+        lines.join("\n"),
+      ),
+    ),
   );
 }
 
@@ -89,35 +108,40 @@ export function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : String(error);
 }
 
-export async function getEventRecipients(event: Pick<Event, "programmeId" | "cohortId">) {
+export async function getEventRecipients(
+  event: Pick<Event, "programmeId" | "cohortId">,
+) {
   if (event.cohortId) {
     const cohortParticipants = await prisma.cohortParticipant.findMany({
       where: { cohortId: event.cohortId },
-      include: { participant: true }
+      include: { participant: true },
     });
     const programmeParticipants = await prisma.programmeParticipant.findMany({
       where: {
         programmeId: event.programmeId,
-        participantId: { in: cohortParticipants.map((entry) => entry.participantId) }
-      }
+        participantId: {
+          in: cohortParticipants.map((entry) => entry.participantId),
+        },
+      },
     });
     const programmeParticipantByParticipantId = new Map(
-      programmeParticipants.map((entry) => [entry.participantId, entry])
+      programmeParticipants.map((entry) => [entry.participantId, entry]),
     );
 
     return cohortParticipants.map((entry) => ({
       participant: entry.participant,
-      programmeParticipant: programmeParticipantByParticipantId.get(entry.participantId) ?? null
+      programmeParticipant:
+        programmeParticipantByParticipantId.get(entry.participantId) ?? null,
     }));
   }
 
   const programmeParticipants = await prisma.programmeParticipant.findMany({
     where: { programmeId: event.programmeId },
-    include: { participant: true }
+    include: { participant: true },
   });
 
   return programmeParticipants.map((entry) => ({
     participant: entry.participant,
-    programmeParticipant: entry
+    programmeParticipant: entry,
   }));
 }

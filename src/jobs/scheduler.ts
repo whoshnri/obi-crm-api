@@ -1,43 +1,87 @@
-import schedule from "node-schedule";
+import { createClient } from "@supabase/supabase-js";
 
-type ScheduledTask = () => Promise<void> | void;
+type SupabaseConfig = {
+  job_id: string;
+  execute_at: Date;
+  job_type: string;
+};
 
-function formatInMs(date: Date) {
-  const inMs = Math.max(0, date.getTime() - Date.now());
-  if (inMs < 60_000) return `${Math.round(inMs / 1000)}s`;
-  if (inMs < 3_600_000) return `${Math.round(inMs / 60_000)}m`;
-  return `${(inMs / 3_600_000).toFixed(1)}h`;
-}
+const client = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_ANON_KEY!,
+);
 
-export function scheduleCronJob(name: string, rule: string, task: ScheduledTask) {
-  schedule.cancelJob(name);
-  return schedule.scheduleJob(name, rule, async () => {
-    try {
-      await task();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      console.error(`[scheduler] error in ${name}: ${message}`);
+export type LogStatus = "completed" | "cancelled" | "failed" | "auto";
+
+async function addJob(_config: SupabaseConfig): Promise<boolean> {
+  try {
+    const { error } = await client.from("scheduled_jobs").upsert({
+      job_id: _config.job_id,
+      due_at: _config.execute_at,
+      job_type: _config.job_type,
+    });
+    if (error) {
+      console.error(`[scheduler] Error upserting job ${_config.job_id}:`, error);
+      return false;
     }
-  });
+    return true;
+  } catch (err) {
+    console.error(`[scheduler] Exception in addJob for ${_config.job_id}:`, err);
+    return false;
+  }
 }
 
-export function scheduleOneOffJob(name: string, date: Date, task: ScheduledTask) {
-  schedule.cancelJob(name);
-  console.log(`[scheduler] registered ${name} at ${date.toISOString()} (in ${formatInMs(date)})`);
-  return schedule.scheduleJob(name, date, async () => {
-    console.log(`[scheduler] fired ${name}`);
-    try {
-      await task();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      console.error(`[scheduler] error in ${name}: ${message}`);
+async function cancelJob(_name: string, _status?: LogStatus): Promise<boolean> {
+  try {
+    const { error } = await client.from("scheduled_jobs").update({
+      status: _status ? _status : "cancelled",
+    }).eq("job_id", _name);
+    if (error) {
+      console.error(`[scheduler] Error updating status for job ${_name}:`, error);
+      return false;
     }
-  });
+    return true;
+  } catch (err) {
+    console.error(`[scheduler] Exception in cancelJob for ${_name}:`, err);
+    return false;
+  }
 }
 
-export function cancelScheduledJob(name: string) {
-  const cancelled = schedule.cancelJob(name);
-  if (cancelled) {
-    console.log(`[scheduler] cancelled ${name}`);
+export async function scheduleCronJob(name: string, executeAt: Date, type: string) {
+  const jobConfig: SupabaseConfig = {
+    job_id: name,
+    execute_at: executeAt,
+    job_type: type,
+  };
+  const res = await addJob(jobConfig);
+  return res;
+}
+
+export async function cancelScheduledJob(name: string, status?: LogStatus) {
+  const res = await cancelJob(name, status);
+  return res;
+}
+
+export type SupabaseJob = {
+  job_id: string;
+  due_at: string;
+  job_type: string;
+  status: string;
+};
+
+export async function getActiveScheduledJobs(): Promise<SupabaseJob[]> {
+  try {
+    const { data, error } = await client
+      .from("scheduled_jobs")
+      .select("job_id, due_at, job_type, status")
+      .in("status", ["pending", "claimed"]);
+    if (error) {
+      console.error("[scheduler] Error fetching active scheduled jobs:", error);
+      return [];
+    }
+    return data ?? [];
+  } catch (err) {
+    console.error("[scheduler] Exception fetching active scheduled jobs:", err);
+    return [];
   }
 }

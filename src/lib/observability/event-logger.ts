@@ -3,7 +3,7 @@ export type EventExecutionLogPayload = {
   programmeId?: string;
   cohortId?: string | null;
   baseType?: string;
-  phase: "claim" | "validate" | "send" | "complete" | "fail" | "retry" | "schedule" | "deploy" | "trigger";
+  phase: "claim" | "validate" | "send" | "complete" | "fail" | "retry" | "schedule" | "deploy" | "trigger" | "cancel";
   status?: string;
   recipientCount?: number;
   durationMs?: number;
@@ -30,6 +30,8 @@ function formatEventLog(payload: EventExecutionLogPayload) {
         return `[event] ${eventRef}${type} — skipped (not pending)`;
       }
       return `[event] ${eventRef}${type} — claimed (attempt ${payload.attemptCount ?? 1})`;
+    case "cancel":
+      return `[event] ${eventRef}${type} — cancellation ${payload.status ?? ""}`;
     case "schedule":
       if (payload.status === "flow_saved") {
         const meta = payload.meta ?? {};

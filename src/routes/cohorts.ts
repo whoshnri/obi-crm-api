@@ -501,7 +501,9 @@ export const cohortsRouter = new Hono()
       await resetFailedEventsForDeploy(events);
 
       const scheduleResult = await scheduleDeployedEvents(
-        events.map((event) => ({ id: event.id, scheduledAt: event.scheduledAt })),
+        events
+          .filter((event): event is typeof event & { scheduledAt: Date } => event.scheduledAt !== null)
+          .map((event) => ({ id: event.id, scheduledAt: event.scheduledAt })),
         { checkAttachments: true }
       );
 
