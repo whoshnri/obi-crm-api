@@ -18,7 +18,11 @@ export const internalRouter = new Hono().post("/jobs/run", async (c) => {
       console.log("no header");
       return c.json({ error: "Unauthorized" }, 401);
     }
-    if (authHeader !== process.env.INTERNAL_QUEUE_SECRET) {
+    const token = authHeader?.startsWith("Bearer ")
+      ? authHeader.slice(7)
+      : authHeader;
+
+    if (token !== process.env.INTERNAL_QUEUE_SECRET) {
       console.log("invalid token");
       return c.json({ error: "Unauthorized" }, 401);
     }

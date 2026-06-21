@@ -15,11 +15,14 @@ export type LogStatus = "completed" | "cancelled" | "failed" | "auto";
 
 async function addJob(_config: SupabaseConfig): Promise<boolean> {
   try {
-    const { error } = await client.from("scheduled_jobs").upsert({
-      job_id: _config.job_id,
-      due_at: _config.execute_at,
-      job_type: _config.job_type,
-    });
+    const { error } = await client.from("scheduled_jobs").upsert(
+      {
+        job_id: _config.job_id,
+        due_at: _config.execute_at,
+        job_type: _config.job_type,
+      },
+      { onConflict: "job_id" }
+    );
     if (error) {
       console.error(`[scheduler] Error upserting job ${_config.job_id}:`, error);
       return false;
