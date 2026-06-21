@@ -14,12 +14,14 @@ const client = createClient(
 export type LogStatus = "completed" | "cancelled" | "failed" | "auto";
 
 async function addJob(_config: SupabaseConfig): Promise<boolean> {
+  // make sure to assert timezone in the time inclusion
   try {
     const { error } = await client.from("scheduled_jobs").upsert(
       {
         job_id: _config.job_id,
         due_at: _config.execute_at,
         job_type: _config.job_type,
+        status: "pending"
       },
       { onConflict: "job_id" }
     );
